@@ -1,0 +1,30 @@
+@import url('https://fonts.cdnfonts.com/css/roboto');
+@import url('https://fonts.cdnfonts.com/css/primer-preschoolers');
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.logo {
+    font-family: 'Primer Preschoolers', sans-serif;                                           
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .rounded-fixed {
+    border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    -webkit-border-radius: 1rem;
+  }
