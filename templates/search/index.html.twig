@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="relative top-28 mb-28 flex border-b">
+        <div class="w-[70%]">
+            <div class="px-10 py-6 border-b">
+                <span class="text-zinc-500 text-sm font-semibold">
+                    {{ location | capitalize }} 
+                    <i class="fa-solid fa-chevron-right"></i>
+                    {{ cflt | capitalize }}
+                </span>
+                <div class="flex items-center">
+                    <span class="font-extrabold block text-2xl">
+                        Top {{ businesses|length >= 10 ? 10 : businesses|length }} {{ cflt | capitalize }} in {{ location | capitalize }}
+                    </span>
+                    <span class="ml-auto">
+                        Sort: 
+                        <span 
+                            x-data="{ show: false }"
+                            @click="show = !show"
+                            class="font-semibold cursor-pointer hover:underline">
+                            Highest Rated
+                            <i class="fa-solid fa-chevron-down"></i>  
+                        </span>                
+                    </span>
+                </div>
+                <div class="sticky ">
+                </div>
+            </div>
+            <div class="px-16 py-4">
+                <span class="font-bold my-4">
+                    All "{{ cflt | capitalize }}" results in {{ location | capitalize }}
+                </span>
+                {% for business in businesses %}
+                    <div class="flex my-5 pb-5 border-b cursor-pointer">
+                        {% if business.reviews is defined and business.reviews[0] is defined and business.reviews[0].images is defined and business.reviews[0].images[0] is defined %}
+                            <img src="{{ asset('' ~ business.reviews[0].images[0]) }}" alt="" class="w-48 h-48 object-cover rounded-md">
+                        {% else %}
+                            
+                        {% endif %}
+                        <div class="ml-6">
+                            <span class="font-bold text-xl">
+                                {{ loop.index }}. <span class="hover:underline">{{ business.name }}</span>
+                            </span>
+                            <div class="flex items-center text-zinc-500 my-1">
+                                {% set totalStars = 0 %}
+                                {% for review in business.reviews %}
+                                    {% set totalStars = totalStars + review.stars %}
+                                {% endfor %}
+                                {% set avgStars = totalStars / business.reviews|length %}
+
+                                {% for i in 1..5 %}
+                                    {% set color = 
+                                        avgStars >= 9 ? 'rgba(251,67,60,1)' :
+                                        avgStars >= 7 ? 'rgba(255,100,61,1)' :
+                                        avgStars >= 5 ? 'rgba(255,135,66,1)' :
+                                        avgStars >= 3 ? 'rgba(255,173,72,1)' :
+                                        avgStars >= 1 ? 'rgba(255,204,75,1)' : 
+                                        '#BBBAC0'
+                                    %}
+                                    <svg width="20" height="20" viewBox="0 0 20 20" class="mr-1">
+                                        <path 
+                                            fill="{{ avgStars >= i * 2 - 1 ? color :
+                                                    '#BBBAC0' }}" 
+                                            opacity="1" d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z">
+                                        </path>
+                                        <path 
+                                            fill="{{ avgStars >= i * 2 ? color :
+                                                    '#BBBAC0' }}" 
+                                            opacity="1" d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z">
+                                        </path>
+                                        <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                                    </svg>
+                                {% endfor %}
+                                <span class="ml-1">
+                                    {{ business.reviews|length }}
+                                </span>
+                            </div>
+                            <div class="flex my-2">
+                                {% for category in business.categories %}
+                                    <div class="bg-zinc-200 px-2 mr-2 text-sm text-zinc-500 rounded font-semibold hover:bg-zinc-300 transition-[0.2]">
+                                        {{ category.name }}                                       
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            {% set currentDay = "now"|date("D") %}
+                            {% set nextDay = (currentDay|date_modify('+1 day'))|date('D') %}
+                            {% set currentTime = "now"|date("H:i") %}
+                            {% set openHours = business.hours[currentDay]|split(" - ") %}
+                            {% set nextOpenHours = business.hours[nextDay]|split(" - ") %}
+                            {% set openingTime = openHours[0]|date("H:i") %}
+                            {% set closingTime = openHours[1]|date("H:i") %}
+                            {% set nextOpeningTime = nextOpenHours[0]|date("H:i") %}
+
+                            {% if currentTime >= openingTime and currentTime <= closingTime %}
+                                <span class="text-green-700 font-semibold">
+                                    Open
+                                </span>
+                                until {{ openHours[1] }}
+                            {% else %}
+                                <span class="text-red-600 font-semibold">
+                                    Closed
+                                </span>
+                                until {{ nextDay }} {{ nextOpeningTime }}
+                            {% endif %}
+
+                            <div class="flex text-zinc-500 mt-2">
+                                <i class="fa-regular fa-message mt-1"></i>
+                                    <span class="dots ml-2 text-sm">
+                                        {{ business.reviews[0].content }}
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+
+        </div>
+    </div>
+    <div>
+
+    </div>
+{% endblock %}

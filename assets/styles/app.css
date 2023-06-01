@@ -9,6 +9,7 @@
 
 body {
     font-family: 'Roboto', sans-serif;
+    user-select: none;
 }
 
 .logo {
@@ -28,3 +29,11 @@ body {
     -moz-border-radius: 1rem;
     -webkit-border-radius: 1rem;
   }
+
+  .dots {
+    overflow: hidden;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}

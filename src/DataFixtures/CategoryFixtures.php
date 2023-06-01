@@ -15,7 +15,7 @@ class CategoryFixtures extends Fixture
         $manager->persist($category);
 
         $category2 = new Category();
-        $category2->setName("Japanese");
+        $category2->setName("Restaurants");
         $manager->persist($category2);
 
         $manager->flush();

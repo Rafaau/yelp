@@ -19,13 +19,25 @@ class Business
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Location = null;
+    private ?string $location = null;
 
     #[ORM\OneToMany(mappedBy: 'business', targetEntity: Review::class, orphanRemoval: true)]
     private Collection $reviews;
 
     #[ORM\ManyToMany(targetEntity: Category::class)]
     private Collection $categories;
+
+    #[ORM\Column]
+    private array $hours = [];
+
+    #[ORM\Column(length: 255)]
+    private ?string $address = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $website = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phoneNumber = null;
 
     public function __construct()
     {
@@ -52,12 +64,12 @@ class Business
 
     public function getLocation(): ?string
     {
-        return $this->Location;
+        return $this->location;
     }
 
-    public function setLocation(string $Location): self
+    public function setLocation(string $location): self
     {
-        $this->Location = $Location;
+        $this->location = $location;
 
         return $this;
     }
@@ -112,6 +124,54 @@ class Business
     public function removeCategory(Category $category): self
     {
         $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    public function getHours(): array
+    {
+        return $this->hours;
+    }
+
+    public function setHours(array $hours): self
+    {
+        $this->hours = $hours;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }

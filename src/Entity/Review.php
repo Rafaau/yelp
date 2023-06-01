@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ReviewRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
@@ -24,6 +25,18 @@ class Review
     #[ORM\JoinColumn(nullable: false)]
     private ?Business $business = null;
 
+    #[ORM\Column]
+    private array $images = [];
+
+    #[ORM\Column]
+    #[Assert\Range(min: 1, max: 10)]
+    private ?int $stars = null;
+
+    public function __construct()
+    {
+        $this->images = [];
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -41,7 +54,7 @@ class Review
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -61,6 +74,37 @@ class Review
     public function setBusiness(?Business $business): self
     {
         $this->business = $business;
+
+        return $this;
+    }
+
+    public function getImages(): array
+    {
+        return $this->images;
+    }
+
+    public function setImages(array $images): self
+    {
+        $this->images = $images;
+
+        return $this;
+    }
+
+    public function addImage(string $image): self
+    {
+        $this->images[] = $image;
+
+        return $this;
+    }
+
+    public function getStars(): ?int
+    {
+        return $this->stars;
+    }
+
+    public function setStars(int $stars): self
+    {
+        $this->stars = $stars;
 
         return $this;
     }
