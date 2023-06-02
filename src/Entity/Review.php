@@ -36,6 +36,9 @@ class Review
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $postDate;
 
+    #[ORM\Column(type: Types::JSON)]
+    private array $reactions = ['useful' => 0, 'funny' => 0, 'cool' => 0];
+
     public function __construct()
     {
         $this->images = [];
@@ -122,6 +125,18 @@ class Review
     public function setPostDate(\DateTimeInterface $postDate): self
     {
         $this->postDate = $postDate;
+
+        return $this;
+    }
+
+    public function getReactions(): array
+    {
+        return $this->reactions;
+    }
+
+    public function setReactions(array $reactions): self
+    {
+        $this->reactions = $reactions;
 
         return $this;
     }

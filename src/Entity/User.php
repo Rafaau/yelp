@@ -34,6 +34,21 @@ class User
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $memberSince;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $thingsILove = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $myHometown = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $whenIAmNotWhelping = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $whyYouShouldRead = null;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -144,6 +159,66 @@ class User
     public function setMemberSince(\DateTimeInterface $memberSince): self
     {
         $this->memberSince = $memberSince;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getThingsILove(): ?string
+    {
+        return $this->thingsILove;
+    }
+
+    public function setThingsILove(?string $thingsILove): self
+    {
+        $this->thingsILove = $thingsILove;
+
+        return $this;
+    }
+
+    public function getMyHometown(): ?string
+    {
+        return $this->myHometown;
+    }
+
+    public function setMyHometown(?string $myHometown): self
+    {
+        $this->myHometown = $myHometown;
+
+        return $this;
+    }
+
+    public function getWhenIAmNotWhelping(): ?string
+    {
+        return $this->whenIAmNotWhelping;
+    }
+
+    public function setWhenIAmNotWhelping(?string $whenIAmNotWhelping): self
+    {
+        $this->whenIAmNotWhelping = $whenIAmNotWhelping;
+
+        return $this;
+    }
+
+    public function getWhyYouShouldRead(): ?string
+    {
+        return $this->whyYouShouldRead;
+    }
+
+    public function setWhyYouShouldRead(?string $whyYouShouldRead): self
+    {
+        $this->whyYouShouldRead = $whyYouShouldRead;
 
         return $this;
     }

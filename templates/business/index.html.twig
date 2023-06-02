@@ -221,9 +221,11 @@
                         <div class="flex">
                             <img src="{{ asset('' ~ review.user.userImage) }}" class="w-[4.5rem] h-[4.5rem] rounded-full mr-3 border">
                             <div>
-                                <p class="font-semibold mt-[0.125rem]">
+                                <a 
+                                    href="{{ path('user_details', { 'userid': review.user.id, 'location': location }) }}"
+                                    class="font-semibold mt-[0.125rem] cursor-pointer hover:underline">
                                     {{ review.user.username }}
-                                </p>
+                                </a>
                                 <p class="text-sm font-roboto-light">
                                     {{ review.user.address }}
                                 </p>

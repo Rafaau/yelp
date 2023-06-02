@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Review;
 use App\Entity\Business;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +57,21 @@ class ViewController extends AbstractController
             'cflt' => $cflt,
             'location' => $find_loc,
             'businesses' => $businesses,
+        ]);
+    }
+
+    #[Route('/user_details', name: 'user_details' )]
+    public function user(Request $request): Response
+    {
+        $userid = $request->query->get('userid');
+        $location = $request->query->get('location');
+        $userRepository = $this->em->getRepository(User::class);
+        
+        $user = $userRepository->findOneBy(['id' => $userid]);
+
+        return $this->render('user-details/index.html.twig', [
+            'location' => $location,
+            'user' => $user,
         ]);
     }
 

@@ -1,5 +1,5 @@
-<header class="{{ cflt is defined or business is defined ? 'bg-zinc-100 border-b' }} {{ cflt is defined ? 'fixed' : 'absolute' }} z-20 px-10 pt-4 w-full">
-    <div class="flex items-center {{ cflt is defined or business is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
+<header class="{{ cflt is defined or business is defined or user is defined ? 'bg-zinc-100 border-b' }} {{ cflt is defined ? 'fixed' : 'absolute' }} z-20 px-10 pt-4 w-full">
+    <div class="flex items-center {{ cflt is defined or business is defined or user is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
         <a 
             href="/"
             class="logo text-3xl mr-8 cursor-pointer">
@@ -27,14 +27,14 @@
         <span class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30">
             Write a review
         </span>
-        <button class="py-2 px-4 border {{ cflt is defined or business is defined ? 'border-zinc-400' : 'border-zinc-100' }} rounded-md ml-3 hover:bg-zinc-400 hover:bg-opacity-30">
+        <button class="py-2 px-4 border {{ cflt is defined or business is defined or user is defined ? 'border-zinc-400' : 'border-zinc-100' }} rounded-md ml-3 hover:bg-zinc-400 hover:bg-opacity-30">
             Log In
         </button>
         <button class="py-2 px-4 bg-red-600 text-zinc-100 rounded-md ml-3">
             Sign up
         </button>
     </div>
-    <div class="flex items-center text-sm {{ cflt is defined or business is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
+    <div class="flex items-center text-sm {{ cflt is defined or business is defined or user is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
         <div 
             @mouseover="show = true" 
             @mouseleave="show = false"

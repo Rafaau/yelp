@@ -1,0 +1,314 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <img 
+        class="absolute top-14 h-[14.5rem] w-full object-cover object-bottom"
+        src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_user_details/3a3ed7e5327e/assets/img/stars-static.png">
+    <div class="w-full flex justify-center">
+        <div class="relative flex top-36 mb-44 px-24 max-w-[1300px]">
+            <div class="min-w-[14rem]">
+                <img 
+                    src="{{ asset('' ~ user.userImage) }}" 
+                    alt="404" 
+                    class="rounded-md w-56 h-56">
+                <p class="my-4 font-semibold text-lg">
+                    {{ user.username|split(' ')[0] }}'s Profile
+                </p>
+                <div
+                    x-data="{ current: 0 }" 
+                    class="flex flex-col text-zinc-600">
+                    <div
+                        @click="current = 0" 
+                        class="py-3 px-3 border-b border-t font-roboto-light cursor-pointer flex items-center" 
+                        x-bind:class="current == 0 ? 'border-l-red-600 border-l-4' : 'border-l-4 border-l-transparent'">
+                        <i class="fa-regular fa-circle-user text-lg mr-3"></i>
+                        Profile Overview
+                    </div>
+                    <div 
+                        @click="current = 1"
+                        x-bind:class="current == 1 ? 'border-l-red-600 border-l-4' : 'border-l-4 border-l-transparent'"
+                        class="py-3 px-3 border-b font-roboto-light cursor-pointer flex items-center">
+                        <i class="fa-solid fa-users-rectangle text-lg mr-3"></i>
+                        Friends
+                    </div>
+                    <div 
+                        @click="current = 2"
+                        x-bind:class="current == 2 ? 'border-l-red-600 border-l-4' : 'border-l-4 border-l-transparent'"
+                        class="py-3 px-3 border-b font-roboto-light cursor-pointer flex items-center">
+                        <i class="fa-regular fa-message text-lg mr-4"></i>
+                        Reviews
+                    </div>
+                </div>
+            </div>
+            <div class="px-8">
+                <div class="border-b">
+                    <p class="text-3xl font-black mb-1">
+                        {{ user.username }}
+                    </p>
+                    <p>
+                        From {{ user.address }}
+                    </p>
+                    <div class="flex items-center text-zinc-800 font-roboto-light text-base mt-1">
+                        <i class="fa-solid fa-users-rectangle text-lg text-orange-600"></i>
+                        <span class="mx-1 font-semibold">
+                            {{ user.friends|length }}
+                        </span>
+                        Friends
+                        <i class="fa-regular fa-message text-lg text-orange-600 ml-4"></i>
+                        <span class="mx-1 font-semibold">
+                            {{ user.reviews|length }}
+                        </span>
+                        Reviews
+                        <i class="fa-regular fa-images text-lg text-orange-600 ml-4"></i>
+                        <span class="mx-1 font-semibold">
+                            {{ user.friends|length }}
+                        </span>
+                        Photos
+                    </div>
+                    {% if user.description is not null %}
+                        <p class="my-3">
+                            "{{ user.description }}"
+                        </p>
+                    {% endif %}
+                </div>
+                {% if user.reviews|length %}
+                    <p class="font-semibold text-xl text-red-600 py-6 border-b">
+                        Reviews
+                    </p>
+                    {% for review in user.reviews %}
+                        <div class="py-4">
+                            <div class="flex">
+                                <img src="{{ asset('' ~ review.business.reviews[0].images[0]) }}" alt="logo" class="rounded-md w-16 h-16 object-cover border">
+                                <div class="ml-2">
+                                    <a 
+                                        href="/biz/{{ review.business.name }}-{{ location }}"
+                                        class="font-semibold text-cyan-700 cursor-pointer hover:underline">
+                                        {{ review.business.name }}
+                                    </a>
+                                    <p class="flex items-center">
+                                        {% for i in 1..review.business.expensiveness %}
+                                            <i class="fa-solid fa-dollar-sign text-xs text-zinc-700 mr-1"></i>
+                                        {% endfor %}
+                                        •
+                                        {% for category in review.business.categories %}
+                                            <a 
+                                                href="{{ path('search', { 'cflt': category.name|lower, 'find_loc': location }) }}"
+                                                class="text-cyan-700 ml-1 text-xs">
+                                                {{ category.name }}
+                                            </a>
+                                            {% if not loop.last %}
+                                                <span class="text-sm">,</span>
+                                            {% endif %}
+                                        {% endfor %}                                   
+                                    </p>
+                                    <p class="text-xs font-roboto-light">
+                                        {{ review.business.address }}                                   
+                                    </p>
+                                    <p class="text-xs font-roboto-light">
+                                        {{ review.business.location }}                                   
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex py-3">
+                                {% for i in 1..5 %}
+                                    {% set color = 
+                                        review.stars >= 9 ? 'rgba(251,67,60,1)' :
+                                        review.stars >= 7 ? 'rgba(255,100,61,1)' :
+                                        review.stars >= 5 ? 'rgba(255,135,66,1)' :
+                                        review.stars >= 3 ? 'rgba(255,173,72,1)' :
+                                        review.stars >= 1 ? 'rgba(255,204,75,1)' : 
+                                        '#BBBAC0'
+                                    %}
+                                    <svg width="20" height="20" viewBox="0 0 20 20" class="mr-1">
+                                        <path 
+                                            fill="{{ review.stars >= i * 2 - 1 ? color :
+                                                    '#BBBAC0' }}" 
+                                            opacity="1" d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z">
+                                        </path>
+                                        <path 
+                                            fill="{{ review.stars >= i * 2 ? color :
+                                                    '#BBBAC0' }}" 
+                                            opacity="1" d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z">
+                                        </path>
+                                        <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                                    </svg>
+                                {% endfor %}
+                                <span class="font-roboto-light text-sm text-zinc-600 ml-2">
+                                    {{ review.postDate|date('d/m/y') }}
+                                </span>
+                            </div>
+                            <p class="font-roboto-light text-sm">
+                                {{ review.content|nl2br }}
+                            </p>
+                            <p class="font-semibold text-xs text-zinc-600 mt-3">
+                                Was this review …?
+                            </p>
+                            <div class="flex space-x-2 text-zinc-500 font-semibold text-sm mt-1">
+                                <button 
+                                    class="py-1 px-2 border border-zinc-400 rounded flex items-center">
+                                    <i class="fa-regular fa-lightbulb mr-2"></i>
+                                    Useful
+                                    <span class="font-roboto-light ml-2 text-xs">
+                                        {{ review.reactions['useful'] }}
+                                    </span>
+                                </button>
+                                <button 
+                                    class="py-1 px-2 border border-zinc-400 rounded flex items-center">
+                                    <i class="fa-regular fa-face-laugh-squint mr-2"></i>
+                                    Funny
+                                    <span class="font-roboto-light ml-2 text-xs">
+                                        {{ review.reactions['funny'] }}
+                                    </span>
+                                </button>
+                                <button 
+                                    class="py-1 px-2 border border-zinc-400 rounded flex items-center">
+                                    <i class="fa-regular fa-face-grin-wink mr-2"></i>
+                                    Cool
+                                    <span class="font-roboto-light ml-2 text-xs">
+                                        {{ review.reactions['cool'] }}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="w-64">
+                <div class="border-l pl-8 pb-12 flex flex-col text-cyan-700 font-semibold">
+                    <a class="mb-1 flex items-center cursor-pointer">
+                        <i class="fa-solid fa-user-plus text-xs mr-2"></i>
+                        <span class="hover:underline">Add Friend</span>
+                    </a>
+                    <a class="mb-1 flex items-center cursor-pointer">
+                        <i class="fa-regular fa-comment text-xs mr-2"></i>
+                        <span class="hover:underline">Send message</span>
+                    </a>
+                    <a class="flex items-center cursor-pointer">
+                        <i class="fa-solid fa-user-check text-xs mr-2"></i>
+                        <span class="hover:underline">Follow {{ user.username }}</span>
+                    </a>                              
+                </div>
+                <div class="mt-10 pl-8">
+                    {% set starsCount = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0} %}
+                    {% for review in user.reviews %}
+                        {% set star = review.stars %}
+                        {% if star in starsCount|keys %}
+                            {% set starsCount = starsCount|slice(0, star)|merge({(star): starsCount[star] + 1})|merge(starsCount|slice(star + 1)) %}
+                        {% else %}
+                            {% set starsCount = starsCount|merge({(star): 1}) %}
+                        {% endif %}
+                    {% endfor %}
+                    <p class="font-semibold text-lg text-red-600">
+                        About {{ user.username }}
+                    </p>
+                    <p class="text-sm font-semibold my-2">
+                        Rating distribution
+                    </p>
+                    <div class="flex mb-1 text-zinc-600 font-roboto-medium">
+                        <div class="bg-[#FCD8D2] px-2 rounded mr-3 w-[4.25rem]">
+                            5 stars
+                        </div>
+                        {{ starsCount[8] + starsCount[9] }}
+                    </div>
+                    <div class="flex mb-1 text-zinc-600 font-roboto-medium">
+                        <div class="bg-[#FDE3D0] px-2 rounded mr-3 w-[4.25rem]">
+                            4 stars
+                        </div>
+                        {{ starsCount[7] + starsCount[8] }}
+                    </div>
+                    <div class="flex mb-1 text-zinc-600 font-roboto-medium">
+                        <div class="bg-[#FDE7CF] px-2 rounded mr-3 w-[4.25rem]">
+                            3 stars
+                        </div>
+                        {{ starsCount[5] + starsCount[6] }}
+                    </div>
+                    <div class="flex mb-1 text-zinc-600 font-roboto-medium">
+                        <div class="bg-[#FEEDCE] px-2 rounded mr-3 w-[4.25rem]">
+                            2 stars
+                        </div>
+                        {{ starsCount[3] + starsCount[4] }}
+                    </div>
+                    <div class="flex mb-1 text-zinc-600 font-roboto-medium">
+                        <div class="bg-[#FFF3CD] px-2 rounded mr-3 w-[4.25rem]">
+                            1 star
+                        </div>
+                        {{ starsCount[1] + starsCount[2] }}
+                    </div>
+                    <p class="text-sm font-semibold my-3">
+                        Review Votes
+                    </p>
+                    {% set totalReactions = { 'useful': 0, 'funny': 0, 'cool': 0 } %}
+                    {% for review in user.reviews %}
+                        {% for reaction, count in review.reactions %}
+                            {% set totalReactions = totalReactions|merge({(reaction): totalReactions[reaction] + count}) %}
+                        {% endfor %}
+                    {% endfor %}
+                    <div class="flex items-center mt-1 text-sm text-zinc-600">
+                        <i class="fa-regular fa-lightbulb mr-[0.625rem] text-lg ml-[0.125rem]"></i>
+                        Useful
+                        <span class="font-semibold ml-2 text-zinc-900">
+                            {{ totalReactions['useful'] }}
+                        </span>
+                    </div>
+                    <div class="flex items-center mt-1 text-sm text-zinc-600">
+                        <i class="fa-regular fa-face-laugh-squint mr-2 text-lg"></i>
+                        Funny
+                        <span class="font-semibold ml-2 text-zinc-900">
+                            {{ totalReactions['funny'] }}
+                        </span>
+                    </div>
+                    <div class="flex items-center mt-1 text-sm text-zinc-600">
+                        <i class="fa-regular fa-face-grin-wink mr-2 text-lg"></i>
+                        Cool
+                        <span class="font-semibold ml-2 text-zinc-900">
+                            {{ totalReactions['cool'] }}
+                        </span>
+                    </div>
+                    <p class="text-sm font-semibold mt-3 mb-1">
+                        Location
+                    </p>
+                    <p class="text-sm font-roboto-light">
+                        {{ user.address }}
+                    </p>
+                    <p class="text-sm font-semibold mt-3 mb-1">
+                        Whelping Since
+                    </p>
+                    <p class="text-sm font-roboto-light">
+                        {{ user.memberSince|date('F Y') }}
+                    </p>
+                    {% if user.thingsILove is not null %}
+                        <p class="text-sm font-semibold mt-3 mb-1">
+                            Things I Love
+                        </p>
+                        <p class="text-sm font-roboto-light">
+                            {{ user.thingsILove }}
+                        </p>
+                    {% endif %}
+                    {% if user.myHometown is not null %}
+                        <p class="text-sm font-semibold mt-3 mb-1">
+                            My Hometown
+                        </p>
+                        <p class="text-sm font-roboto-light">
+                            {{ user.myHometown }}
+                        </p>
+                    {% endif %}
+                    {% if user.whenIAmNotWhelping is not null %}
+                        <p class="text-sm font-semibold mt-3 mb-1">
+                            When I'm Not Whelping
+                        </p>
+                        <p class="text-sm font-roboto-light">
+                            {{ user.whenIAmNotWhelping }}
+                        </p>
+                    {% endif %}
+                    {% if user.whyYouShouldRead is not null %}
+                        <p class="text-sm font-semibold mt-3 mb-1">
+                            Why You Should Read My Reviews
+                        </p>
+                        <p class="text-sm font-roboto-light">
+                            {{ user.whyYouShouldRead }}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

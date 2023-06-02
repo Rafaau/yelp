@@ -28,6 +28,13 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $review->setStars(8);
         $review->setUser($this->getReference("user"));
         $review->setBusiness($this->getReference("business"));
+        $review->setReactions(
+            [
+                "useful" => 11,
+                "funny" => 20,
+                "cool" => 8
+            ]
+        );
         $manager->persist($review);
 
         $review2 = new Review();
@@ -42,6 +49,13 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $review2->setStars(9);
         $review2->setUser($this->getReference("user2"));
         $review2->setBusiness($this->getReference("business2"));
+        $review2->setReactions(
+            [
+                "useful" => 42,
+                "funny" => 11,
+                "cool" => 20
+            ]
+        );
         $manager->persist($review2);
 
         $review3 = new Review();
@@ -54,6 +68,13 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $review3->setStars(10);
         $review3->setUser($this->getReference("user3"));
         $review3->setBusiness($this->getReference("business3"));
+        $review3->setReactions(
+            [
+                "useful" => 2,
+                "funny" => 1,
+                "cool" => 0
+            ]
+        );
         $manager->persist($review3);
 
         $review4 = new Review();
@@ -61,6 +82,13 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $review4->setStars(2);
         $review4->setUser($this->getReference("user4"));
         $review4->setBusiness($this->getReference("business"));
+        $review4->setReactions(
+            [
+                "useful" => 0,
+                "funny" => 0,
+                "cool" => 0
+            ]
+        );
         $manager->persist($review4);
 
         $review5 = new Review();
@@ -73,6 +101,13 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $review5->setStars(6);
         $review5->setUser($this->getReference("user5"));
         $review5->setBusiness($this->getReference("business2"));
+        $review5->setReactions(
+            [
+                "useful" => 14,
+                "funny" => 5,
+                "cool" => 0
+            ]
+        );
         $manager->persist($review5);
 
         $review6 = new Review();
@@ -86,6 +121,13 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $review6->setStars(10);
         $review6->setUser($this->getReference("user6"));
         $review6->setBusiness($this->getReference("business3"));
+        $review6->setReactions(
+            [
+                "useful" => 11,
+                "funny" => 20,
+                "cool" => 8
+            ]
+        );
         $manager->persist($review6);
 
         $review7 = new Review();
@@ -98,6 +140,13 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $review7->setStars(8);
         $review7->setUser($this->getReference("user7"));
         $review7->setBusiness($this->getReference("business"));
+        $review7->setReactions(
+            [
+                "useful" => 30,
+                "funny" => 16,
+                "cool" => 14
+            ]
+        );
         $manager->persist($review7);
 
         $review8 = new Review();
@@ -114,6 +163,13 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $review8->setStars(7);
         $review8->setUser($this->getReference("user8"));
         $review8->setBusiness($this->getReference("business2"));
+        $review8->setReactions(
+            [
+                "useful" => 5,
+                "funny" => 2,
+                "cool" => 1
+            ]
+        );
         $manager->persist($review8);
 
         $manager->flush();
