@@ -1,5 +1,5 @@
-<header class="{{ cflt is defined ? 'fixed bg-zinc-100 border-b' : 'absolute' }} z-10 px-10 pt-4 w-full">
-    <div class="flex items-center {{ cflt is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
+<header class="{{ cflt is defined or business is defined ? 'bg-zinc-100 border-b' }} {{ cflt is defined ? 'fixed' : 'absolute' }} z-20 px-10 pt-4 w-full">
+    <div class="flex items-center {{ cflt is defined or business is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
         <a 
             href="/"
             class="logo text-3xl mr-8 cursor-pointer">
@@ -16,7 +16,7 @@
                 class="bg-transparent outline-none pl-2 w-[45%] mr-[12%] text-zinc-900"
                 placeholder="London"
                 value="{{ location | capitalize }}"/>
-            <div class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-700 w-14 h-full rounded-r-md cursor-pointer">
+            <div class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-600 w-14 h-full rounded-r-md cursor-pointer">
                 <i class="fa-solid fa-magnifying-glass text-2xl text-zinc-100"></i>
             </div>
         </div>
@@ -27,19 +27,19 @@
         <span class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30">
             Write a review
         </span>
-        <button class="py-2 px-4 border {{ cflt is defined ? 'border-zinc-400' : 'border-zinc-100' }} rounded-md ml-3 hover:bg-zinc-400 hover:bg-opacity-30">
+        <button class="py-2 px-4 border {{ cflt is defined or business is defined ? 'border-zinc-400' : 'border-zinc-100' }} rounded-md ml-3 hover:bg-zinc-400 hover:bg-opacity-30">
             Log In
         </button>
-        <button class="py-2 px-4 bg-red-700 text-zinc-100 rounded-md ml-3">
+        <button class="py-2 px-4 bg-red-600 text-zinc-100 rounded-md ml-3">
             Sign up
         </button>
     </div>
-    <div class="flex items-center text-sm {{ cflt is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
+    <div class="flex items-center text-sm {{ cflt is defined or business is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
         <div 
             @mouseover="show = true" 
             @mouseleave="show = false"
             x-data="{ show: false }" 
-            class="relative text-md cursor-pointer py-3 px-3 ml-[10vw] mr-2 border-b-4 border-transparent hover:border-red-700">
+            class="relative text-md cursor-pointer py-3 px-3 ml-[10vw] mr-2 border-b-4 border-transparent hover:border-red-600">
             Restaurants
             <i class="fa-solid fa-chevron-down ml-1"></i>
             <div 
@@ -105,7 +105,7 @@
             @mouseover="show = true" 
             @mouseleave="show = false"
             x-data="{ show: false }" 
-            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-700">
+            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
             Home Services
             <i class="fa-solid fa-chevron-down ml-1"></i>
             <div 
@@ -171,7 +171,7 @@
             @mouseover="show = true" 
             @mouseleave="show = false"
             x-data="{ show: false }" 
-            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-700">
+            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
             Auto Services
             <i class="fa-solid fa-chevron-down ml-1"></i>
             <div 
@@ -237,7 +237,7 @@
             @mouseover="show = true" 
             @mouseleave="show = false"
             x-data="{ show: false }" 
-            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-700">
+            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
             More
             <i class="fa-solid fa-chevron-down ml-1"></i>
             <div 

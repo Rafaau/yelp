@@ -17,6 +17,9 @@ class BusinessFixtures extends Fixture implements DependentFixtureInterface
         $business->setAddress("Unit B SP 4");
         $business->setWebsite("http://www.bleeckerburger.co.uk");
         $business->setPhoneNumber("020 7998 8650");
+        $business->setOwner("Zan K.");
+        $business->setDescription("We serve the worlds best burgers.");
+        $business->setExpensiveness(1);
         $business->setHours(
             [
                 "Mon" => "11:30 AM - 9:00 PM",
@@ -38,6 +41,7 @@ class BusinessFixtures extends Fixture implements DependentFixtureInterface
         $business2->setAddress("20 Kensington Church St");
         $business2->setWebsite("http://www.dirty-bones.com");
         $business2->setPhoneNumber("020 3019 9061");
+        $business2->setExpensiveness(1);
         $business2->setHours(
             [
                 "Mon" => "5:00 PM - 12:00 AM",
@@ -59,6 +63,8 @@ class BusinessFixtures extends Fixture implements DependentFixtureInterface
         $business3->setAddress("54 James Street");
         $business3->setWebsite("http://www.pattyandbun.co.uk");
         $business3->setPhoneNumber("020 7487 3188");
+        $business3->setDescription("The home of proper hamburgers.");
+        $business3->setExpensiveness(2);
         $business3->setHours(
             [
                 "Mon" => "12:00 AM - 11:00 PM",

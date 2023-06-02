@@ -6,6 +6,7 @@ use App\Repository\BusinessRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BusinessRepository::class)]
 class Business
@@ -38,6 +39,16 @@ class Business
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phoneNumber = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $owner = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Assert\Range(min: 1, max: 3)]
+    private ?int $expensiveness = null;
 
     public function __construct()
     {
@@ -172,6 +183,42 @@ class Business
     public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    public function getOwner(): ?string
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?string $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getExpensiveness(): ?int
+    {
+        return $this->expensiveness;
+    }
+
+    public function setExpensiveness(?int $expensiveness): self
+    {
+        $this->expensiveness = $expensiveness;
 
         return $this;
     }

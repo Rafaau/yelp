@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ReviewRepository;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +15,7 @@ class Review
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: "text", nullable: true)]
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
@@ -32,9 +33,13 @@ class Review
     #[Assert\Range(min: 1, max: 10)]
     private ?int $stars = null;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $postDate;
+
     public function __construct()
     {
         $this->images = [];
+        $this->postDate = new \DateTime();
     }
 
     public function getId(): ?int
@@ -105,6 +110,18 @@ class Review
     public function setStars(int $stars): self
     {
         $this->stars = $stars;
+
+        return $this;
+    }
+
+    public function getPostDate(): ?\DateTimeInterface
+    {
+        return $this->postDate;
+    }
+
+    public function setPostDate(\DateTimeInterface $postDate): self
+    {
+        $this->postDate = $postDate;
 
         return $this;
     }

@@ -11,11 +11,11 @@ class CategoryFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $category = new Category();
-        $category->setName("Burgers");
+        $category->setName("Restaurants");
         $manager->persist($category);
 
         $category2 = new Category();
-        $category2->setName("Restaurants");
+        $category2->setName("Burgers");
         $manager->persist($category2);
 
         $manager->flush();

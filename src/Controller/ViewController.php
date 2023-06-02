@@ -63,11 +63,50 @@ class ViewController extends AbstractController
     public function location(string $location): Response
     {
         $reviewsRepository = $this->em->getRepository(Review::class);
-        $reviews = $reviewsRepository->findAll();
+        $queryBuilder = $reviewsRepository->createQueryBuilder('r');
+
+        $reviews = $queryBuilder
+            ->select('r, b')
+            ->innerJoin('r.business', 'b')
+            ->where('b.location = :location')
+            ->setParameter('location', ucwords($location))
+            ->getQuery()
+            ->getResult();
 
         return $this->render('index.html.twig', [
             'location' => $location,
             'reviews' => $reviews,
+        ]);
+    }
+
+    #[Route('/biz/{business}-{location}', name: 'business')]
+    public function business(string $business, string $location): Response
+    {
+        $reviewsRepository = $this->em->getRepository(Review::class);
+        $businessesRepository = $this->em->getRepository(Business::class);
+
+        $queryBuilder = $reviewsRepository->createQueryBuilder('r');
+
+        $reviews = $queryBuilder
+            ->select('r, b')
+            ->innerJoin('r.business', 'b')
+            ->where('b.name = :business')
+            ->setParameter('business', ucwords($business))
+            ->getQuery()
+            ->getResult();
+
+        $business = $businessesRepository->findOneBy(['name' => ucwords($business)]);
+
+        $imageCount = 0;
+        foreach ($business->getReviews() as $review) {
+            $imageCount += count($review->getImages());
+        }
+
+        return $this->render('business/index.html.twig', [
+            'reviews' => $reviews,
+            'business' => $business,
+            'location' => $location,
+            'imageCount' => $imageCount,
         ]);
     }
 }

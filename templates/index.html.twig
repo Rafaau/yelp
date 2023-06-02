@@ -4,12 +4,17 @@
         class="h-[500px] w-full object-cover object-bottom brightness-50" 
         src="{{ asset('build/images/main_1.c44d6871.jpg') }}" 
         alt="404">
+    <span class="absolute z-10 text-zinc-100 text-5xl font-bold top-48 left-10">
+        Connect with great local businesses
+    </span>    
     <p class="text-center text-3xl font-black my-10">
         Recent Activity
     </p>
     <div class="grid grid-cols-3 gap-8 px-10 pb-10 max-w-[1300px] mx-auto">
         {% for review in reviews %}
-            <div class="w-[100%] h-96 rounded border border-zinc-300 cursor-pointer hover:shadow-md">
+            <a 
+                href="/biz/{{ review.business.name }}-{{ location }}"
+                class="w-[100%] h-96 rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <div class="flex items-center p-4">
                     <img src="{{ asset('' ~ review.user.userImage) }}" alt="404" class="w-12 h-12 rounded-full mr-2" />
                     <div>
@@ -17,7 +22,9 @@
                         <p class="text-sm">Wrote a review</p>
                     </div>
                 </div>
-                <img src="{{ asset('' ~ review.images[0]) }}" alt="404" class="w-full object-cover h-[30%] my-2" />
+                {% if review.images|length %}
+                    <img src="{{ asset('' ~ review.images[0]) }}" alt="404" class="w-full object-cover h-[30%] my-2" />
+                {% endif %}
                 <div class="px-8 py-2">
                     <p class="text-lg font-bold text-cyan-700">{{ review.business.name }}</p>
                     <div class="flex py-2">
@@ -47,7 +54,7 @@
                     </div>
                     <p class="text-sm dots">{{ review.content }}</p>
                 </div>
-            </div>
+            </a>
         {% endfor %}
     </div>
     <p class="text-center text-3xl font-black py-10 border-t">
@@ -58,110 +65,153 @@
         class="max-w-[1300px] mx-auto">
         <div class="grid grid-cols-4 gap-8 px-10 pb-10">
             <a 
-                <a href="{{ path('search', { 'cflt': 'restaurants', 'find_loc': location }) }}"
+                href="{{ path('search', { 'cflt': 'restaurants', 'find_loc': location }) }}"
                 class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <img class="m-auto" src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_design_cdn/8bc05b287157/assets/img/svg_illustrations/40x40_food_v2.svg" alt="404" />
                 Restaurants
             </a>
             <a
-                href="/search?cflt=Shopping&find_loc=London&ns=1"
+                href="{{ path('search', { 'cflt': 'shopping', 'find_loc': location }) }}"
                 class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <img class="m-auto" src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_design_cdn/488aeb87ef6e/assets/img/svg_illustrations/40x40_gift_shops_v2.svg" alt="404" />
                 Shopping
             </a>
-            <div class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
+            <a 
+                href="{{ path('search', { 'cflt': 'nightlife', 'find_loc': location }) }}"
+                class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <img class="m-auto" src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_design_cdn/1397897c21a5/assets/img/svg_illustrations/40x40_new_v2.svg" alt="404" />
                 Nightlife
-            </div>
-            <div class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'sports & leisure', 'find_loc': location }) }}"
+                class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <img class="m-auto" src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_design_cdn/0372f8e93aa9/assets/img/svg_illustrations/40x40_set_objective_v2.svg" alt="404" />
                 Sports & Leisure
-            </div>  
-            <div class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
+            </a>  
+            <a 
+                href="{{ path('search', { 'cflt': 'beauty & spas', 'find_loc': location }) }}"
+                class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <img class="m-auto" src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_design_cdn/5bd5d2648742/assets/img/svg_illustrations/40x40_barbers_v2.svg" alt="404" />
                 Beauty & Spas
-            </div>
-            <div class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
+            </a>
+            <a
+                href="{{ path('search', { 'cflt': 'car & motorcycle', 'find_loc': location }) }}" 
+                class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <img class="m-auto" src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_design_cdn/5967f38fe621/assets/img/svg_illustrations/40x40_auto_v2.svg" alt="404" />
                 Car & Motorcycle
-            </div>
-            <div class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'home services', 'find_loc': location }) }}"
+                class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <img class="m-auto" src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_design_cdn/7fc312973cf8/assets/img/svg_illustrations/40x40_home_services_v2.svg" alt="404" />
                 Home Services
-            </div>
-            <div @click="show = !show" :class="{ 'bg-zinc-200': show, 'bg-zinc-100': !show }" 
+            </a>
+            <a 
+                @click="show = !show" :class="{ 'bg-zinc-200': show, 'bg-zinc-100': !show }" 
                 class="w-[100%] py-[6vw] text-center rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <img class="m-auto" src="https://s3-media0.fl.yelpcdn.com/assets/public/40x40_more_v2.yji-961fdce2fd036f85fb01.svg" alt="404" />
                 More
-            </div>                
+            </a>                
         </div>
         <div 
             x-show="show"
-            class="grid grid-cols-4 px-10 gap-8 mb-10">
-            <span>
-                <i class="fa-solid fa-mug-hot"></i>
-                Coffee & Tea Shops
-            </span>
-            <span>
-                <i class="fa-solid fa-utensils"></i>
-                Food
-            </span>
-            <span>
-                <i class="fa-solid fa-palette"></i>
-                Arts & Entertainment
-            </span>
-            <span>
-                <i class="fa-solid fa-people-group"></i>
-                Health & Medical
-            </span>
-            <span>
-                <i class="fa-solid fa-shield-halved"></i>
-                Professional Services
-            </span>
-            <span>
-                <i class="fa-solid fa-paw"></i>
-                Pets
-            </span>
-            <span>
-                <i class="fa-solid fa-house"></i>
-                Property
-            </span>
-            <span>
-                <i class="fa-solid fa-hotel"></i>
-                Hotel & Travel
-            </span>
-            <span>
-                <i class="fa-solid fa-map-location-dot"></i>
-                Local Services
-            </span>
-            <span>
-                <i class="fa-solid fa-calendar-day"></i>
-                Event Planning
-            </span>
-            <span>
-                <i class="fa-solid fa-building"></i>
-                Government
-            </span>
-            <span>
-                <i class="fa-solid fa-chart-line"></i>
-                Financial Services
-            </span>
-            <span>
-                <i class="fa-solid fa-graduation-cap"></i>
-                Education
-            </span>
-            <span>
-                <i class="fa-solid fa-hands-praying"></i>
-                Religious Organisations
-            </span>
-            <span>
-                <i class="fa-solid fa-seedling"></i>
-                Local Flavour
-            </span>
-            <span>
-                <i class="fa-solid fa-photo-film"></i>
-                Mass media
-            </span>                                                               
+            class="grid grid-cols-4 px-10 gap-8 mb-10 text-zinc-600">
+            <a 
+                href="{{ path('search', { 'cflt': 'coffee & Tea Shops', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-mug-hot mr-1"></i>
+                <span class="hover:underline">Coffee & Tea Shops</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'food', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-utensils mr-1"></i>
+                <span class="hover:underline">Food</span>
+            </a>
+            <a
+                href="{{ path('search', { 'cflt': 'arts & Entertainment', 'find_loc': location }) }}" 
+                class="cursor-pointer">
+                <i class="fa-solid fa-palette mr-1"></i>
+                <span class="hover:underline">Arts & Entertainment</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'health & Medical', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-people-group mr-1"></i>
+                <span class="hover:underline">Health & Medical</span>
+            </a>
+            <a
+                href="{{ path('search', { 'cflt': 'professional Services', 'find_loc': location }) }}" 
+                class="cursor-pointer">
+                <i class="fa-solid fa-shield-halved mr-1"></i>
+                <span class="hover:underline">Professional Services</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'pets', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-paw mr-1"></i>
+                <span class="hover:underline">Pets</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'property', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-house mr-1"></i>
+                <span class="hover:underline">Property</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'hotel & Travel', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-hotel mr-1"></i>
+                <span class="hover:underline">Hotel & Travel</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'local Services', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-map-location-dot mr-1"></i>
+                <span class="hover:underline">Local Services</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'event Planning', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-calendar-day mr-1"></i>
+                <span class="hover:underline">Event Planning</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'government', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-building mr-1"></i>
+                <span class="hover:underline">Government</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'financial Services', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-chart-line mr-1"></i>
+                <span class="hover:underline">Financial Services</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'education', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-graduation-cap mr-1"></i>
+                <span class="hover:underline">Education</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'religious Organisations', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-hands-praying mr-1"></i>
+                <span class="hover:underline">Religious Organisations</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'local Flavour', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-seedling mr-1"></i>
+                <span class="hover:underline">Local Flavour</span>
+            </a>
+            <a 
+                href="{{ path('search', { 'cflt': 'mass Media', 'find_loc': location }) }}"
+                class="cursor-pointer">
+                <i class="fa-solid fa-photo-film mr-1"></i>
+                <span class="hover:underline">Mass Media</span>
+            </a>                                                               
         </div>
     </div>
 {% endblock %}

@@ -21,7 +21,8 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         \nBurger to enjoy !");
         $review->setImages(
             [
-                "build/images/review_1.2e79276d.jpg"
+                "build/images/review_1.2e79276d.jpg",
+                "build/images/review_4.5451221c.jpg"
             ]
         );
         $review->setStars(8);
@@ -57,11 +58,6 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
 
         $review4 = new Review();
         $review4->setContent("These guys pay for reviews. They pay dishonest people who are looking for those who will write a review, promising to pay them. And people don't get paid for reviews. They are so deceitful! In fact their service and food is disgusting. do not recommend at all!");
-        $review4->setImages(
-            [
-                "build/images/review_4.5451221c.jpg"
-            ]
-        );
         $review4->setStars(2);
         $review4->setUser($this->getReference("user4"));
         $review4->setBusiness($this->getReference("business"));
