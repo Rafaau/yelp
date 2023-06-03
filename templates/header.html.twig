@@ -1,303 +1,343 @@
 <header class="{{ cflt is defined or business is defined or user is defined ? 'bg-zinc-100 border-b' }} {{ cflt is defined ? 'fixed' : 'absolute' }} z-20 px-10 pt-4 w-full">
-    <div class="flex items-center {{ cflt is defined or business is defined or user is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
+    <div class="flex items-center {{ cflt is defined or business is defined or user is defined or location is not defined ? 'text-zinc-900' : 'text-zinc-100' }}">
         <a 
             href="/"
             class="logo text-3xl mr-8 cursor-pointer">
             whelp
         </a>
-        <div class="flex bg-white pl-3 py-3 rounded-md relative w-[40vw] shadow-md">
-            <input 
-                type="text" 
-                class="bg-transparent outline-none border-r border-zinc-300 pr-2 w-[45%]"
-                placeholder="pizza, pub, Fox & Hound"
-                value="{{ cflt is defined ? cflt | capitalize : '' }}"/>
-            <input 
-                type="text" 
-                class="bg-transparent outline-none pl-2 w-[45%] mr-[12%] text-zinc-900"
-                placeholder="London"
-                value="{{ location | capitalize }}"/>
-            <div class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-600 w-14 h-full rounded-r-md cursor-pointer">
-                <i class="fa-solid fa-magnifying-glass text-2xl text-zinc-100"></i>
+        {% if location is defined %}
+            <div class="flex bg-white pl-3 py-3 rounded-md relative w-[40vw] shadow-md">
+                <input 
+                    type="text" 
+                    class="bg-transparent outline-none border-r border-zinc-300 pr-2 w-[45%]"
+                    placeholder="pizza, pub, Fox & Hound"
+                    value="{{ cflt is defined ? cflt | capitalize : '' }}"/>
+                <input 
+                    type="text" 
+                    class="bg-transparent outline-none pl-2 w-[45%] mr-[12%] text-zinc-900"
+                    placeholder="London"
+                    value="{{ location | capitalize }}"/>
+                <div class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-600 w-14 h-full rounded-r-md cursor-pointer">
+                    <i class="fa-solid fa-magnifying-glass text-2xl text-zinc-100"></i>
+                </div>
             </div>
+            <span class="text-md cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 ml-auto">
+                Whelp for business
+                <i class="fa-solid fa-chevron-down ml-1"></i>
+            </span>
+            <span class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30">
+                Write a review
+            </span>
+            {% if app.user is not null %}
+                <a href="/messages">
+                    <i class="fa-regular fa-comment-dots text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
+                </a>
+                <a href="/notifications">
+                    <i class="fa-regular fa-bell text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
+                </a>
+                <div
+                    x-data="{ show: false }"
+                    @mouseover="show = true"
+                    @mouseleave="show = false"
+                    class="relative">
+                    <img
+                        class="rounded-full w-10 h-10 ml-4 cursor-pointer" 
+                        src="http://localhost:3000/build/images/avatar_default.19e0a8ff.jpg">
+                    <div 
+                        x-show="show"
+                        x-transition:enter="transition ease-out duration-200" 
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="absolute z-20 top-12 w-32 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
+                        <a 
+                            class="flex items-center" 
+                            href="/logout">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span class="ml-auto">Log Out</span>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <button 
+                    onclick="window.location.href='/login'"
+                    class="py-2 px-4 border {{ cflt is defined or business is defined or user is defined ? 'border-zinc-400' : 'border-zinc-100' }} rounded-md ml-3 hover:bg-zinc-400 hover:bg-opacity-30">
+                    Log In
+                </button>
+                <button
+                    onclick="window.location.href='/signup'"
+                    class="py-2 px-4 bg-red-600 text-zinc-100 rounded-md ml-3">
+                    Sign up
+                </button>
+            {% endif %}
         </div>
-        <span class="text-md cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 ml-auto">
-            Whelp for business
-            <i class="fa-solid fa-chevron-down ml-1"></i>
-        </span>
-        <span class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30">
-            Write a review
-        </span>
-        <button class="py-2 px-4 border {{ cflt is defined or business is defined or user is defined ? 'border-zinc-400' : 'border-zinc-100' }} rounded-md ml-3 hover:bg-zinc-400 hover:bg-opacity-30">
-            Log In
-        </button>
-        <button class="py-2 px-4 bg-red-600 text-zinc-100 rounded-md ml-3">
-            Sign up
-        </button>
-    </div>
-    <div class="flex items-center text-sm {{ cflt is defined or business is defined or user is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
-        <div 
-            @mouseover="show = true" 
-            @mouseleave="show = false"
-            x-data="{ show: false }" 
-            class="relative text-md cursor-pointer py-3 px-3 ml-[10vw] mr-2 border-b-4 border-transparent hover:border-red-600">
-            Restaurants
-            <i class="fa-solid fa-chevron-down ml-1"></i>
+        <div class="flex items-center text-sm {{ cflt is defined or business is defined or user is defined ? 'text-zinc-900' : 'text-zinc-100' }}">
             <div 
-                x-show="show"
-                x-transition:enter="transition ease-out duration-200" 
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition ease-in duration-100"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="absolute z-20 w-[270px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                <a 
-                    href="{{ path('search', { 'cflt': 'delivery', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-truck"></i>
-                    Delivery
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'reservations', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-calendar-day"></i>
-                    Reservations
-                </a>
-                <a
-                    href="{{ path('search', { 'cflt': 'burgers', 'find_loc': location }) }}" 
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-burger"></i>
-                    Burgers
-                </a>
-                <a
-                    href="{{ path('search', { 'cflt': 'japanese', 'find_loc': location }) }}" 
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-fish"></i>
-                    Japanese
-                </a>
-                <a
-                    href="{{ path('search', { 'cflt': 'chinese', 'find_loc': location }) }}" 
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-bowl-food"></i>
-                    Chinese
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'mexican', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-stroopwafel"></i>
-                    Mexican
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'italian', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-pizza-slice"></i>
-                    Italian
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'thai', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-shrimp"></i>
-                    Thai
-                </a>
+                @mouseover="show = true" 
+                @mouseleave="show = false"
+                x-data="{ show: false }" 
+                class="relative text-md cursor-pointer py-3 px-3 ml-[10vw] mr-2 border-b-4 border-transparent hover:border-red-600">
+                Restaurants
+                <i class="fa-solid fa-chevron-down ml-1"></i>
+                <div 
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-200" 
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="absolute z-20 w-[270px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                    <a 
+                        href="{{ path('search', { 'cflt': 'delivery', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-truck"></i>
+                        Delivery
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'reservations', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        Reservations
+                    </a>
+                    <a
+                        href="{{ path('search', { 'cflt': 'burgers', 'find_loc': location }) }}" 
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-burger"></i>
+                        Burgers
+                    </a>
+                    <a
+                        href="{{ path('search', { 'cflt': 'japanese', 'find_loc': location }) }}" 
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-fish"></i>
+                        Japanese
+                    </a>
+                    <a
+                        href="{{ path('search', { 'cflt': 'chinese', 'find_loc': location }) }}" 
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-bowl-food"></i>
+                        Chinese
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'mexican', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-stroopwafel"></i>
+                        Mexican
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'italian', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-pizza-slice"></i>
+                        Italian
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'thai', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-shrimp"></i>
+                        Thai
+                    </a>
+                </div>
             </div>
-        </div>
-        <div 
-            @mouseover="show = true" 
-            @mouseleave="show = false"
-            x-data="{ show: false }" 
-            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
-            Home Services
-            <i class="fa-solid fa-chevron-down ml-1"></i>
             <div 
-                x-show="show"
-                x-transition:enter="transition ease-out duration-200" 
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition ease-in duration-100"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                <a 
-                    href="{{ path('search', { 'cflt': 'contractors', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-hammer"></i>
-                    Contractors
-                </a>
-                <a
-                    href="{{ path('search', { 'cflt': 'landscaping', 'find_loc': location }) }}" 
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-mountain-sun"></i>
-                    Landscaping
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'electricians', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-plug"></i>
-                    Electricians
-                </a>
-                <a
-                    href="{{ path('search', { 'cflt': 'locksmiths', 'find_loc': location }) }}" 
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-unlock-keyhole"></i>
-                    Locksmiths
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'home cleaners', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-broom"></i>
-                    Home Cleaners
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'movers', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-truck-fast"></i>
-                    Movers
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'hvac', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-house-chimney-window"></i>
-                    HVAC
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'plumbers', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-faucet-drip"></i>
-                    Plumbers
-                </a>
+                @mouseover="show = true" 
+                @mouseleave="show = false"
+                x-data="{ show: false }" 
+                class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                Home Services
+                <i class="fa-solid fa-chevron-down ml-1"></i>
+                <div 
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-200" 
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                    <a 
+                        href="{{ path('search', { 'cflt': 'contractors', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-hammer"></i>
+                        Contractors
+                    </a>
+                    <a
+                        href="{{ path('search', { 'cflt': 'landscaping', 'find_loc': location }) }}" 
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-mountain-sun"></i>
+                        Landscaping
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'electricians', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-plug"></i>
+                        Electricians
+                    </a>
+                    <a
+                        href="{{ path('search', { 'cflt': 'locksmiths', 'find_loc': location }) }}" 
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-unlock-keyhole"></i>
+                        Locksmiths
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'home cleaners', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-broom"></i>
+                        Home Cleaners
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'movers', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        Movers
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'hvac', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-house-chimney-window"></i>
+                        HVAC
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'plumbers', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-faucet-drip"></i>
+                        Plumbers
+                    </a>
+                </div>
             </div>
-        </div>
-        <div 
-            @mouseover="show = true" 
-            @mouseleave="show = false"
-            x-data="{ show: false }" 
-            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
-            Auto Services
-            <i class="fa-solid fa-chevron-down ml-1"></i>
             <div 
-                x-show="show"
-                x-transition:enter="transition ease-out duration-200" 
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition ease-in duration-100"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                <a 
-                    href="{{ path('search', { 'cflt': 'auto repair', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-wrench"></i>
-                    Auto Repair
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'car dealers', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-car"></i>
-                    Car Dealers
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'auto detailing', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-car-battery"></i>
-                    Auto Detailing
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'oil change', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-oil-can"></i>
-                    Oil Change
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'body shops', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-shop"></i>
-                    Body Shops
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'parking', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-square-parking"></i>
-                    Parking
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'car wash', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-car-on"></i>
-                    Car Wash
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'towing', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-truck-ramp-box"></i>
-                    Towing
-                </a>
+                @mouseover="show = true" 
+                @mouseleave="show = false"
+                x-data="{ show: false }" 
+                class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                Auto Services
+                <i class="fa-solid fa-chevron-down ml-1"></i>
+                <div 
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-200" 
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                    <a 
+                        href="{{ path('search', { 'cflt': 'auto repair', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-wrench"></i>
+                        Auto Repair
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'car dealers', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-car"></i>
+                        Car Dealers
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'auto detailing', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-car-battery"></i>
+                        Auto Detailing
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'oil change', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-oil-can"></i>
+                        Oil Change
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'body shops', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-shop"></i>
+                        Body Shops
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'parking', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-square-parking"></i>
+                        Parking
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'car wash', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-car-on"></i>
+                        Car Wash
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'towing', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-truck-ramp-box"></i>
+                        Towing
+                    </a>
+                </div>
             </div>
-        </div>
-        <div 
-            @mouseover="show = true" 
-            @mouseleave="show = false"
-            x-data="{ show: false }" 
-            class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
-            More
-            <i class="fa-solid fa-chevron-down ml-1"></i>
             <div 
-                x-show="show"
-                x-transition:enter="transition ease-out duration-200" 
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition ease-in duration-100"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                <a 
-                    href="{{ path('search', { 'cflt': 'dry cleaning', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-socks"></i>
-                    Dry Cleaning
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'hair salons', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-spray-can-sparkles"></i>
-                    Hair Salons
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'phone repair', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                    Phone Repair
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'gyms', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-dumbbell"></i>
-                    Gyms
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'bars', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-beer-mug-empty"></i>
-                    Bars
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'massage', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-spa"></i>
-                    Massage
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'nightlife', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-martini-glass"></i>
-                    Nightlife
-                </a>
-                <a 
-                    href="{{ path('search', { 'cflt': 'shopping', 'find_loc': location }) }}"
-                    class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    Shopping
-                </a>
+                @mouseover="show = true" 
+                @mouseleave="show = false"
+                x-data="{ show: false }" 
+                class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                More
+                <i class="fa-solid fa-chevron-down ml-1"></i>
+                <div 
+                    x-show="show"
+                    x-transition:enter="transition ease-out duration-200" 
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                    <a 
+                        href="{{ path('search', { 'cflt': 'dry cleaning', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-socks"></i>
+                        Dry Cleaning
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'hair salons', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-spray-can-sparkles"></i>
+                        Hair Salons
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'phone repair', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        Phone Repair
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'gyms', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-dumbbell"></i>
+                        Gyms
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'bars', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-beer-mug-empty"></i>
+                        Bars
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'massage', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-spa"></i>
+                        Massage
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'nightlife', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-martini-glass"></i>
+                        Nightlife
+                    </a>
+                    <a 
+                        href="{{ path('search', { 'cflt': 'shopping', 'find_loc': location }) }}"
+                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        Shopping
+                    </a>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 </header>

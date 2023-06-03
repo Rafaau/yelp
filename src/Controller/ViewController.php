@@ -26,6 +26,12 @@ class ViewController extends AbstractController
         return $this->redirect('/london');
     }
 
+    // #[Route('/signup', name: 'signup' )]
+    // public function register(): Response
+    // {
+    //     return $this->render('auth/index.html.twig');
+    // }
+
     #[Route('/search', name: 'search' )]
     public function search(Request $request): Response
     {

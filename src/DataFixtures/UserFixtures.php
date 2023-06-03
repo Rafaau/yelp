@@ -12,6 +12,8 @@ class UserFixtures extends Fixture
     {
         $user = new User();
         $user->setUsername("Mary K.");
+        $user->setEmail("kmary@gmail.com");
+        $user->setPassword("password");
         $user->setUserImage("build/images/avatar_1.fe6f03b7.jpg");
         $user->setAddress("Tallahassee, United States");
         $user->setThingsILove("traveling, skiing, good company and good food!");
@@ -23,6 +25,8 @@ class UserFixtures extends Fixture
 
         $user2 = new User();
         $user2->setUsername("Allison E.");
+        $user2->setEmail("eallison@gmail.com");
+        $user2->setPassword("password");
         $user2->setUserImage("build/images/avatar_2.0a664683.jpg");
         $user2->setAddress("Santa Barbara, United States");
         $user2->setThingsILove("Playing handball, lifting, snowboarding, singing, piano, nail art, blogging, doodling, artsy farty stuff, video games, and EATING");
@@ -33,6 +37,8 @@ class UserFixtures extends Fixture
 
         $user3 = new User();
         $user3->setUsername("Morgan R.");
+        $user3->setEmail("rmorgan.com");
+        $user3->setPassword("password");
         $user3->setUserImage("build/images/avatar_3.662404f0.jpg");
         $user3->setAddress("Lincoln, United States");
         $user3->setThingsILove("food, NYC, travel in that order!");
@@ -44,6 +50,8 @@ class UserFixtures extends Fixture
 
         $user4 = new User();
         $user4->setUsername("Pedro B.");
+        $user4->setEmail("bpedro@gmail.com");
+        $user4->setPassword("password");
         $user4->setUserImage("build/images/avatar_4.553187e6.jpg");
         $user4->setAddress("Chicago, United States");
         $user4->setThingsILove("eating everything, traveling, reading and playing board games");
@@ -52,6 +60,8 @@ class UserFixtures extends Fixture
 
         $user5 = new User();
         $user5->setUsername("Ti V.");
+        $user5->setEmail("vti@gmail.com");
+        $user5->setPassword("password");
         $user5->setUserImage("build/images/avatar_5.db9d8650.jpg");
         $user5->setAddress("Baltimore, United States");
         $user5->setThingsILove("Traveling (been to 6 out of 7 continents)..and I'm always on the look out for good food.");
@@ -63,6 +73,8 @@ class UserFixtures extends Fixture
 
         $user6 = new User();
         $user6->setUsername("Pete B.");
+        $user6->setEmail("bpete@gmail.com");
+        $user6->setPassword("password");
         $user6->setUserImage("build/images/avatar_6.134f3f2f.jpg");
         $user6->setAddress("San Francisco, United States");
         $user6->setThingsILove("my family, food in general, traveling, exploring, photography, being outdoors, journal entries, cooking, etc.");
@@ -74,6 +86,8 @@ class UserFixtures extends Fixture
 
         $user7 = new User();
         $user7->setUsername("Thomas M.");
+        $user7->setEmail("mthomas@gmail.com");
+        $user7->setPassword("password");
         $user7->setUserImage("build/images/avatar_7.3e9e5bae.jpg");
         $user7->setAddress("MD, United States");
         $user7->setMyHometown("Roseville, CA");
@@ -84,6 +98,8 @@ class UserFixtures extends Fixture
 
         $user8 = new User();
         $user8->setUsername("Motty S.");
+        $user8->setEmail("smotty@gmail.com");
+        $user8->setPassword("password");
         $user8->setUserImage("build/images/avatar_8.55b0d884.jpg");
         $user8->setAddress("San Francisco Bay Area, United States");
         $user8->setThingsILove("Friends, Italy, Boston, Doodles");
@@ -94,6 +110,8 @@ class UserFixtures extends Fixture
 
         $user9 = new User();
         $user9->setUsername("Faisal S.");
+        $user9->setEmail("sfaisal@gmail.com");
+        $user9->setPassword("password");
         $user9->setUserImage("build/images/avatar_9.2222d5b9.jpg");
         $user9->setAddress("Scotts Valley, United States");
         $user9->setThingsILove("Mrs. K.");
@@ -104,6 +122,8 @@ class UserFixtures extends Fixture
 
         $user10 = new User();
         $user10->setUsername("Lauren V.");
+        $user10->setEmail("vlauren@gmail.com");
+        $user10->setPassword("password");
         $user10->setUserImage("build/images/avatar_10.257cf234.jpg");
         $user10->setAddress("Colorado Springs, United States");
         $user10->setThingsILove("Disneyworld, Dogs, New York City and the North Fork of Long Island");

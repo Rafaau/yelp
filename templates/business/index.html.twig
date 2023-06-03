@@ -91,9 +91,11 @@
         <span class="font-semibold ml-2">
             {{ openingTime }} - {{ closingTime }}
         </span>
-        <span class="bg-zinc-400 bg-opacity-30 px-2 ml-2 text-sm py-[0.125rem] rounded cursor-pointer hover:bg-opacity-50 transition-[0.5]">
+        <button
+            id="see-hours-button" 
+            class="bg-zinc-400 bg-opacity-30 px-2 ml-2 text-sm py-[0.125rem] rounded hover:bg-opacity-50 transition-[0.5]">
             See hours
-        </span>
+        </button>
     </div>
     <div class="flex max-w-[1300px] mx-auto px-10">
         <div class="py-4 pr-10 w-[65%]">
@@ -131,7 +133,9 @@
                 </button>
             </div>
             <div class="border-b border-t py-8">
-                <span class="font-black text-xl">
+                <span
+                    id="hours" 
+                    class="font-black text-xl">
                     Location & Hours
                     <div class="flex mt-6">
                         <div>
