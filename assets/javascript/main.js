@@ -142,6 +142,18 @@ try {
 } catch (error) {}
 
 try {
+    document.querySelectorAll('div.bg-zinc-200 button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            document.getElementsByClassName('logo')[0].scrollIntoView({behavior: "smooth"});
+        });
+    });
+} catch (error) {}   
+
+// ********************* //
+// ** ENDPOINTS CALLS ** //
+// ********************* //
+
+try {
     document.querySelectorAll('.reaction-btn').forEach(function(button) {
         button.addEventListener('click', function() {
             var reaction = {};
@@ -166,12 +178,22 @@ try {
 } catch (error) {}
 
 try {
-    document.querySelectorAll('div.bg-zinc-200 button').forEach(function(button) {
+    document.querySelectorAll('.delete-review-btn').forEach(function(button) {
         button.addEventListener('click', function() {
-            document.getElementsByClassName('logo')[0].scrollIntoView({behavior: "smooth"});
+
+            fetch('/reviews/delete', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: this.dataset.reviewId,
+                })
+            }).then(function(response) {
+                if (response.ok) {
+                    button.closest('.review-element').remove();
+                }
+            });
         });
     });
-} catch (error) {}    
+} catch (error) {}
 
 
 

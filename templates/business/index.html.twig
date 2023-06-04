@@ -115,10 +115,12 @@
                 {{ business.name }}
             </p>
             <div class="flex my-8">
-                <button class="bg-red-600 text-zinc-100 px-4 py-2 rounded font-semibold">
+                <a 
+                    href="{{ '/review/' ~ business.name }}"
+                    class="bg-red-600 text-zinc-100 px-4 py-2 rounded font-semibold">
                     <i class="fa-regular fa-star mr-2"></i>
                     Write a review
-                </button>
+                </a>
                 <button class="py-2 px-4 border border-zinc-400 rounded ml-2 hover:bg-zinc-400 hover:bg-opacity-30 transition-[0.5] font-semibold">
                     <i class="fa-solid fa-camera-retro mr-2"></i>
                     Add Photo
@@ -221,7 +223,7 @@
                     Recommended reviews
                 </span>
                 {% for review in business.reviews %}
-                    <div class="mt-6 mb-10">
+                    <div class="mt-6 mb-10 review-element">
                         <div class="flex">
                             {% if review.user.userImage %}
                                 <img src="{{ asset('' ~ review.user.userImage) }}" class="w-[4.5rem] h-[4.5rem] rounded-full mr-3 border" alt="404">
@@ -252,6 +254,13 @@
                                     </span>
                                 </div>
                             </div>
+                            {% if review.user.id == app.user.id %}
+                                <button
+                                    data-review-id="{{ review.id }}"
+                                    class="ml-auto delete-review-btn">
+                                    <i class="fa-solid fa-trash-can text-xl text-red-700 cursor-pointer hover:text-red-600"></i>
+                                </button>
+                            {% endif %}
                         </div>
                         <div class="flex items-center py-4">
                             {% for i in 1..5 %}

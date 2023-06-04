@@ -34,4 +34,18 @@ class ReviewController extends AbstractController
 
         return new JsonResponse(['status' => 'ok']);
     }
+
+    #[Route('/reviews/delete', name: 'review-delete' )]
+    public function delete(Request $request): Response {
+        $data = json_decode($request->getContent(), true);
+
+        $review = $this->em->getRepository(Review::class)->find($data['id']);
+
+        if ($review) {
+            $this->em->remove($review);
+            $this->em->flush();
+        }
+
+        return new JsonResponse(['status' => 'ok']);
+    }
 }
