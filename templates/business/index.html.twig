@@ -223,7 +223,11 @@
                 {% for review in business.reviews %}
                     <div class="mt-6 mb-10">
                         <div class="flex">
-                            <img src="{{ asset('' ~ review.user.userImage) }}" class="w-[4.5rem] h-[4.5rem] rounded-full mr-3 border">
+                            {% if review.user.userImage %}
+                                <img src="{{ asset('' ~ review.user.userImage) }}" class="w-[4.5rem] h-[4.5rem] rounded-full mr-3 border" alt="404">
+                            {% else %}
+                                <img src="{{ asset('/build/images/avatar_default.19e0a8ff.jpg') }}" class="w-[4.5rem] h-[4.5rem] rounded-full mr-3 border" alt="404">
+                            {% endif %}
                             <div>
                                 <a 
                                     href="{{ path('user_details', { 'userid': review.user.id, 'location': location }) }}"

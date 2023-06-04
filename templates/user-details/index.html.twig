@@ -6,10 +6,17 @@
     <div class="w-full flex justify-center">
         <div class="relative flex top-36 mb-44 px-24 max-w-[1300px]">
             <div class="min-w-[14rem]">
-                <img 
-                    src="{{ asset('' ~ user.userImage) }}" 
-                    alt="404" 
-                    class="rounded-md w-56 h-56">
+                {% if user.userImage %}
+                    <img 
+                        src="{{ asset('' ~ user.userImage) }}" 
+                        alt="404" 
+                        class="rounded-md w-56 h-56">
+                {% else %}
+                    <img 
+                        src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_styleguide/7e4e0dfd903f/assets/img/default_avatars/user_large_square.png"
+                        alt="404" 
+                        class="rounded-md w-56 h-56 border-2">
+                {% endif %}
                 <p class="my-4 font-semibold text-lg">
                     {{ user.username|split(' ')[0] }}'s Profile
                 </p>

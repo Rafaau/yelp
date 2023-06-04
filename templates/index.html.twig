@@ -16,7 +16,11 @@
                 href="/biz/{{ review.business.name }}-{{ location }}"
                 class="w-[100%] h-[27.5rem] rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <div class="flex items-center p-4">
-                    <img src="{{ asset('' ~ review.user.userImage) }}" alt="404" class="w-12 h-12 rounded-full mr-2" />
+                    {% if review.user.userImage %}
+                        <img src="{{ asset('' ~ review.user.userImage) }}" alt="404" class="w-12 h-12 rounded-full mr-2" />
+                    {% else %}
+                        <img src="{{ asset('/build/images/avatar_default.19e0a8ff.jpg') }}" alt="404" class="w-12 h-12 rounded-full mr-2 border" />
+                    {% endif %}
                     <div>
                         <p class="text-lg font-bold">{{ review.user.username }}</p>
                         <p class="text-sm">Wrote a review</p>
