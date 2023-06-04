@@ -12,9 +12,7 @@
     </p>
     <div class="grid grid-cols-3 gap-8 px-10 pb-10 max-w-[1300px] mx-auto">
         {% for review in reviews %}
-            <a 
-                href="/biz/{{ review.business.name }}-{{ location }}"
-                class="w-[100%] h-[27.5rem] rounded border border-zinc-300 cursor-pointer hover:shadow-md">
+            <div class="w-[100%] h-[27.5rem] rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <div class="flex items-center p-4">
                     {% if review.user.userImage %}
                         <img src="{{ asset('' ~ review.user.userImage) }}" alt="404" class="w-12 h-12 rounded-full mr-2" />
@@ -30,7 +28,11 @@
                     <img src="{{ asset('' ~ review.images[0]) }}" alt="404" class="w-full object-cover h-[30%] my-2" />
                 {% endif %}
                 <div class="px-8 py-2">
-                    <p class="text-lg font-bold text-cyan-700">{{ review.business.name }}</p>
+                    <a
+                        href="/biz/{{ review.business.name }}-{{ location }}" 
+                        class="text-lg font-bold text-cyan-700 hover:underline">
+                        {{ review.business.name }}
+                    </a>
                     <div class="flex py-2">
                         {% for i in 1..5 %}
                             {% set color = 
@@ -58,33 +60,10 @@
                     </div>
                     <p class="text-sm dots">{{ review.content }}</p>
                     <div class="flex space-x-2 text-zinc-500 font-semibold text-sm pt-4 mt-3 border-t">
-                        <button 
-                            class="py-1 px-2 border border-zinc-400 rounded flex items-center">
-                            <i class="fa-regular fa-lightbulb mr-2"></i>
-                            Useful
-                            <span class="font-roboto-light ml-2 text-xs">
-                                {{ review.reactions['useful'] }}
-                            </span>
-                        </button>
-                        <button 
-                            class="py-1 px-2 border border-zinc-400 rounded flex items-center">
-                            <i class="fa-regular fa-face-laugh-squint mr-2"></i>
-                            Funny
-                            <span class="font-roboto-light ml-2 text-xs">
-                                {{ review.reactions['funny'] }}
-                            </span>
-                        </button>
-                        <button 
-                            class="py-1 px-2 border border-zinc-400 rounded flex items-center">
-                            <i class="fa-regular fa-face-grin-wink mr-2"></i>
-                            Cool
-                            <span class="font-roboto-light ml-2 text-xs">
-                                {{ review.reactions['cool'] }}
-                            </span>
-                        </button>
+                        {% include '/shared/review-reactions.html.twig' %}
                     </div>
                 </div>
-            </a>
+            </div>
         {% endfor %}
     </div>
     <p class="text-center text-3xl font-black py-10 border-t">

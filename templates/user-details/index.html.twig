@@ -150,30 +150,7 @@
                                 Was this review …?
                             </p>
                             <div class="flex space-x-2 text-zinc-500 font-semibold text-sm mt-1">
-                                <button 
-                                    class="py-1 px-2 border border-zinc-400 rounded flex items-center">
-                                    <i class="fa-regular fa-lightbulb mr-2"></i>
-                                    Useful
-                                    <span class="font-roboto-light ml-2 text-xs">
-                                        {{ review.reactions['useful'] }}
-                                    </span>
-                                </button>
-                                <button 
-                                    class="py-1 px-2 border border-zinc-400 rounded flex items-center">
-                                    <i class="fa-regular fa-face-laugh-squint mr-2"></i>
-                                    Funny
-                                    <span class="font-roboto-light ml-2 text-xs">
-                                        {{ review.reactions['funny'] }}
-                                    </span>
-                                </button>
-                                <button 
-                                    class="py-1 px-2 border border-zinc-400 rounded flex items-center">
-                                    <i class="fa-regular fa-face-grin-wink mr-2"></i>
-                                    Cool
-                                    <span class="font-roboto-light ml-2 text-xs">
-                                        {{ review.reactions['cool'] }}
-                                    </span>
-                                </button>
+                                {% include '/shared/review-reactions.html.twig' %}
                             </div>
                         </div>
                     {% endfor %}
