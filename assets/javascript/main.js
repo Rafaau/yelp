@@ -77,6 +77,7 @@ try {
             svg.setAttributeNS(null, "height", "30");
             svg.setAttributeNS(null, "viewBox", "0 0 20 20");
             svg.setAttributeNS(null, "class", "mr-1 cursor-pointer");
+            svg.setAttributeNS(null, "id", `star-${i}`);
 
             var path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             path1.setAttributeNS(null, "fill", firstHalf ? color : '#BBBAC0');

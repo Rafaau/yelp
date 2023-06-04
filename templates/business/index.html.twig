@@ -49,15 +49,19 @@
         </div>
         <div class="flex items-center font-semibold my-1">
             {% if business.owner is not null %}
-                <i class="fa-solid fa-circle-check text-blue-400 mr-1 text-sm"></i>
-                <span class="text-blue-400 mr-2">
-                    Claimed
-                </span>
+                <div id="claimed-info">
+                    <i class="fa-solid fa-circle-check text-blue-400 mr-1 text-sm"></i>
+                    <span class="text-blue-400 mr-2">
+                        Claimed
+                    </span>
+                </div>
             {% else %}
-                <span class="mr-1">
-                    Unclaimed
-                </span>
-                <i class="fa-solid fa-circle-exclamation mx-2 text-sm"></i>
+                <div id="unclaimed-info">
+                    <span class="mr-1">
+                        Unclaimed
+                    </span>
+                    <i class="fa-solid fa-circle-exclamation mx-2 text-sm"></i>
+                </div>
             {% endif %}
             <span class="mr-2">•</span>           
             {% for i in 1..business.expensiveness %}

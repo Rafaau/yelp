@@ -35,10 +35,14 @@
                 Write a review
             </button>
             {% if app.user is not null %}
-                <a href="/messages">
+                <a
+                    id="messages-btn" 
+                    href="/messages">
                     <i class="fa-regular fa-comment-dots text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                 </a>
-                <a href="/notifications">
+                <a 
+                    id="notifications-btn" 
+                    href="/notifications">
                     <i class="fa-regular fa-bell text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                 </a>
                 <div
