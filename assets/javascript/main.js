@@ -28,6 +28,12 @@ try {
 } catch (error) {}
 
 try {
+    document.getElementById('login-btn').addEventListener('click', function() {
+        window.location.href = `../login`;
+    });
+} catch (error) {}
+
+try {
     document.getElementById('see-hours-button').addEventListener('click', function() {
         document.getElementById('hours').scrollIntoView({behavior: "smooth"});
     });
@@ -149,6 +155,150 @@ try {
         });
     });
 } catch (error) {}   
+
+try {
+    var select_open_1 = document.getElementById('select-open-1');
+    var select_close_1 = document.getElementById('select-close-1');
+    var select_open_2 = document.getElementById('select-open-2');
+    var select_close_2 = document.getElementById('select-close-2');
+    var select_open_3 = document.getElementById('select-open-3');
+    var select_close_3 = document.getElementById('select-close-3');
+    var select_open_4 = document.getElementById('select-open-4');
+    var select_close_4 = document.getElementById('select-close-4');
+    var select_open_5 = document.getElementById('select-open-5');
+    var select_close_5 = document.getElementById('select-close-5');
+    var select_open_6 = document.getElementById('select-open-6');
+    var select_close_6 = document.getElementById('select-close-6');
+    var select_open_7 = document.getElementById('select-open-7');
+    var select_close_7 = document.getElementById('select-close-7');
+    console.log('dupa')
+    var hiddenInput = document.getElementById('business_form__hours');
+    console.log('dupa')
+    select_open_1.onchange = function () {
+        
+        var temp = hiddenInput.value.split(',');
+        temp[0] = select_open_1.value + " - " + select_close_1.value;
+        hiddenInput.value = temp.join(',');
+        if (select_open_1.value == "Closed") {
+            select_close_1.style.display = 'none';
+            var temp = hiddenInput.value.split(',');
+            temp[0] = "0:00 AM - 0:00 AM";
+            hiddenInput.value = temp.join(',');                        
+        } else {
+            select_close_1.style.display = 'block';
+        }
+    }
+
+    select_open_2.onchange = function () {
+        var temp = hiddenInput.value.split(',');
+        temp[1] = select_open_2.value + " - " + select_close_2.value;
+        hiddenInput.value = temp.join(',');
+        if (select_open_2.value == "Closed") {
+            select_close_2.style.display = 'none';
+            var temp = hiddenInput.value.split(',');
+            temp[1] = "0:00 AM - 0:00 AM";
+            hiddenInput.value = temp.join(',');
+        } else {
+            select_close_2.style.display = 'block';
+        }
+    }
+
+    select_open_3.onchange = function () {
+        var temp = hiddenInput.value.split(',');
+        temp[2] = select_open_3.value + " - " + select_close_3.value;
+        hiddenInput.value = temp.join(',');
+        if (select_open_3.value == "Closed") {
+            select_close_3.style.display = 'none';
+            var temp = hiddenInput.value.split(',');
+            temp[2] = "0:00 AM - 0:00 AM";
+            hiddenInput.value = temp.join(',');
+        } else {
+            select_close_3.style.display = 'block';
+        }
+    }
+
+    select_open_4.onchange = function () {
+        var temp = hiddenInput.value.split(',');
+        temp[3] = select_open_4.value + " - " + select_close_4.value;
+        hiddenInput.value = temp.join(',');
+        if (select_open_4.value == "Closed") {
+            select_close_4.style.display = 'none';
+            var temp = hiddenInput.value.split(',');
+            temp[3] = "0:00 AM - 0:00 AM";
+            hiddenInput.value = temp.join(',');
+        } else {
+            select_close_4.style.display = 'block';
+        }
+    }
+
+    select_open_5.onchange = function () {
+        var temp = hiddenInput.value.split(',');
+        temp[4] = select_open_5.value + " - " + select_close_5.value;
+        hiddenInput.value = temp.join(',');
+        if (select_open_5.value == "Closed") {
+            select_close_5.style.display = 'none';
+            var temp = hiddenInput.value.split(',');
+            temp[4] = "0:00 AM - 0:00 AM";
+            hiddenInput.value = temp.join(',');
+        } else {
+            select_close_5.style.display = 'block';
+        }
+    }
+
+    select_open_6.onchange = function () {
+        var temp = hiddenInput.value.split(',');
+        temp[5] = select_open_6.value + " - " + select_close_6.value;
+        hiddenInput.value = temp.join(',');
+        if (select_open_6.value == "Closed") {
+            select_close_6.style.display = 'none';
+            var temp = hiddenInput.value.split(',');
+            temp[5] = "0:00 AM - 0:00 AM";
+            hiddenInput.value = temp.join(',');
+        } else {
+            select_close_6.style.display = 'block';
+        }
+    }
+
+    select_open_7.onchange = function () {
+        console.log(hiddenInput.value)
+        var temp = hiddenInput.value.split(',');
+        temp[6] = select_open_7.value + " - " + select_close_7.value;
+        hiddenInput.value = temp.join(',');
+        if (select_open_7.value == "Closed") {
+            select_close_7.style.display = 'none';
+            var temp = hiddenInput.value.split(',');
+            temp[6] = "0:00 AM - 0:00 AM";
+            hiddenInput.value = temp.join(',');
+        } else {
+            select_close_7.style.display = 'block';
+        }
+    }
+} catch (error) {}
+
+try {
+    window.onload = function () {
+        var select = document.getElementById('category-select');
+
+        select.onchange = function () {
+            var selected = document.querySelector('select[id="category-select"] option:checked');
+            var container = document.getElementById('category-list');
+            var newCategory = document.createElement('div');
+            newCategory.setAttribute('class', 'flex items-center bg-cyan-700 bg-opacity-[0.25] text-cyan-700 font-bold px-2 py-1 rounded-sm mr-2 mt-2 w-auto');
+            newCategory.innerHTML = select.value;
+            var closeIcon = document.createElement('i');
+            closeIcon.setAttribute('class', 'fa-solid fa-xmark ml-2 cursor-pointer ml-auto');
+            var hiddenInput = document.getElementById('business_form__categories');
+            hiddenInput.value += `${selected.parentElement.label},${select.value},`;
+            console.log(hiddenInput.value);
+            closeIcon.addEventListener('click', function() {
+                newCategory.remove();
+                hiddenInput.value = hiddenInput.value.replace(select.value + ',', '');
+            });
+            newCategory.appendChild(closeIcon);
+            container.appendChild(newCategory);
+        }
+    } 
+} catch (error) {}
 
 // ********************* //
 // ** ENDPOINTS CALLS ** //

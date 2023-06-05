@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Review;
 use App\Entity\Business;
+use App\Entity\Category;
 use App\Entity\User;
+use App\Form\BusinessFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\ReviewFormType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ViewController extends AbstractController
 {
@@ -78,6 +81,57 @@ class ViewController extends AbstractController
         return $this->render('user-details/index.html.twig', [
             'location' => $location,
             'user' => $user,
+        ]);
+    }
+
+    #[Route('/claim', name: 'claim')]
+    public function claim(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $categoryRepository = $this->em->getRepository(Category::class);
+
+        $business = new Business();
+        $form = $this->createForm(BusinessFormType::class, $business);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $business->setOwner($this->getUser()->getUserIdentifier());
+            $hours = explode(',', $form->get('_hours')->getData());
+            dump($hours[5]);
+            $business->setHours(
+                [
+                    'Mon' => $hours[0],
+                    'Tue' => $hours[1],
+                    'Wed' => $hours[2],
+                    'Thu' => $hours[3],
+                    'Fri' => $hours[4],
+                    'Sat' => $hours[5],
+                    'Sun' => $hours[6],
+                ]
+            );
+            $categories = explode(',', $form->get('_categories')->getData());
+            foreach ($categories as $categoryName) {
+                dump($categories);
+                dump($categoryName);
+                $category = $categoryRepository->findOneBy(['name' => $categoryName]);
+                if ($category) {     
+                    dump($category);
+                    $business->addCategory($category);
+                }
+            }
+            $business->setExpensiveness(1);
+
+            $entityManager->persist($business);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('business', [
+                'business' => $business->getName(),
+                'location' => $business->getLocation(),
+            ]);
+        }
+
+        return $this->render('business/create.html.twig', [
+            'view' => 'claim',
+            'businessForm' => $form->createView(),
         ]);
     }
 

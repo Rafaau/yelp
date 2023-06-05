@@ -1,3 +1,4 @@
+{% if view is not defined or view != 'claim' %}
 <div class="bg-zinc-200 px-10 py-10">
     <div class="grid grid-cols-4 max-w-[1200px] mx-auto">
         <div class="[&>button]:block [&>button]:text-zinc-500 [&>button]:py-[0.125rem]">
@@ -43,3 +44,4 @@
         </div>          
     </div>
 </div>
+{% endif %}

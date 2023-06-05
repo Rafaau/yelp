@@ -172,6 +172,120 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         );
         $manager->persist($review8);
 
+        $review9 = new Review();
+        $review9->setContent("It was rated best no 1 in the uk not sure why but so i got to try it because i saw the ads. Tried it and it was good to be honest but it was just small and not worth the price. Paying more than £10 for such a small burger that wont make you full its not worth it. Not recommended not worth to go but nonetheless the taste is good. Cheers! Hope this helps!");
+        $review9->setImages(
+            [
+                "build/images/review_9.29cb9403.jpg"
+            ]
+        );
+        $review9->setStars(6);
+        $review9->setUser($this->getReference("user9"));
+        $review9->setBusiness($this->getReference("business3"));
+        $review9->setReactions(
+            [
+                "useful" => 2,
+                "funny" => 0,
+                "cool" => 0
+            ]
+        );
+        $manager->persist($review9);
+
+        $review10 = new Review();
+        $review10->setContent("I can't quite bring myself to join the general chorus of praise for Bleecker. It may be beloved by Instagram and many London-based food writers whom I tend to trust, but for me, this place doesn't live up to the Ludwig-filtered hype.
+        \n
+        Don't get me wrong, these chaps serve up a pretty good burger. Juicy, well-seasoned, lifted by the crowd-pleasing ying-and-yang of cheese and burger sauce. But in London's ever-crowded burger space, that standard should be the minimum expectation.
+        \n
+        For me, their single-patty cheeseburger is a tad small. I know we should all be trying to reduce our consumption of red meat, but this lacked the satisfying heft of a good burger. You could, of course, double-up, but at £9.50, once you've thrown in a portion of fries and something to drink, that's pushing you over the £15 mark. Call me a miser, but that's too much for what is still just a simple street-food lunch.  
+        \n
+        My other gripe is the lack of variation on offer. I'm a firm believer in restaurants offering short menus of dishes they've mastered, but I'd still like more choices for toppings/additions than just bacon and blue-cheese.");
+        $review10->setStars(6);
+        $review10->setUser($this->getReference("user10"));
+        $review10->setBusiness($this->getReference("business"));
+        $review10->setReactions(
+            [
+                "useful" => 21,
+                "funny" => 6,
+                "cool" => 5
+            ]
+        );
+        $manager->persist($review10);
+
+        $review11 = new Review();
+        $review11->setContent("Best. Burgers. In. London. That's done.
+        \n
+        Seriously, the Patty Bun (with black pudding sandwiched inbetween tow beef patties) is the best burger there is to eat this side of the Atlantic.
+        \n
+        So, SO good.");
+        $review11->setImages(
+            [
+                "build/images/review_11.3417da81.jpg",
+                "build/images/review_10.0001d14c.jpg"
+            ]
+        );
+        $review11->setStars(10);
+        $review11->setUser($this->getReference("user6"));
+        $review11->setBusiness($this->getReference("business2"));
+        $review11->setReactions(
+            [
+                "useful" => 18,
+                "funny" => 4,
+                "cool" => 2
+            ]
+        );
+        $manager->persist($review11);
+
+        $review12 = new Review();
+        $review12->setContent("Two words : THE BEST !!!!!
+        \n
+        For a long time I considered Patty & Bun's Smokey Robinson burger as the best burger in London... but this was before I went to Bleecker St in Spitafields market.
+        The Black Burger has two layers of beef with black pudding, cheese and onions in the middle. The beef is perfectly cooked and it is tasty and juicy. The bun is very good and moist.
+        \n
+        WARNING : You should not walk passed Bleecker St. if you are on a diet as you won't resist temptation.");
+        $review12->setImages(
+            [
+                "build/images/review_12.0b293c52.jpg"
+            ]
+        );
+        $review12->setStars(10);
+        $review12->setUser($this->getReference("user5"));
+        $review12->setBusiness($this->getReference("business3"));
+        $review12->setReactions(
+            [
+                "useful" => 10,
+                "funny" => 6,
+                "cool" => 1
+            ]
+        );
+        $manager->persist($review12);
+
+        $review13 = new Review();
+        $review13->setContent("*Reviewing veg options*
+        \n
+        Oh, woe to high expectations! After hearing and reading so much about Bleecker St. burgers, I thought they might offer a decent veg burger. Sadly, this is not the case and I'm afraid I will not be back again unless the menu changes.
+        \n
+        Perhaps I should give them a little bit of credit given that they gained fame as a food truck. And OK, I know it's a struggle for burger places to get the right balance of street accessibility and flavour when it comes to a non-meat patty, but, come on, be a bit more adventurous. Two crisp tofu squares garnished with a weak piece of lettuce and squirted with some hot sauce I could buy in any shop is a tad disappointing. And at £6!! Eep. There are other places that actually take lentils or beans or mushrooms and cook something for a fiver. And I hate mushrooms...
+        \n
+        The three stars is for the tofu being good quality and the fries being tasty enough. The sweet potato fries are nice and absolutely satisfied my craving for them, but they were a little too moist for me and way too expensive (£4). We also tried the regular fries, which were quite nice, but doesn't blow my mind away enough to bring me back.
+        \n
+        I understand that vege-/pescetarians are just not a priority market for burger joints, but there are times I crave a comforting, hearty veg burger and give some a try. Sadly, though I would have loved to give this stand my support, I won't be back for the tofu burger again.");
+        $review13->setImages(
+            [
+                "build/images/review_13.fa33b016.jpg"
+            ]
+        );
+        $review13->setStars(7);
+        $review13->setUser($this->getReference("user8"));
+        $review13->setBusiness($this->getReference("business"));
+        $review13->setReactions(
+            [
+                "useful" => 4,
+                "funny" => 0,
+                "cool" => 1
+            ]
+        );
+        $manager->persist($review13);
+
         $manager->flush();
 
         $this->addReference("review", $review);
@@ -182,6 +296,11 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $this->addReference("review6", $review6);
         $this->addReference("review7", $review7);
         $this->addReference("review8", $review8);
+        $this->addReference("review9", $review9);
+        $this->addReference("review10", $review10);
+        $this->addReference("review11", $review11);
+        $this->addReference("review12", $review12);
+        $this->addReference("review13", $review13);
     }
 
     public function getDependencies(): array
