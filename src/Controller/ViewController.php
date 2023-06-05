@@ -147,6 +147,7 @@ class ViewController extends AbstractController
             ->where('b.location = :location')
             ->setParameter('location', ucwords($location))
             ->orderBy('r.id', 'DESC')
+            ->setMaxResults(9)
             ->getQuery()
             ->getResult();
 

@@ -48,4 +48,31 @@ class ReviewController extends AbstractController
 
         return new JsonResponse(['status' => 'ok']);
     }
+
+    #[Route('/reviews/{location}/{page}', name: 'review-load' )]
+    public function getReviews($location, $page = 1, $limit = 9): Response {
+        $reviewsRepository = $this->em->getRepository(Review::class);
+        $queryBuilder = $reviewsRepository->createQueryBuilder('r');
+
+        $reviews = $queryBuilder
+            ->select('r, b')
+            ->innerJoin('r.business', 'b')
+            ->where('b.location = :location')
+            ->setParameter('location', ucwords($location))
+            ->orderBy('r.id', 'DESC')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        $reviewsData = [];
+        foreach ($reviews as $review) {
+            $reviewsData[] = [
+                'id' => $review->getId(),
+                'content' => $review->getContent(),
+            ];
+        }
+        
+        return new JsonResponse(['reviews' => $reviewsData]);            
+    }
 }
