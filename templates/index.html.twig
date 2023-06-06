@@ -20,7 +20,11 @@
                         <img src="{{ asset('/build/images/avatar_default.19e0a8ff.jpg') }}" alt="404" class="w-12 h-12 rounded-full mr-2 border" />
                     {% endif %}
                     <div>
-                        <p class="text-lg font-bold">{{ review.user.username }}</p>
+                        <a
+                            href="{{ path('user_details', { 'userid': review.user.id, 'location': location }) }}" 
+                            class="text-lg font-bold hover:underline">
+                            {{ review.user.username }}
+                        </a>
                         <p class="text-sm">Wrote a review</p>
                     </div>
                 </div>
