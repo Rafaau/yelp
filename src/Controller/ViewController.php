@@ -6,6 +6,7 @@ use App\Entity\Review;
 use App\Entity\Business;
 use App\Entity\Category;
 use App\Entity\User;
+use App\Entity\Message;
 use App\Form\BusinessFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -81,6 +82,60 @@ class ViewController extends AbstractController
         return $this->render('user-details/index.html.twig', [
             'location' => $location,
             'user' => $user,
+        ]);
+    }
+
+    #[Route('/messaging', name: 'messaging')]
+    public function messaging() 
+    {
+        $messageRepository = $this->em->getRepository(Message::class);
+
+        $conversations = $messageRepository->createQueryBuilder('m')
+            ->select('m, u')
+            ->innerJoin('m.sender', 'u')
+            ->where('m.receiver = :user')
+            ->orWhere('m.sender = :user')
+            ->groupBy('u.id')
+            ->orderBy('m.id', 'DESC')
+            ->setParameter('user', $this->getUser())
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('messaging/index.html.twig', [
+            'view' => 'messaging',
+            'conversations' => $conversations,
+        ]);
+    }
+
+    #[Route('/messaging/{senderId}-{receiverId}', name: 'conversation')]
+    public function conversation($senderId, $receiverId) 
+    {
+        $receiver = $this->em->getRepository(User::class)->findOneBy(['id' => $receiverId]);
+        $sender = $this->em->getRepository(User::class)->findOneBy(['id' => $senderId]);
+
+        $messageRepository = $this->em->getRepository(Message::class);
+
+        $messagesFromSender = $messageRepository->findBy(
+            ['sender' => $sender, 'receiver' => $receiver],
+            ['id' => 'DESC'],
+            10
+        );
+        
+        $messagesFromReceiver = $messageRepository->findBy(
+            ['sender' => $receiver, 'receiver' => $sender],
+            ['id' => 'DESC'],
+            10
+        );
+        
+        $messages = array_merge($messagesFromSender, $messagesFromReceiver);
+        usort($messages, function ($a, $b) {
+            return $a->getId() - $b->getId();
+        });
+        
+        return $this->render('messaging/conversation.html.twig', [
+            'view' => 'messaging',
+            'messages' => $messages,
+            'receiver' => $receiver,
         ]);
     }
 

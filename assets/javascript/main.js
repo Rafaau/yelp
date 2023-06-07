@@ -367,6 +367,58 @@ try {
     }
 } catch (error) {}
 
+try {
+    window.onload = function () {
+        var input = document.getElementById('message-input');
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+               sendMessage(input);
+            }
+        })
+
+        var button = document.getElementById('send-message-btn');
+        button.addEventListener('click', function() {
+            sendMessage(input);
+        })
+    }
+} catch (error) {}
+
+function sendMessage(input) {
+    var receiverId = document.getElementById('receiver-id').innerText;
+    var lastSender = document.getElementById('last-sender').innerText;
+    fetch('/messages/post', {
+        method: 'POST',
+        body: JSON.stringify({
+            receiverId: Number(receiverId),
+            content: input.value
+        })
+    }).then(function(response) {
+        if (response.ok) {
+            response.json().then(data => {
+                var today = new Date().toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
+                var html = `
+                    <div class="flex space-x-3">
+                        ${lastSender == 1 ? '<div class="w-12"></div>' : 
+                            '<img src="/build/images/avatar_default.19e0a8ff.jpg" class="rounded-full w-10 h-10 border mt-3">'
+                        }               
+                        <div class="w-full">                   
+                            ${lastSender == 1 ? '' : `
+                                <p class="font-semibold text-sm flex items-center mt-3">
+                                    ${data.sender}
+                                    <span class="ml-auto text-xs font-roboto-light text-zinc-500">${today}</span>
+                                </p>
+                            `}
+                            <p class="font-roboto-light text-sm">${input.value}</p>
+                        </div>
+                    </div>
+                `
+                document.getElementById('messages-container').innerHTML += html;
+                document.getElementById('last-sender').innerHTML = '1';
+                input.value = '';
+            })
+        }
+    })
+}
 
 
 

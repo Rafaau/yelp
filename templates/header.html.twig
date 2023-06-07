@@ -55,7 +55,7 @@
             {% if app.user is not null %}
                 <a
                     id="messages-btn" 
-                    href="/messages">
+                    href="/messaging">
                     <i class="fa-regular fa-comment-dots text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                 </a>
                 <div 
@@ -109,7 +109,7 @@
                     class="relative">
                     <img
                         class="rounded-full w-10 h-10 ml-4 cursor-pointer" 
-                        src="http://localhost:3000/build/images/avatar_default.19e0a8ff.jpg">
+                        src="{{ asset('build/images/avatar_default.19e0a8ff.jpg') }}">
                     <div 
                         x-show="show"
                         x-transition:enter="transition ease-out duration-200" 
