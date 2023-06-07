@@ -9,3 +9,4 @@
 import './styles/app.css';
 import './javascript/main.js';
 import './javascript/tooltips.js';
+import './javascript/endpoint-calls.js';

@@ -4,7 +4,16 @@ tippy('#messages-btn', {
 
 tippy('#notifications-btn', {
     content: 'Notifications',
+    zIndex: 9,
 });
+
+try {
+    var username = document.getElementById('user-panel').getAttribute('name');
+    tippy('#user-panel', {
+        content: username,
+        zIndex: 9,
+    });
+} catch (error) {}
 
 tippy('#star-1', {
     content: 'Not good',

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UserController extends AbstractController
+class NotificationController extends AbstractController
 {
     private $em;
 
@@ -20,21 +20,15 @@ class UserController extends AbstractController
         $this->em = $em;
     }
 
-    #[Route('/users/add-friend', name: 'add-friend' )]
+    #[Route('/notifications/mark-as-read', name: 'mark-as-read' )]
     public function update(Request $request): Response {
-        $data = json_decode($request->getContent(), true);
-
         $user = $this->em->getRepository(User::class)->findOneBy(['username' => $this->getUser()->getUserIdentifier()]);
 
         if ($user) {
-            $friendToAdd = $this->em->getRepository(User::class)->find($data['id']);
-            $user->addFriend($friendToAdd);
-
-            $notification = new Notification();
-            $notification->setTitle('New friend request');
-            $notification->setMessage($user->getUsername() . ' wants to be your friend!');
-            $notification->setUser($friendToAdd);
-            $this->em->persist($notification);
+            $unreadNotifications = $user->getUnreadNotifications();
+            foreach ($unreadNotifications as $notification) {
+                $notification->setIsRead(true);
+            }
 
             $this->em->flush();
         }
