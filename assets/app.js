@@ -10,3 +10,13 @@ import './styles/app.css';
 import './javascript/main.js';
 import './javascript/tooltips.js';
 import './javascript/endpoint-calls.js';
+import Globals from './javascript/components/Globals.svelte';
+import Header from './javascript/components/layout/Header.svelte';
+
+new Globals({
+    target: document.getElementById('globals-target')
+})
+
+new Header({
+    target: document.getElementById('header-target')
+})
