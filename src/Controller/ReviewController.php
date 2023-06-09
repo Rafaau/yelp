@@ -55,8 +55,9 @@ class ReviewController extends AbstractController
         $queryBuilder = $reviewsRepository->createQueryBuilder('r');
 
         $reviews = $queryBuilder
-            ->select('r, b')
+            ->select('r, b, u')
             ->innerJoin('r.business', 'b')
+            ->innerJoin('r.user', 'u')
             ->where('b.location = :location')
             ->setParameter('location', ucwords($location))
             ->orderBy('r.id', 'DESC')
@@ -64,12 +65,21 @@ class ReviewController extends AbstractController
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
-
+    
         $reviewsData = [];
         foreach ($reviews as $review) {
             $reviewsData[] = [
                 'id' => $review->getId(),
                 'content' => $review->getContent(),
+                'stars' => $review->getStars(),
+                'reactions' => $review->getReactions(),
+                'images' => $review->getImages(),
+                'user' => array(
+                    'username' => $review->getUser()->getUsername(),
+                ),
+                'business' => array(
+                    'name' => $review->getBusiness()->getName(),
+                ),
             ];
         }
         

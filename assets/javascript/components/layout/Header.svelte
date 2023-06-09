@@ -1,5 +1,7 @@
-<script>
+<script lang="ts">
     import { user } from '../../store.js';
+    import {clickOutside} from '../../libs/clickOutside.js';
+    import Categories from './Categories.svelte';
 
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -7,18 +9,34 @@
 
     let currentURL = new URL(window.location.href);
     let cflt = currentURL.searchParams.get('cflt');
+    let homeLoc = currentURL.pathname.split('/').length == 2 ? currentURL.pathname.split('/')[1] : null; 
     let findLoc = currentURL.searchParams.get('find_loc');
     let findDesc = currentURL.searchParams.get('find_desc');
     let business = currentURL.pathname.includes('biz');
 
     console.log(cflt, findLoc, findDesc, business)
+
     let blankView = findLoc != null && findDesc != null;
     let transparentView = cflt == null || findLoc == null;
     let whiteView = cflt != null || findLoc != null;
     let fixed = cflt != null && findDesc == null;
     let padding = findDesc != null || (cflt == null && business != null);
 
+    let dropdown = {
+        'Restaurants': false,
+        'Home Services': false,
+        'Auto Services': false,
+        'More': false,
+        'Business': false,
+        'Notifications': false,
+        'User': false
+    }
+
     $: console.log($user);
+
+    function redirect(path: string) {
+        window.location.href = path;
+    }
 </script>
 
 <header class="{ whiteView ? 'bg-zinc-100 border-b': '' } { fixed ? 'fixed' : 'absolute' } z-20 px-10 pt-4 w-full { padding ? 'pb-4' : '' }">
@@ -41,7 +59,7 @@
                     type="text" 
                     class="bg-transparent outline-none pl-2 w-[45%] mr-[12%] text-zinc-900"
                     placeholder="London"
-                    value="{ capitalize(findLoc) }"/>
+                    value="{ homeLoc != null ? capitalize(homeLoc) : '' }"/>
                 <div 
                     id="search-btn"
                     class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-600 w-14 h-full rounded-r-md cursor-pointer">
@@ -49,29 +67,27 @@
                 </div>
             </div>
             <span
-                x-data=""
+                on:click={() => dropdown['Business'] = !dropdown['Business']}
+                on:keydown={null}
+                use:clickOutside
+                on:click_outside={() => dropdown['Business'] = false}           
                 class="relative text-md cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 ml-auto">
                 Whelp for business
                 <i class="fa-solid fa-chevron-down ml-1"></i>
-                <div 
-                    x-show="show"
-                    x-transition:enter="transition ease-out duration-200" 
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-100"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    x-on:click.stop.outside="show = false"
-                    class="absolute z-20 top-12 w-48 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
-                    <a 
-                        class="flex items-center hover:bg-zinc-200 rounded p-1" 
-                        href="{ user != null ? '/claim' : '/login'}">
-                        <i class="fa-solid fa-store"></i>
-                        <span class="ml-2">Add a Business</span>
-                    </a>
-                </div>
+                {#if dropdown['Business']}
+                    <div class="absolute z-20 top-12 w-48 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
+                        <a 
+                            class="flex items-center hover:bg-zinc-200 rounded p-1" 
+                            href="{ user != null ? '/claim' : '/login'}">
+                            <i class="fa-solid fa-store"></i>
+                            <span class="ml-2">Add a Business</span>
+                        </a>
+                    </div>
+                {/if}
             </span>
-            <a class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 { user != null ? 'write-review-btn' : 'login-btn' }">
+            <a 
+                class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 { user != null ? 'write-review-btn' : 'login-btn' }"
+                href={ user != null ? `../search?cflt=&find_desc=writereview&find_loc=${homeLoc}` : '/login'}>
                 Write a review
             </a>
             {#if user != null }
@@ -80,9 +96,12 @@
                     href="/messaging">
                     <i class="fa-regular fa-comment-dots text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                 </a>
-                <div 
-                    id="notifications-btn"
-                    x-data=""
+                <div
+                    on:click={() => dropdown['Notifications'] = !dropdown['Notifications']}
+                    on:keydown={null}
+                    use:clickOutside
+                    on:click_outside={() => dropdown['Notifications'] = false}      
+                    id="notifications-btn"                   
                     class="relative">
                     <i class="fa-regular fa-bell text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                     {#if $user != null && $user.unreadNotifications.length > 0 }
@@ -92,332 +111,122 @@
                             { $user.unreadNotifications.length }
                         </span>
                     {/if}
-                    <div 
-                        x-show="show"
-                        x-transition:enter="transition ease-out duration-200" 
-                        x-transition:enter-start="opacity-0"
-                        x-transition:enter-end="opacity-100"
-                        x-transition:leave="transition ease-in duration-100"
-                        x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0"
-                        x-on:click.stop.outside="show = false"
-                        class="absolute z-20 top-12 w-64 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
-                        {#if $user != null && $user.notifications.length > 0}
-                            <!-- {% set notifications = app.user.notifications.toArray()|sort|reverse %} -->
-                            {#each $user.notifications as notification }
-                                <div class="my-2">
-                                    <div class="font-semibold flex items-center">
-                                        { notification.title }
-                                        {#if !notification.isRead }
-                                            <span class="bg-red-600 px-2 py-1 text-zinc-100 font-semibold ml-auto rounded text-sm">New</span>
-                                        {/if}
+                    {#if dropdown['Notifications']}
+                        <div 
+                            class="absolute z-20 top-12 w-64 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
+                            {#if $user != null && $user.notifications.length > 0}
+                                <!-- {% set notifications = app.user.notifications.toArray()|sort|reverse %} -->
+                                {#each $user.notifications as notification }
+                                    <div class="my-2">
+                                        <div class="font-semibold flex items-center">
+                                            { notification.title }
+                                            {#if !notification.isRead }
+                                                <span class="bg-red-600 px-2 py-1 text-zinc-100 font-semibold ml-auto rounded text-sm">New</span>
+                                            {/if}
+                                        </div>
+                                        <p class="text-sm">
+                                            { notification.message }
+                                        </p>
                                     </div>
-                                    <p class="text-sm">
-                                        { notification.message }
-                                    </p>
-                                </div>
-                            {/each}
-                        {:else }
-                            <span class="text-center">No notifications</span>
-                        {/if}
-                    </div>
+                                {/each}
+                            {:else }
+                                <span class="text-center">No notifications</span>
+                            {/if}
+                        </div>
+                    {/if}
                 </div>
                 <div
+                    on:click={() => dropdown['User'] = !dropdown['User']}
+                    on:keydown={null}
+                    use:clickOutside
+                    on:click_outside={() => dropdown['User'] = false}     
                     id="user-panel"
-                    name="{ user.username }"
-                    x-data=""
                     class="relative">
                     <img
                         class="rounded-full w-10 h-10 ml-4 cursor-pointer" 
-                        src="build/images/avatar_default.19e0a8ff.jpg">
-                    <div 
-                        x-show="show"
-                        x-transition:enter="transition ease-out duration-200" 
-                        x-transition:enter-start="opacity-0"
-                        x-transition:enter-end="opacity-100"
-                        x-transition:leave="transition ease-in duration-100"
-                        x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0"
-                        x-on:click.stop.outside="show = false"
-                        class="absolute z-20 top-12 w-40 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
-                        <a 
-                            class="flex items-center hover:bg-zinc-200 rounded p-1" 
-                            href="/logout">
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                            <span class="ml-2">Log Out</span>
-                        </a>
-                    </div>
+                        src="build/images/avatar_default.19e0a8ff.jpg"
+                        alt="404">
+                    {#if dropdown['User']}
+                        <div class="absolute z-20 top-12 w-40 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
+                            <a 
+                                class="flex items-center hover:bg-zinc-200 rounded p-1" 
+                                href="/logout">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                <span class="ml-2">Log Out</span>
+                            </a>
+                        </div>
+                    {/if}
                 </div>
             {:else}
                 <button 
-                    onclick="window.location.href='/login'"
+                    on:click={() => redirect('/login')}
                     class="py-2 px-4 border { whiteView ? 'border-zinc-400' : 'border-zinc-100' } rounded-md ml-3 hover:bg-zinc-400 hover:bg-opacity-30">
                     Log In
                 </button>
                 <button
-                    onclick="window.location.href='/signup'"
+                    on:click={() => redirect('/signup')}
                     class="py-2 px-4 bg-red-600 text-zinc-100 rounded-md ml-3">
                     Sign up
                 </button>
             {/if}
+            {/if}
+        </div>
         <div class="flex items-center text-sm { whiteView ? 'text-zinc-900' : 'text-zinc-100' }">
             <div 
-                x-data="" 
+                on:mouseover={() => dropdown['Restaurants'] = true}
+                on:focus={() => dropdown['Restaurants'] = true}
+                on:blur={() => dropdown['Restaurants'] = false}
+                on:mouseleave={() => dropdown['Restaurants'] = false}
                 class="relative text-md cursor-pointer py-3 px-3 ml-[10vw] mr-2 border-b-4 border-transparent hover:border-red-600">
                 Restaurants
                 <i class="fa-solid fa-chevron-down ml-1"></i>
-                <div 
-                    x-show="show"
-                    x-transition:enter="transition ease-out duration-200" 
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-100"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="absolute z-20 w-[270px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-truck"></i>
-                        Delivery
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-calendar-day"></i>
-                        Reservations
-                    </a>
-                    <a
-                        href="" 
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-burger"></i>
-                        Burgers
-                    </a>
-                    <a
-                        href="" 
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-fish"></i>
-                        Japanese
-                    </a>
-                    <a
-                        href="" 
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-bowl-food"></i>
-                        Chinese
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-stroopwafel"></i>
-                        Mexican
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-pizza-slice"></i>
-                        Italian
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-shrimp"></i>
-                        Thai
-                    </a>
-                </div>
+                {#if dropdown['Restaurants']}
+                    <div class="absolute z-20 w-[270px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                        <Categories label="Restaurants" findLoc={homeLoc}/>
+                    </div>
+                {/if}
             </div>
             <div 
-                x-data="" 
+                on:mouseover={() => dropdown['Home Services'] = true}
+                on:focus={() => dropdown['Home Services'] = true}
+                on:blur={() => dropdown['Home Services'] = false}
+                on:mouseleave={() => dropdown['Home Services'] = false}
                 class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
                 Home Services
                 <i class="fa-solid fa-chevron-down ml-1"></i>
-                <div 
-                    x-show="show"
-                    x-transition:enter="transition ease-out duration-200" 
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-100"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-hammer"></i>
-                        Contractors
-                    </a>
-                    <a
-                        href="" 
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-mountain-sun"></i>
-                        Landscaping
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-plug"></i>
-                        Electricians
-                    </a>
-                    <a
-                        href="" 
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-unlock-keyhole"></i>
-                        Locksmiths
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-broom"></i>
-                        Home Cleaners
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-truck-fast"></i>
-                        Movers
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-house-chimney-window"></i>
-                        HVAC
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-faucet-drip"></i>
-                        Plumbers
-                    </a>
-                </div>
+                {#if dropdown['Home Services']}
+                    <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                        <Categories label="Home Services" findLoc={homeLoc}/>
+                    </div>
+                {/if}
             </div>
             <div 
-                x-data="" 
+                on:mouseover={() => dropdown['Auto Services'] = true}
+                on:focus={() => dropdown['Auto Services'] = true}
+                on:blur={() => dropdown['Auto Services'] = false}
+                on:mouseleave={() => dropdown['Auto Services'] = false} 
                 class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
                 Auto Services
                 <i class="fa-solid fa-chevron-down ml-1"></i>
-                <div 
-                    x-show="show"
-                    x-transition:enter="transition ease-out duration-200" 
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-100"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-wrench"></i>
-                        Auto Repair
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-car"></i>
-                        Car Dealers
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-car-battery"></i>
-                        Auto Detailing
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-oil-can"></i>
-                        Oil Change
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-shop"></i>
-                        Body Shops
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-square-parking"></i>
-                        Parking
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-car-on"></i>
-                        Car Wash
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-truck-ramp-box"></i>
-                        Towing
-                    </a>
-                </div>
+                {#if dropdown['Auto Services']}
+                    <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                        <Categories label="Auto Services" findLoc={homeLoc}/>
+                    </div>
+                {/if}
             </div>
             <div 
-                x-data="" 
+                on:mouseover={() => dropdown['More'] = true}
+                on:focus={() => dropdown['More'] = true}
+                on:blur={() => dropdown['More'] = false}
+                on:mouseleave={() => dropdown['More'] = false} 
                 class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
                 More
                 <i class="fa-solid fa-chevron-down ml-1"></i>
-                <div 
-                    x-show="show"
-                    x-transition:enter="transition ease-out duration-200" 
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-100"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-socks"></i>
-                        Dry Cleaning
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-spray-can-sparkles"></i>
-                        Hair Salons
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-mobile-screen-button"></i>
-                        Phone Repair
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-dumbbell"></i>
-                        Gyms
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-beer-mug-empty"></i>
-                        Bars
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-spa"></i>
-                        Massage
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-martini-glass"></i>
-                        Nightlife
-                    </a>
-                    <a 
-                        href=""
-                        class="rounded-md py-1 px-2 hover:bg-zinc-200">
-                        <i class="fa-solid fa-bag-shopping"></i>
-                        Shopping
-                    </a>
-                </div>
+                {#if dropdown['More']}
+                    <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                        <Categories label="More" findLoc={homeLoc}/>
+                    </div>
+                {/if}
             </div>
         </div>
-        {/if}
-    </div>
 </header>

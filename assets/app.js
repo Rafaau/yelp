@@ -12,6 +12,8 @@ import './javascript/tooltips.js';
 import './javascript/endpoint-calls.js';
 import Globals from './javascript/components/Globals.svelte';
 import Header from './javascript/components/layout/Header.svelte';
+import Footer from './javascript/components/layout/Footer.svelte';
+import Homepage from './javascript/components/home/Homepage.svelte';
 
 new Globals({
     target: document.getElementById('globals-target')
@@ -20,3 +22,14 @@ new Globals({
 new Header({
     target: document.getElementById('header-target')
 })
+
+new Footer({
+    target: document.getElementById('footer-target')
+})
+
+new Homepage({
+    target: document.getElementById('homepage-target')
+})
+
+
+

@@ -2,6 +2,7 @@ const Encore = require('@symfony/webpack-encore');
 require('dotenv').config({ path: './.env' });
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const path = require('path');
+const sveltePreprocess = require('svelte-preprocess');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -138,9 +139,39 @@ config.resolve = {
     alias: {
         svelte: path.resolve('node_modules', 'svelte'),
     },
-    extensions: ['.mjs', '.js', '.svelte'],
+    extensions: ['.mjs', '.js', '.svelte', '.ts'],
     mainFields: ['svelte', 'browser', 'module', 'main'],
-    conditionNames: ['svelte']
+    conditionNames: ['svelte'],   
+}
+
+config.module = {
+    rules: [
+        {
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            loader: "ts-loader"
+        },
+        {
+            test: /\.svelte$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'svelte-loader',
+                options: {
+                    emitCss: true,
+                    hotReload: true,
+                    preprocess: sveltePreprocess({ sourceMap: !Encore.isProduction() })
+                },
+            },
+        }, 
+        {
+            test: /\.css$/,
+            use: [
+                'style-loader',
+                'css-loader',
+                'postcss-loader',
+            ],
+        },
+    ]
 }
 
 module.exports = config;
