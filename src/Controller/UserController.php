@@ -23,21 +23,91 @@ class UserController extends AbstractController
         $this->security = $security;
     }
 
-    #[Route('/users/currentUser', name: 'currentUser' )]
+    #[Route('/users/currentUser', name: 'current-user' )]
     public function getCurrentUser(): Response {
         $user = $this->security->getUser();
 
         if ($user instanceof \App\Entity\User) {
+
+            $friendsData = [];
+            foreach ($user->getFriends() as $friend) {
+                $friendsData[] = [
+                    'id' => $friend->getId(),
+                    'username' => $friend->getUsername(),
+                ];
+            }
+
             return new JsonResponse(['user' => [
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
                 'roles' => $user->getRoles(),
-                'friends' => $user->getFriends(),
+                'friends' => $friendsData,
                 'unreadNotifications' => [],
                 'notifications' => [],
             ]]);
         }
+    }
+
+    #[Route('/users/{userId}', name: 'get-user' )]
+    public function getUserDetails($userId): Response {
+        $user = $this->em->getRepository(User::class)->find($userId);
+
+        $reviewsData = [];
+        foreach ($user->getReviews() as $review) {
+            $businessReviews = [];
+            foreach ($review->getBusiness()->getReviews() as $businessReview) {
+                $businessReviews[] = [
+                    'images' => $businessReview->getImages(),
+                ];
+            }
+
+            $businessCategories = [];
+            foreach ($review->getBusiness()->getCategories() as $businessCategory) {
+                $businessCategories[] = [
+                    'name' => $businessCategory->getName(),
+                ];
+            }
+
+            $reviewsData[] = [
+                'id' => $review->getId(),
+                'business' => array(
+                    'id' => $review->getBusiness()->getId(),
+                    'name' => $review->getBusiness()->getName(),
+                    'categories' => $businessCategories,
+                    'reviews' => $businessReviews,
+                    'location' => $review->getBusiness()->getLocation(),
+                    'address' => $review->getBusiness()->getAddress(),
+                ),
+                'user' => $review->getUser(),
+                'stars' => $review->getStars(),
+                'content' => $review->getContent(),
+                'reactions' => $review->getReactions(),
+                'postDate' => $review->getPostDate(),
+            ];
+        }
+
+        $friendsData = [];
+        foreach ($user->getFriends() as $friend) {
+            $friendsData[] = [
+                'id' => $friend->getId(),
+                'username' => $friend->getUsername(),
+            ];
+        }
+
+        return new JsonResponse(['user' => [
+            'id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+            'roles' => $user->getRoles(),
+            'friends' => $friendsData,
+            'address' => $user->getAddress(),
+            'userImage' => $user->getUserImage(),
+            'memberSince' => $user->getMemberSince(),
+            'unreadNotifications' => [],
+            'notifications' => [],
+            'reviews' => $reviewsData,
+        ]]);
     }
 
     #[Route('/users/add-friend', name: 'add-friend' )]

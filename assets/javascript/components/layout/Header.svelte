@@ -1,26 +1,29 @@
 <script lang="ts">
-    import { user } from '../../store.js';
+    import { currentUser } from '../../store.js';
     import {clickOutside} from '../../libs/clickOutside.js';
     import Categories from './Categories.svelte';
 
     function capitalize(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+        return string ? string.charAt(0).toUpperCase() + string.slice(1) : null;
     }
 
     let currentURL = new URL(window.location.href);
-    let cflt = currentURL.searchParams.get('cflt');
-    let homeLoc = currentURL.pathname.split('/').length == 2 ? currentURL.pathname.split('/')[1] : null; 
-    let findLoc = currentURL.searchParams.get('find_loc');
+    let cflt = capitalize(currentURL.searchParams.get('cflt'));
+    let homeLoc = capitalize(currentURL.pathname.split('/')[1]);
+    let findLoc = capitalize(currentURL.searchParams.get('find_loc'));
     let findDesc = currentURL.searchParams.get('find_desc');
     let business = currentURL.pathname.includes('biz');
+    let user = currentURL.pathname.includes('user_details');
+
+    let findLocInput = findLoc || homeLoc;
 
     console.log(cflt, findLoc, findDesc, business)
 
     let blankView = findLoc != null && findDesc != null;
     let transparentView = cflt == null || findLoc == null;
-    let whiteView = cflt != null || findLoc != null;
+    let whiteView = cflt != null || findLoc != null || business || user;
     let fixed = cflt != null && findDesc == null;
-    let padding = findDesc != null || (cflt == null && business != null);
+    let padding = findDesc != null || (cflt == null && business);
 
     let dropdown = {
         'Restaurants': false,
@@ -32,9 +35,10 @@
         'User': false
     }
 
-    $: console.log($user);
+    $: console.log($currentUser);
 
     function redirect(path: string) {
+        console.log(path)
         window.location.href = path;
     }
 </script>
@@ -46,22 +50,24 @@
             class="logo text-3xl mr-8 cursor-pointer">
             whelp
         </a>
-        {#if transparentView }
+        {#if !blankView }
             <div class="flex bg-white pl-3 py-3 rounded-md relative w-[40vw] shadow-md">
                 <input 
                     id="cflt-input"
                     type="text" 
                     class="bg-transparent outline-none border-r border-zinc-300 pr-2 w-[45%] text-zinc-900"
                     placeholder="pizza, pub, Fox & Hound"
-                    value="{ cflt != null ? capitalize(cflt) : '' }"/>
+                    bind:value={cflt}/>
                 <input 
                     id="loc-input"
                     type="text" 
                     class="bg-transparent outline-none pl-2 w-[45%] mr-[12%] text-zinc-900"
                     placeholder="London"
-                    value="{ homeLoc != null ? capitalize(homeLoc) : '' }"/>
+                    bind:value={findLocInput}/>               
                 <div 
-                    id="search-btn"
+                
+                    on:click={() => redirect(`/search?cflt=${cflt ? cflt : ''}&find_loc=${findLocInput}`)}
+                    on:keydown={null}
                     class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-600 w-14 h-full rounded-r-md cursor-pointer">
                     <i class="fa-solid fa-magnifying-glass text-2xl text-zinc-100"></i>
                 </div>
@@ -78,7 +84,7 @@
                     <div class="absolute z-20 top-12 w-48 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
                         <a 
                             class="flex items-center hover:bg-zinc-200 rounded p-1" 
-                            href="{ user != null ? '/claim' : '/login'}">
+                            href="{ currentUser != null ? '/claim' : '/login'}">
                             <i class="fa-solid fa-store"></i>
                             <span class="ml-2">Add a Business</span>
                         </a>
@@ -86,11 +92,11 @@
                 {/if}
             </span>
             <a 
-                class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 { user != null ? 'write-review-btn' : 'login-btn' }"
-                href={ user != null ? `../search?cflt=&find_desc=writereview&find_loc=${homeLoc}` : '/login'}>
+                class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 { currentUser != null ? 'write-review-btn' : 'login-btn' }"
+                href={ currentUser != null ? `../search?cflt=&find_desc=writereview&find_loc=${findLoc}` : '/login'}>
                 Write a review
             </a>
-            {#if user != null }
+            {#if currentUser != null }
                 <a
                     id="messages-btn" 
                     href="/messaging">
@@ -104,19 +110,19 @@
                     id="notifications-btn"                   
                     class="relative">
                     <i class="fa-regular fa-bell text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
-                    {#if $user != null && $user.unreadNotifications.length > 0 }
+                    {#if $currentUser != null && $currentUser.unreadNotifications.length > 0 }
                         <span
                             id="notifications-count" 
                             class="rounded-full bg-red-600 w-5 h-5 text-center absolute left-[65%] text-sm">
-                            { $user.unreadNotifications.length }
+                            { $currentUser.unreadNotifications.length }
                         </span>
                     {/if}
                     {#if dropdown['Notifications']}
                         <div 
                             class="absolute z-20 top-12 w-64 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
-                            {#if $user != null && $user.notifications.length > 0}
+                            {#if $currentUser != null && $currentUser.notifications.length > 0}
                                 <!-- {% set notifications = app.user.notifications.toArray()|sort|reverse %} -->
-                                {#each $user.notifications as notification }
+                                {#each $currentUser.notifications as notification }
                                     <div class="my-2">
                                         <div class="font-semibold flex items-center">
                                             { notification.title }
@@ -143,7 +149,7 @@
                     id="user-panel"
                     class="relative">
                     <img
-                        class="rounded-full w-10 h-10 ml-4 cursor-pointer" 
+                        class="rounded-full w-10 h-10 ml-4 cursor-pointer border" 
                         src="build/images/avatar_default.19e0a8ff.jpg"
                         alt="404">
                     {#if dropdown['User']}
@@ -182,7 +188,7 @@
                 <i class="fa-solid fa-chevron-down ml-1"></i>
                 {#if dropdown['Restaurants']}
                     <div class="absolute z-20 w-[270px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                        <Categories label="Restaurants" findLoc={homeLoc}/>
+                        <Categories label="Restaurants" findLoc={findLocInput}/>
                     </div>
                 {/if}
             </div>
@@ -196,7 +202,7 @@
                 <i class="fa-solid fa-chevron-down ml-1"></i>
                 {#if dropdown['Home Services']}
                     <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                        <Categories label="Home Services" findLoc={homeLoc}/>
+                        <Categories label="Home Services" findLoc={findLocInput}/>
                     </div>
                 {/if}
             </div>
@@ -210,7 +216,7 @@
                 <i class="fa-solid fa-chevron-down ml-1"></i>
                 {#if dropdown['Auto Services']}
                     <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                        <Categories label="Auto Services" findLoc={homeLoc}/>
+                        <Categories label="Auto Services" findLoc={findLocInput}/>
                     </div>
                 {/if}
             </div>
@@ -224,7 +230,7 @@
                 <i class="fa-solid fa-chevron-down ml-1"></i>
                 {#if dropdown['More']}
                     <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                        <Categories label="More" findLoc={homeLoc}/>
+                        <Categories label="More" findLoc={findLocInput}/>
                     </div>
                 {/if}
             </div>

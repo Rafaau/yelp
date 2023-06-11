@@ -159,7 +159,15 @@ config.module = {
                 options: {
                     emitCss: true,
                     hotReload: true,
-                    preprocess: sveltePreprocess({ sourceMap: !Encore.isProduction() })
+                    preprocess: sveltePreprocess({ 
+                        sourceMap: !Encore.isProduction(),
+                        postcss: {
+                            plugins: [
+                                require('tailwindcss'),
+                                require('autoprefixer'),
+                            ],
+                        },
+                    })
                 },
             },
         }, 

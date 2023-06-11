@@ -8,7 +8,8 @@ module.exports = {
         },
         postcss: {
             plugins: [
-                // Add any PostCSS plugins here
+                require('tailwindcss'),
+                require('autoprefixer'),
             ],
         },
     }),

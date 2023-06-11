@@ -75,7 +75,9 @@ class ReviewController extends AbstractController
                 'reactions' => $review->getReactions(),
                 'images' => $review->getImages(),
                 'user' => array(
+                    'id' => $review->getUser()->getId(),
                     'username' => $review->getUser()->getUsername(),
+                    'userImage' => $review->getUser()->getUserImage(),
                 ),
                 'business' => array(
                     'name' => $review->getBusiness()->getName(),
