@@ -5,6 +5,7 @@
         "@rollup/plugin-typescript": "^11.1.1",
         "@symfony/webpack-encore": "^4.0.0",
         "@tsconfig/svelte": "^4.0.1",
+        "@types/date-fns": "^2.6.0",
         "core-js": "^3.23.0",
         "css-loader": "^6.8.1",
         "file-loader": "^6.2.0",
@@ -36,6 +37,7 @@
         "autoprefixer": "^10.4.14",
         "browser-sync": "^2.29.3",
         "browser-sync-webpack-plugin": "^2.3.0",
+        "date-fns": "^2.30.0",
         "dotenv": "^16.0.3",
         "svelte": "^3.59.1",
         "svelte-loader": "^3.1.8"

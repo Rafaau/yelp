@@ -11,11 +11,12 @@
     let cflt = capitalize(currentURL.searchParams.get('cflt'));
     let homeLoc = capitalize(currentURL.pathname.split('/')[1]);
     let findLoc = capitalize(currentURL.searchParams.get('find_loc'));
+    let bizLoc = capitalize(currentURL.searchParams.get('loc'));
     let findDesc = currentURL.searchParams.get('find_desc');
     let business = currentURL.pathname.includes('biz');
     let user = currentURL.pathname.includes('user_details');
 
-    let findLocInput = findLoc || homeLoc;
+    let findLocInput = findLoc || bizLoc || homeLoc;
 
     console.log(cflt, findLoc, findDesc, business)
 

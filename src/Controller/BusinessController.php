@@ -20,7 +20,7 @@ class BusinessController extends AbstractController
     }
 
     #[Route('/businesses', name: 'get-businesses' )]
-    public function get(Request $request): Response {
+    public function getAll(Request $request): Response {
         $cflt = $request->query->get('cflt');
         $find_loc = $request->query->get('find_loc');
         $find_desc = $request->query->get('find_desc');
@@ -80,6 +80,74 @@ class BusinessController extends AbstractController
         return new JsonResponse([
             'status' => 'ok', 
             'businesses' => $businessesData
+        ]);
+    }
+
+    #[Route('/businesses/{business}-{location}', name: 'get-business' )]
+    public function get($business, $location): Response {
+        $businessesRepository = $this->em->getRepository(Business::class);
+
+        $business = $businessesRepository->findOneBy([
+            'name' => ucwords($business), 
+            'location' => ucwords($location)
+        ]);
+
+        $reviewsData = [];
+        foreach($business->getReviews() as $review) {
+            $userFriends = [];
+            foreach($review->getUser()->getFriends() as $friend) {
+                $userFriends[] = [
+                    'id' => $friend->getId(),
+                ];
+            }
+
+            $userReviews = [];
+            foreach($review->getUser()->getReviews() as $userReview) {
+                $userReviews[] = [
+                    'id' => $userReview->getId(),
+                ];
+            }
+
+            $reviewsData[] = [
+                'stars' => $review->getStars(),
+                'images' => $review->getImages(),
+                'content' => $review->getContent(),
+                'user' => array(
+                    'username' => $review->getUser()->getUsername(),
+                    'userImage' => $review->getUser()->getUserImage(),
+                    'friends' => $userFriends,
+                    'reviews' => $userReviews,
+                ),
+                'postDate' => $review->getPostDate(),
+                'reactions' => $review->getReactions(),
+            ];
+        }
+
+        $categories = [];
+        foreach($business->getCategories() as $category) {
+            $categories[] = [
+                'name' => $category->getName(),
+            ];
+        }
+
+        $businessData = [
+            'name' => $business->getName(),
+            'location' => $business->getLocation(),
+            'categories' => $business->getCategories(),
+            'reviews' => $reviewsData,
+            'owner' => $business->getOwner(),
+            'expensiveness' => $business->getExpensiveness(),
+            'hours' => $business->getHours(),
+            'categories' => $categories,
+            'description' => $business->getDescription(),
+            'website' => $business->getWebsite(),
+            'phoneNumber' => $business->getPhoneNumber(),
+            'address' => $business->getAddress(),
+        ];
+
+        return new JsonResponse([
+            'status' => 'ok', 
+            'business' => $businessData
         ]);
     }
 

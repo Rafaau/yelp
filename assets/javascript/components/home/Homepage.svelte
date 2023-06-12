@@ -55,7 +55,7 @@
                 {/if}
                 <div class="px-8 py-2">
                     <a
-                        href="/biz/{review.business.name}-{location}" 
+                        href="/biz?name={encodeURIComponent(review.business.name)}&loc={location}" 
                         class="text-lg font-bold text-cyan-700 hover:underline">
                         {review.business.name}
                     </a>

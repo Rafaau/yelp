@@ -87,7 +87,7 @@
             {/if}
             {#each businesses as business, index}
                 <a 
-                    href="{findDesc != null ? `/review/'${business.name}` : `/biz/'${business.name}-${location}` }"
+                    href="{findDesc != null ? `/review/'${business.name}` : `/biz?name=${encodeURIComponent(business.name)}&loc=${location}` }"
                     class="flex my-5 pb-5 border-b cursor-pointer">
                     {#if business.reviews.length && business.reviews[0] != null && business.reviews[0].images != null && business.reviews[0].images[0] != null}
                         <img src="{business.reviews[0].images[0]}" alt="" class="w-48 h-48 object-cover rounded-md">
@@ -96,7 +96,7 @@
                     {/if}
                     <div class="ml-6">
                         <span class="font-bold text-xl">
-                            {index}. <span class="hover:underline">{business.name}</span>
+                            {index + 1}. <span class="hover:underline">{business.name}</span>
                         </span>
                         <div class="flex items-center text-zinc-500 my-1">
                             {#if business.reviews.length}
