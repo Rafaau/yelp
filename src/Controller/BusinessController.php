@@ -117,6 +117,7 @@ class BusinessController extends AbstractController
                     'userImage' => $review->getUser()->getUserImage(),
                     'friends' => $userFriends,
                     'reviews' => $userReviews,
+                    'address' => $review->getUser()->getAddress(),
                 ),
                 'postDate' => $review->getPostDate(),
                 'reactions' => $review->getReactions(),

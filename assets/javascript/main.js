@@ -44,6 +44,7 @@ try {
 
 try {
     var reviewStars = document.getElementById('review-stars');
+    console.log(reviewStars)
     var hovered = 0;
     var chosen = 0;
 

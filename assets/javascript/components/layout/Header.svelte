@@ -15,16 +15,17 @@
     let findDesc = currentURL.searchParams.get('find_desc');
     let business = currentURL.pathname.includes('biz');
     let user = currentURL.pathname.includes('user_details');
+    let review = currentURL.pathname.includes('review');
 
     let findLocInput = findLoc || bizLoc || homeLoc;
 
     console.log(cflt, findLoc, findDesc, business)
 
-    let blankView = findLoc != null && findDesc != null;
+    let blankView = findLoc != null && findDesc != null || review;
     let transparentView = cflt == null || findLoc == null;
     let whiteView = cflt != null || findLoc != null || business || user;
     let fixed = cflt != null && findDesc == null;
-    let padding = findDesc != null || (cflt == null && business);
+    let padding = findDesc != null || (cflt == null && business) || review;
 
     let dropdown = {
         'Restaurants': false,
@@ -44,8 +45,8 @@
     }
 </script>
 
-<header class="{ whiteView ? 'bg-zinc-100 border-b': '' } { fixed ? 'fixed' : 'absolute' } z-20 px-10 pt-4 w-full { padding ? 'pb-4' : '' }">
-    <div class="flex items-center { whiteView ? 'text-zinc-900' : 'text-zinc-100' }">
+<header class="{ whiteView || blankView ? 'bg-zinc-100 border-b': '' } { fixed ? 'fixed' : 'absolute' } z-20 px-10 pt-4 w-full { padding ? 'pb-4' : '' }">
+    <div class="flex items-center { whiteView || blankView ? 'text-zinc-900' : 'text-zinc-100' }">
         <a 
             href="/"
             class="logo text-3xl mr-8 cursor-pointer">
@@ -94,7 +95,7 @@
             </span>
             <a 
                 class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 { currentUser != null ? 'write-review-btn' : 'login-btn' }"
-                href={ currentUser != null ? `../search?cflt=&find_desc=writereview&find_loc=${findLoc}` : '/login'}>
+                href={ currentUser != null ? `../search?cflt=&find_desc=writereview&find_loc=${findLoc || homeLoc}` : '/login'}>
                 Write a review
             </a>
             {#if currentUser != null }
@@ -178,62 +179,64 @@
             {/if}
             {/if}
         </div>
-        <div class="flex items-center text-sm { whiteView ? 'text-zinc-900' : 'text-zinc-100' }">
-            <div 
-                on:mouseover={() => dropdown['Restaurants'] = true}
-                on:focus={() => dropdown['Restaurants'] = true}
-                on:blur={() => dropdown['Restaurants'] = false}
-                on:mouseleave={() => dropdown['Restaurants'] = false}
-                class="relative text-md cursor-pointer py-3 px-3 ml-[10vw] mr-2 border-b-4 border-transparent hover:border-red-600">
-                Restaurants
-                <i class="fa-solid fa-chevron-down ml-1"></i>
-                {#if dropdown['Restaurants']}
-                    <div class="absolute z-20 w-[270px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                        <Categories label="Restaurants" findLoc={findLocInput}/>
-                    </div>
-                {/if}
+        {#if !blankView}
+            <div class="flex items-center text-sm { whiteView ? 'text-zinc-900' : 'text-zinc-100' }">
+                <div 
+                    on:mouseover={() => dropdown['Restaurants'] = true}
+                    on:focus={() => dropdown['Restaurants'] = true}
+                    on:blur={() => dropdown['Restaurants'] = false}
+                    on:mouseleave={() => dropdown['Restaurants'] = false}
+                    class="relative text-md cursor-pointer py-3 px-3 ml-[10vw] mr-2 border-b-4 border-transparent hover:border-red-600">
+                    Restaurants
+                    <i class="fa-solid fa-chevron-down ml-1"></i>
+                    {#if dropdown['Restaurants']}
+                        <div class="absolute z-20 w-[270px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                            <Categories label="Restaurants" findLoc={findLocInput}/>
+                        </div>
+                    {/if}
+                </div>
+                <div 
+                    on:mouseover={() => dropdown['Home Services'] = true}
+                    on:focus={() => dropdown['Home Services'] = true}
+                    on:blur={() => dropdown['Home Services'] = false}
+                    on:mouseleave={() => dropdown['Home Services'] = false}
+                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                    Home Services
+                    <i class="fa-solid fa-chevron-down ml-1"></i>
+                    {#if dropdown['Home Services']}
+                        <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                            <Categories label="Home Services" findLoc={findLocInput}/>
+                        </div>
+                    {/if}
+                </div>
+                <div 
+                    on:mouseover={() => dropdown['Auto Services'] = true}
+                    on:focus={() => dropdown['Auto Services'] = true}
+                    on:blur={() => dropdown['Auto Services'] = false}
+                    on:mouseleave={() => dropdown['Auto Services'] = false} 
+                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                    Auto Services
+                    <i class="fa-solid fa-chevron-down ml-1"></i>
+                    {#if dropdown['Auto Services']}
+                        <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                            <Categories label="Auto Services" findLoc={findLocInput}/>
+                        </div>
+                    {/if}
+                </div>
+                <div 
+                    on:mouseover={() => dropdown['More'] = true}
+                    on:focus={() => dropdown['More'] = true}
+                    on:blur={() => dropdown['More'] = false}
+                    on:mouseleave={() => dropdown['More'] = false} 
+                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                    More
+                    <i class="fa-solid fa-chevron-down ml-1"></i>
+                    {#if dropdown['More']}
+                        <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
+                            <Categories label="More" findLoc={findLocInput}/>
+                        </div>
+                    {/if}
+                </div>
             </div>
-            <div 
-                on:mouseover={() => dropdown['Home Services'] = true}
-                on:focus={() => dropdown['Home Services'] = true}
-                on:blur={() => dropdown['Home Services'] = false}
-                on:mouseleave={() => dropdown['Home Services'] = false}
-                class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
-                Home Services
-                <i class="fa-solid fa-chevron-down ml-1"></i>
-                {#if dropdown['Home Services']}
-                    <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                        <Categories label="Home Services" findLoc={findLocInput}/>
-                    </div>
-                {/if}
-            </div>
-            <div 
-                on:mouseover={() => dropdown['Auto Services'] = true}
-                on:focus={() => dropdown['Auto Services'] = true}
-                on:blur={() => dropdown['Auto Services'] = false}
-                on:mouseleave={() => dropdown['Auto Services'] = false} 
-                class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
-                Auto Services
-                <i class="fa-solid fa-chevron-down ml-1"></i>
-                {#if dropdown['Auto Services']}
-                    <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                        <Categories label="Auto Services" findLoc={findLocInput}/>
-                    </div>
-                {/if}
-            </div>
-            <div 
-                on:mouseover={() => dropdown['More'] = true}
-                on:focus={() => dropdown['More'] = true}
-                on:blur={() => dropdown['More'] = false}
-                on:mouseleave={() => dropdown['More'] = false} 
-                class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
-                More
-                <i class="fa-solid fa-chevron-down ml-1"></i>
-                {#if dropdown['More']}
-                    <div class="absolute z-20 w-[300px] bg-zinc-100 left-0 py-4 px-3 rounded-lg rounded-tl-none bottom-[-144px] grid grid-cols-2 text-zinc-900 h-[140px] border shadow-md">
-                        <Categories label="More" findLoc={findLocInput}/>
-                    </div>
-                {/if}
-            </div>
-        </div>
+        {/if}
 </header>

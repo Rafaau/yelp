@@ -40,8 +40,8 @@
             currentTime = format(now, 'HH:mm');
 
             openHours = business.hours[currentDay].split(" - ");
-            openingTime = format(parse(openHours[0], 'HH:mm', new Date()), 'HH:mm');
-            closingTime = format(parse(openHours[1], 'HH:mm', new Date()), 'HH:mm');
+            openingTime = convertTo24Hour(String(openHours[0]).split(' - ')[0]);
+            closingTime = convertTo24Hour(String(openHours[1]).split(' - ')[0]);
     })
 
     function convertTo24Hour(timeStr) {
@@ -139,7 +139,7 @@
         </p>
         <div class="flex my-8">
             <a 
-                href="{$currentUser != null ? `/review/${business.name}` : '/login'}"
+                href="{$currentUser != null ? `/review?business=${encodeURIComponent(business.name)}` : '/login'}"
                 class="bg-red-600 text-zinc-100 px-4 py-2 rounded font-semibold">
                 <i class="fa-regular fa-star mr-2"></i>
                 Write a review

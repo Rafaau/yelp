@@ -17,6 +17,7 @@ import Homepage from './javascript/components/home/Homepage.svelte';
 import Browse from './javascript/components/search/Browse.svelte';
 import UserDetails from './javascript/components/user/UserDetails.svelte';
 import Business from './javascript/components/business/Business.svelte';
+import Review from './javascript/components/review/Review.svelte';
 
 new Globals({
     target: document.getElementById('globals-target')
@@ -45,6 +46,10 @@ if (document.getElementById('browse-target')) {
 } else if (document.getElementById('business-target')) {
     new Business({
         target: document.getElementById('business-target')
+    })
+} else if (document.getElementById('review-target')) {
+    new Review({
+        target: document.getElementById('review-target')
     })
 }
 

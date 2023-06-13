@@ -28,7 +28,7 @@
 
 {#await promise then businesses}
 <div class="relative top-28 mb-28 flex border-b">
-    <div class="w-[70%]">
+    <div class="">
             <div class="px-10 {findDesc == null ? 'py-6' : 'pb-6'} border-b">
                 {#if cflt != '' && findDesc == null}
                     <span class="text-zinc-500 text-sm font-semibold">
@@ -38,27 +38,41 @@
                     </span>
                 {/if}
                 {#if findDesc != null}
-                    <div class="flex bg-white pl-3 py-3 mb-6 rounded-md relative w-[40vw] shadow-md">
-                        <input 
-                            id="cflt-input"
-                            type="text" 
-                            class="bg-transparent outline-none border-r border-zinc-300 pr-2 w-[45%]"
-                            placeholder="pizza, pub, Fox & Hound"
-                            value="{cflt ? capitalize(cflt) : ''}"/>
-                        <input 
-                            id="loc-input"
-                            type="text" 
-                            class="bg-transparent outline-none pl-2 w-[45%] mr-[12%] text-zinc-900"
-                            placeholder="London"
-                            value="{capitalize(location)}"/>
-                        <div 
-                            id="write-review-btn"
-                            class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-600 w-14 h-full rounded-r-md cursor-pointer">
-                            <i class="fa-solid fa-magnifying-glass text-2xl text-zinc-100"></i>
+                    <div class="flex">
+                        <div>
+                            <p class="font-semibold text-2xl">
+                                Find a business to review
+                            </p>
+                            <p class="font-roboto-light my-6">
+                                Review anything from your favourite patio spot to your local flower shop.
+                            </p>
+                            <div class="flex bg-white pl-3 py-3 mb-6 rounded-md relative w-[40vw] shadow-md">
+                                <input 
+                                    id="cflt-input"
+                                    type="text" 
+                                    class="bg-transparent outline-none border-r border-zinc-300 pr-2 w-[45%]"
+                                    placeholder="pizza, pub, Fox & Hound"
+                                    value="{cflt ? capitalize(cflt) : ''}"/>
+                                <input 
+                                    id="loc-input"
+                                    type="text" 
+                                    class="bg-transparent outline-none pl-2 w-[45%] mr-[12%] text-zinc-900"
+                                    placeholder="London"
+                                    value="{capitalize(location)}"/>
+                                <div 
+                                    id="write-review-btn"
+                                    class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-600 w-14 h-full rounded-r-md cursor-pointer">
+                                    <i class="fa-solid fa-magnifying-glass text-2xl text-zinc-100"></i>
+                                </div>
+                            </div>
                         </div>
+                        <img 
+                            src="https://s3-media0.fl.yelpcdn.com/assets/public/first_to_review_375x200_v2.yji-1aed85a8933f1f907aba.svg"
+                            alt="404"
+                            class="ml-auto w-[30vw]"/>
                     </div>
                 {/if}
-                <div class="flex items-center">
+                <div class="flex items-center w-[60%]">
                     <span class="font-extrabold block text-2xl">
                         {#if cflt != '' && findDesc == null}
                             Top {businesses.length >= 10 ? 10 : businesses.length} {capitalize(cflt)} in {capitalize(location)}
@@ -79,7 +93,7 @@
                 <div class="sticky ">
                 </div>
             </div>
-        <div class="px-16 py-4 min-h-[50vh]">
+        <div class="px-16 py-4 min-h-[50vh] w-[70%]">
             {#if cflt != ''}
                 <span class="font-bold my-4">
                     All "{capitalize(cflt)}" results in {capitalize(location)}
@@ -87,7 +101,7 @@
             {/if}
             {#each businesses as business, index}
                 <a 
-                    href="{findDesc != null ? `/review/'${business.name}` : `/biz?name=${encodeURIComponent(business.name)}&loc=${location}` }"
+                    href="{findDesc != null ? `/review?business=${encodeURIComponent(business.name)}` : `/biz?name=${encodeURIComponent(business.name)}&loc=${location}` }"
                     class="flex my-5 pb-5 border-b cursor-pointer">
                     {#if business.reviews.length && business.reviews[0] != null && business.reviews[0].images != null && business.reviews[0].images[0] != null}
                         <img src="{business.reviews[0].images[0]}" alt="" class="w-48 h-48 object-cover rounded-md">

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\ReviewFormType;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ViewController extends AbstractController
@@ -196,31 +197,10 @@ class ViewController extends AbstractController
         return $this->render('business/index.html.twig');
     }
 
-    #[Route('/{location}', name: 'location')]
-    public function location(string $location): Response
+    #[Route('/review', name: 'review')]
+    public function review(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $reviewsRepository = $this->em->getRepository(Review::class);
-        $queryBuilder = $reviewsRepository->createQueryBuilder('r');
-
-        $reviews = $queryBuilder
-            ->select('r, b')
-            ->innerJoin('r.business', 'b')
-            ->where('b.location = :location')
-            ->setParameter('location', ucwords($location))
-            ->orderBy('r.id', 'DESC')
-            ->setMaxResults(9)
-            ->getQuery()
-            ->getResult();
-
-        return $this->render('index.html.twig', [
-            'location' => $location,
-            'reviews' => $reviews,
-        ]);
-    }
-
-    #[Route('/review/{business}', name: 'review')]
-    public function review(string $business, Request $request, EntityManagerInterface $entityManager): Response
-    {
+        $business = $request->query->get('business');
         $businessesRepository = $this->em->getRepository(Business::class);
         $business = $businessesRepository->findOneBy(['name' => ucwords($business)]);
 
@@ -245,6 +225,28 @@ class ViewController extends AbstractController
         return $this->render('review/index.html.twig', [
             'business' => $business,
             'reviewForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/{location}', name: 'location')]
+    public function location(string $location): Response
+    {
+        $reviewsRepository = $this->em->getRepository(Review::class);
+        $queryBuilder = $reviewsRepository->createQueryBuilder('r');
+
+        $reviews = $queryBuilder
+            ->select('r, b')
+            ->innerJoin('r.business', 'b')
+            ->where('b.location = :location')
+            ->setParameter('location', ucwords($location))
+            ->orderBy('r.id', 'DESC')
+            ->setMaxResults(9)
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('index.html.twig', [
+            'location' => $location,
+            'reviews' => $reviews,
         ]);
     }
 }

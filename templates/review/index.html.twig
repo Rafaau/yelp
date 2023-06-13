@@ -1,32 +1,4 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div class="relative top-20 px-20 py-6 mb-20">
-        <p class="text-3xl font-bold text-zinc-800">{{ business.name }}</p>
-        {{ form_start(reviewForm, { 'method': 'POST' }) }}
-        <div class="min-h-[24rem] w-[40rem] border border-zinc-300 rounded-md mt-4 px-5 py-6">
-            <div class="flex">
-                <div id="review-stars" class="flex">
-                    
-                </div>
-                <div
-                    id="review-stars-overlay" 
-                    class="font-roboto-light text-zinc-600">
-                </div>
-            </div>
-            {{ form_widget(reviewForm.stars, {
-                'attr': {
-                    'class': 'hidden',
-                    'id': 'stars-input',
-                    'value': '0'
-                }
-            }) }}
-            {{ form_widget(reviewForm.content) }}
-        </div>
-        <button
-            class="mt-6 px-4 py-2 bg-red-600 text-white rounded-md font-semibold"
-            >
-            Post review
-        </button>
-        {{ form_end(reviewForm) }}
-    </div>
+    <div id="review-target"></div>
 {% endblock %}
