@@ -11,7 +11,6 @@
     let findDesc = currentURL.searchParams.get('find_desc');
 
     async function getBusinesses() {
-        console.log('test')
         const res = await fetch(`/businesses?find_loc=${location}&cflt=${cflt}&find_desc=${findDesc}`);
         const data = await res.json();
 
