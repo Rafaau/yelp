@@ -17,16 +17,17 @@
     let user = currentURL.pathname.includes('user_details');
     let review = currentURL.pathname.includes('review');
     let claim = currentURL.pathname.includes('claim');
+    let auth = currentURL.pathname.includes('login') || currentURL.pathname.includes('signup');
 
     let findLocInput = findLoc || bizLoc || homeLoc;
 
     console.log(cflt, findLoc, findDesc, business)
 
-    let blankView = findLoc != null && findDesc != null || review || claim;
+    let blankView = findLoc != null && findDesc != null || review || claim || auth;
     let transparentView = cflt == null || findLoc == null;
     let whiteView = cflt != null || findLoc != null || business || user;
     let fixed = cflt != null && findDesc == null;
-    let padding = findDesc != null || (cflt == null && business) || review || claim;
+    let padding = findDesc != null || (cflt == null && business) || review || claim || auth;
 
     let dropdown = {
         'Restaurants': false,

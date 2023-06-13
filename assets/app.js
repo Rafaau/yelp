@@ -18,6 +18,8 @@ import Browse from './javascript/components/search/Browse.svelte';
 import UserDetails from './javascript/components/user/UserDetails.svelte';
 import Business from './javascript/components/business/Business.svelte';
 import Review from './javascript/components/review/Review.svelte';
+import Register from './javascript/components/auth/Register.svelte';
+import Login from './javascript/components/auth/Login.svelte';
 
 new Globals({
     target: document.getElementById('globals-target')
@@ -50,6 +52,14 @@ if (document.getElementById('browse-target')) {
 } else if (document.getElementById('review-target')) {
     new Review({
         target: document.getElementById('review-target')
+    })
+} else if (document.getElementById('register-target')) {
+    new Register({
+        target: document.getElementById('register-target')
+    })
+} else if (document.getElementById('login-target')) {
+    new Login({
+        target: document.getElementById('login-target')
     })
 }
 
