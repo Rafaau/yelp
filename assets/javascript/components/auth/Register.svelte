@@ -1,5 +1,36 @@
 <script lang='ts'>
+    function onSubmit(e) {
+        const formData = new FormData(e.target) as any
 
+        const data = {}
+        for (let field of formData) {
+            const [key, value] = field
+            data[key] = value
+        }
+
+        let isValid = 
+            data['terms'] == 'on' &&
+            data['first-name'] != '' &&
+            data['last-name'] != '' &&
+            data['email'] != '' &&
+            data['password'] != '';
+        
+        if (isValid) {
+            fetch('/users/register', {
+                method: 'POST',
+                body: JSON.stringify({
+                    firstName: data['first-name'],
+                    lastName: data['last-name'],
+                    email: data['email'],
+                    password: data['password'],
+                })
+            }).then(function(response) {
+                if (response.ok) {
+                    window.location.href = '/login'
+                }
+            });
+        }
+    }
 </script>
 
 <div 
@@ -11,25 +42,29 @@
         Connect with great local businesses
     </p>
     <div class="mt-2">
-        <form>
+        <form on:submit|preventDefault={onSubmit}>
             <div class="flex items-center space-x-2">
-                <input type="checkbox">
+                <input type="checkbox" name="terms">
                 <label class="text-xs text-gray-500">
                     By continuing, I agree to Yelp’s <a class="text-blue-500 hover:underline" href="https://www.yelp.co.uk/static?p=tos">Terms of Service</a> and acknowledge Yelp’s <a class="text-blue-500 hover:underline" href="https://www.yelp.com/tos/privacy_policy">Privacy Policy</a>, including Yelp’s cookie policy.
                 </label>
             </div>
             <div class="flex space-x-2 mb-2 mt-4">
                 <input 
+                    name="first-name"
                     class="border border-zinc-400 px-2 py-1 w-[50%] rounded font-roboto-light outline-none mb-2"
                     placeholder="First Name">
                 <input
+                    name="last-name"
                     class="border border-zinc-400 px-2 py-1 w-[50%] rounded font-roboto-light outline-none mb-2"
                     placeholder="Last Name">
             </div>
-            <input 
+            <input
+                name="email" 
                 class="border border-zinc-400 px-2 py-1 w-[100%] rounded font-roboto-light outline-none mb-2"
                 placeholder="Email">
-            <input 
+            <input
+                name="password" 
                 class="border border-zinc-400 px-2 py-1 w-[100%] rounded font-roboto-light outline-none mb-2"
                 placeholder="Password"
                 type="password">

@@ -3,6 +3,7 @@
     
     let currentURL = new URL(window.location.href);
     let businessName = currentURL.searchParams.get('business');
+    let location = currentURL.searchParams.get('loc');
     let hovered = 0;
     let chosen = 0;
 
@@ -113,13 +114,52 @@
         });
 
         appendStars();
+
+        const tx = document.getElementsByTagName("textarea");
+        for (let i = 0; i < tx.length; i++) {
+        tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
+        tx[i].addEventListener("input", OnInput, false);
+        }
+        
+        function OnInput() {
+        this.style.height = 0;
+        this.style.height = (this.scrollHeight) + "px";
+        }
     })
     
+    function onSubmit(e) {
+        const formData = new FormData(e.target) as any
+
+        const data = {}
+        for (let field of formData) {
+            const [key, value] = field
+            data[key] = value
+        }
+
+        let isValid = 
+            data['stars'] != 0 &&
+            data['content'] != '';
+
+        if (isValid) {
+            fetch('/reviews/post', {
+                method: 'POST',
+                body: JSON.stringify({
+                    businessName: businessName,
+                    stars: data['stars'],
+                    content: data['content']
+                })
+            }).then(function(response) {
+                if (response.ok) {
+                    window.location.href = `/biz?name=${encodeURIComponent(businessName)}&loc=${location}`
+                }
+            })
+        }
+    }
 </script>
 
 <div class="relative top-20 px-20 py-6 mb-20">
     <p class="text-3xl font-bold text-zinc-800">{businessName}</p>
-    <form>
+    <form on:submit|preventDefault={onSubmit}>
         <div class="min-h-[24rem] w-[40rem] border border-zinc-300 rounded-md mt-4 px-5 py-6">
             <div class="flex">
                 <div id="review-stars" class="flex">
@@ -132,10 +172,12 @@
             </div>
             <input 
                 class="hidden" 
+                name="stars"
                 id="stars-input" 
                 value={0}>
             <textarea 
                 id="review-content"
+                name="content"
                 class="mt-6 w-full outline-none bg-transparent resize-none hide-scrollbar font-roboto-light"
                 rows="12"
                 placeholder="Doesn’t look like much when you walk past, but I was practically dying of hunger so I popped in. The definition of a hole-in-the-wall. I got the regular hamburger and wow…  there are no words. A classic burger done right. Crisp bun, juicy patty, stuffed with all the essentials (ketchup, shredded lettuce, tomato, and pickles). There’s about a million options available between the menu board and wall full of specials, so it can get a little overwhelming, but you really can’t go wrong. Not much else to say besides go see for yourself! You won’t be disappointed.">

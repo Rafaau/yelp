@@ -20,6 +20,7 @@ import Business from './javascript/components/business/Business.svelte';
 import Review from './javascript/components/review/Review.svelte';
 import Register from './javascript/components/auth/Register.svelte';
 import Login from './javascript/components/auth/Login.svelte';
+import Create from './javascript/components/business/Create.svelte';
 
 new Globals({
     target: document.getElementById('globals-target')
@@ -60,6 +61,10 @@ if (document.getElementById('browse-target')) {
 } else if (document.getElementById('login-target')) {
     new Login({
         target: document.getElementById('login-target')
+    })
+} else if (document.getElementById('create-target')) {
+    new Create({
+        target: document.getElementById('create-target')
     })
 }
 

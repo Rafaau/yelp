@@ -1,5 +1,11 @@
 <script lang='ts'>
-    let csrfToken = window.APP_DATA.csrfToken;
+    interface MyWindow extends Window {
+        APP_DATA: {
+            csrfToken: string;
+        };
+    }
+    const myWindow = window as unknown as MyWindow;
+    let csrfToken = myWindow.APP_DATA.csrfToken;
 </script>
 
 <div 
@@ -39,7 +45,7 @@
             id="inputPassword"  
             autocomplete="current-password" 
             required>
-        <input type="hidden" bind:value={csrfToken} />
+        <input type="hidden" name="_csrf_token" bind:value={csrfToken} />
         <button
             type="submit"
             class="py-2 px-4 bg-red-600 text-zinc-100 font-semibold rounded w-full mt-4">

@@ -12,12 +12,12 @@
 {#each Array(5) as _, i}
     <svg width="20" height="20" viewBox="0 0 20 20" class="mr-1">
         <path 
-            fill="{stars >= i * 2 - 1 ? color :
+            fill="{stars >= i * 2 + 1 ? color :
                         '#BBBAC0'}" 
             opacity="1" d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z">
         </path>
         <path 
-            fill="{stars >= i * 2 ? color :
+            fill="{stars >= i * 2 + 2 ? color :
                         '#BBBAC0'}" 
             opacity="1" d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z">
         </path>

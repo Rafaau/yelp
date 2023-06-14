@@ -1,0 +1,12 @@
+monolog:
+  channels: ["dump"]
+  handlers:
+    console:
+      type: console
+      process_psr_3_messages: false
+      channels: ["dump"]
+      verbosity_levels:
+        VERBOSITY_NORMAL: NOTICE
+        VERBOSITY_VERBOSE: DEBUG
+        VERBOSITY_VERY_VERBOSE: DEBUG
+        VERBOSITY_DEBUG: DEBUG

@@ -88,7 +88,7 @@
                     <div class="absolute z-20 top-12 w-48 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
                         <a 
                             class="flex items-center hover:bg-zinc-200 rounded p-1" 
-                            href="{ currentUser != null ? '/claim' : '/login'}">
+                            href="{ $currentUser != null ? '/claim' : '/login'}">
                             <i class="fa-solid fa-store"></i>
                             <span class="ml-2">Add a Business</span>
                         </a>
@@ -97,10 +97,10 @@
             </span>
             <a 
                 class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 { currentUser != null ? 'write-review-btn' : 'login-btn' }"
-                href={ currentUser != null ? `../search?cflt=&find_desc=writereview&find_loc=${findLoc || homeLoc}` : '/login'}>
+                href={ $currentUser != null ? `../search?cflt=&find_desc=writereview&find_loc=${findLoc || homeLoc}` : '/login'}>
                 Write a review
             </a>
-            {#if currentUser != null }
+            {#if $currentUser != null }
                 <a
                     id="messages-btn" 
                     href="/messaging">

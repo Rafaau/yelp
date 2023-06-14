@@ -1,6 +1,46 @@
 <script lang='ts'>
     let currentURL = new URL(window.location.href);
     let hide = currentURL.pathname.includes('claim') || currentURL.pathname.includes('messaging');
+
+    function scrollToTop() {
+        document.getElementsByClassName('logo')[0].scrollIntoView({behavior: "smooth"});
+    }
+
+    let aboutList = [
+        'About Whelp',
+        'Careers',
+        'Press',
+        'Investor Relations',
+        'Trust & Safety',
+        'Content Guidelines',
+        'UK Gender Pay Gap Report',
+        'Terms of Service',
+        'Privacy Policy',
+        'Ad Choices',
+        'Manage Cookies',
+    ]
+
+    let discoverList = [
+        'Collections',
+        'Talk',
+        'Events',
+        'Whelp Blog',
+        'Support',
+        'Whelp Mobile',
+        'Developers',
+        'RSS',
+    ]
+
+    let whelpForBusinessList = [
+        'Whelp for Business',
+        'Business Owner Login',
+        'Claim your Business Page',
+        'Advertise on Whelp',
+        'Business Success Stories',
+        'Business Support',
+        'Whelp Blog for Business',
+    ]
+
 </script>
 
 {#if !hide}
@@ -8,38 +48,21 @@
     <div class="grid grid-cols-4 max-w-[1200px] mx-auto">
         <div class="[&>button]:block [&>button]:text-zinc-500 [&>button]:py-[0.125rem]">
             <p class="font-bold pb-4">About</p>
-            <button class="hover:underline">About Whelp</button>
-            <button class="hover:underline">Careers</button>
-            <button class="hover:underline">Press</button>
-            <button class="hover:underline">Investor Relations</button>
-            <button class="hover:underline">Trust & Safety</button>
-            <button class="hover:underline">Content Guidelines</button>
-            <button class="hover:underline">UK Gender Pay Gap Report</button>
-            <button class="hover:underline">Terms of Service</button>
-            <button class="hover:underline">Privacy Policy</button>
-            <button class="hover:underline">Ad Choices</button>
-            <button class="hover:underline">Manage Cookies</button>
+            {#each aboutList as about}
+                <button on:click={scrollToTop} class="hover:underline">{about}</button>
+            {/each}
         </div>
         <div class="[&>button]:block [&>button]:text-zinc-500 [&>button]:py-[0.125rem]">
             <p class="font-bold pb-4">Discover</p>
-            <button class="hover:underline">Collections</button>
-            <button class="hover:underline">Talk</button>
-            <button class="hover:underline">Events</button>
-            <button class="hover:underline">Whelp Blog</button>
-            <button class="hover:underline">Support</button>
-            <button class="hover:underline">Whelp Mobile</button>
-            <button class="hover:underline">Developers</button>
-            <button class="hover:underline">RSS</button>
+            {#each discoverList as discover}
+                <button on:click={scrollToTop} class="hover:underline">{discover}</button>
+            {/each}
         </div>
         <div class="[&>button]:block [&>button]:text-zinc-500 [&>button]:py-[0.125rem]">
             <p class="font-bold pb-4">Whelp for Business</p>
-            <button class="hover:underline">Whelp for Business</button>
-            <button class="hover:underline">Business Owner Login</button>
-            <button class="hover:underline">Claim your Business Page</button>
-            <button class="hover:underline">Advertise on Whelp</button>
-            <button class="hover:underline">Business Success Stories</button>
-            <button class="hover:underline">Business Support</button>
-            <button class="hover:underline">Whelp Blog for Business</button>
+            {#each whelpForBusinessList as whelpForBusiness}
+                <button on:click={scrollToTop} class="hover:underline">{whelpForBusiness}</button>
+            {/each}
         </div>      
         <div class="[&>button]:block [&>button]:text-zinc-500 [&>button]:py-[0.125rem]">
             <p class="font-bold pb-1">Languages</p>

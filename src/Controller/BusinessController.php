@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Business;
+use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,7 +62,11 @@ class BusinessController extends AbstractController
         $businessesData = [];
         foreach ($businesses as $business) {
             $reviewsData = [];
+            $totalStars = 0;
+            $totalReviews = 0;
             foreach($business->getReviews() as $review) {
+                $totalStars += $review->getStars();
+                $totalReviews++;
                 $reviewsData[] = [
                     'stars' => $review->getStars(),
                     'images' => $review->getImages(),
@@ -69,11 +74,14 @@ class BusinessController extends AbstractController
                 ];
             }
 
+            $avgStars = $totalReviews > 0 ? $totalStars / $totalReviews : 0;
+
             $businessesData[] = [
                 'name' => $business->getName(),
                 'location' => $business->getLocation(),
                 'categories' => $business->getCategories(),
                 'reviews' => $reviewsData,
+                'avgStars' => $avgStars,
             ];
         }
 
@@ -92,8 +100,13 @@ class BusinessController extends AbstractController
             'location' => ucwords($location)
         ]);
 
+        $totalStars = 0;
+        $totalReviews = 0;
+
         $reviewsData = [];
         foreach($business->getReviews() as $review) {
+            $totalStars += $review->getStars();
+            $totalReviews++;
             $userFriends = [];
             foreach($review->getUser()->getFriends() as $friend) {
                 $userFriends[] = [
@@ -109,6 +122,7 @@ class BusinessController extends AbstractController
             }
 
             $reviewsData[] = [
+                'id' => $review->getId(),
                 'stars' => $review->getStars(),
                 'images' => $review->getImages(),
                 'content' => $review->getContent(),
@@ -131,6 +145,8 @@ class BusinessController extends AbstractController
             ];
         }
 
+        $avgStars = $totalReviews > 0 ? $totalStars / $totalReviews : 0;
+
         $businessData = [
             'name' => $business->getName(),
             'location' => $business->getLocation(),
@@ -144,6 +160,7 @@ class BusinessController extends AbstractController
             'website' => $business->getWebsite(),
             'phoneNumber' => $business->getPhoneNumber(),
             'address' => $business->getAddress(),
+            'avgStars' => $avgStars,
         ];
 
         return new JsonResponse([
@@ -153,17 +170,42 @@ class BusinessController extends AbstractController
     }
 
     #[Route('/businesses/create', name: 'business-create' )]
-    public function update(Request $request): Response {
+    public function update(Request $request, EntityManagerInterface $entityManager): Response {
         $data = json_decode($request->getContent(), true);
+        $categoryRepository = $this->em->getRepository(Category::class);
 
-        $review = $this->em->getRepository(Review::class)->find($data['id']);
+        $business = new Business();
 
-        if ($review) {
-            $currentReactions = $review->getReactions();
-            $updatedReactions = array_merge($currentReactions, $data['reactions']);
-            $review->setReactions($updatedReactions);
-            $this->em->flush();
+        $business->setName($data['name']);
+        $business->setLocation($data['location']);
+        $business->setDescription($data['description']);
+        $business->setWebsite($data['website']);
+        $business->setPhoneNumber($data['phone']);
+        $business->setAddress($data['address']);
+        $business->setOwner($this->getUser()->getUserIdentifier());
+        $hours = explode(',', $data['hours']);
+        $business->setHours(
+            [
+                'Mon' => $hours[0],
+                'Tue' => $hours[1],
+                'Wed' => $hours[2],
+                'Thu' => $hours[3],
+                'Fri' => $hours[4],
+                'Sat' => $hours[5],
+                'Sun' => $hours[6],
+            ]
+        );
+        $categories = explode(',', $data['categories']);
+        foreach ($categories as $categoryName) {
+            $category = $categoryRepository->findOneBy(['name' => $categoryName]);
+            if ($category) {     
+                $business->addCategory($category);
+            }
         }
+        $business->setExpensiveness(1);
+
+        $entityManager->persist($business);
+        $entityManager->flush();
 
         return new JsonResponse(['status' => 'ok']);
     }

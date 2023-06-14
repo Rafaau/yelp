@@ -100,7 +100,7 @@
             {/if}
             {#each businesses as business, index}
                 <a 
-                    href="{findDesc != null ? `/review?business=${encodeURIComponent(business.name)}` : `/biz?name=${encodeURIComponent(business.name)}&loc=${location}` }"
+                    href="{findDesc != null ? `/review?business=${encodeURIComponent(business.name)}&loc=${location}` : `/biz?name=${encodeURIComponent(business.name)}&loc=${location}` }"
                     class="flex my-5 pb-5 border-b cursor-pointer">
                     {#if business.reviews.length && business.reviews[0] != null && business.reviews[0].images != null && business.reviews[0].images[0] != null}
                         <img src="{business.reviews[0].images[0]}" alt="" class="w-48 h-48 object-cover rounded-md">
@@ -113,7 +113,7 @@
                         </span>
                         <div class="flex items-center text-zinc-500 my-1">
                             {#if business.reviews.length}
-                                <Stars stars={4}/>
+                                <Stars stars={business.avgStars}/>
                             {/if}
                             <span>
                                 {business.reviews.length} reviews

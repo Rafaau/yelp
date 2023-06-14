@@ -48,6 +48,10 @@
         const parsedTime = parse(timeStr, "hh:mm aa", new Date());
         return format(parsedTime, 'HH:mm');
     }
+
+    function scrollToHours() {
+        document.getElementById('hours').scrollIntoView({behavior: 'smooth'});
+    }
 </script>
 
 {#await promise then business}
@@ -62,76 +66,79 @@
         {/each}
     {/if}
 </div>
-<div class="absolute z-10 {imageCount > 3 ? 'text-zinc-100 top-[22rem] px-16' : 'text-zinc-900 top-40 px-10'} xl:px-56">
-    <p class="text-5xl font-black">{business.name}</p>
-    <div class="flex items-center my-4">
-        {#if business.reviews.length}
-            <Stars stars={4}/>
-        {/if}
-        <span class="font-semibold hover:underline cursor-pointer">
-            {business.reviews.length} reviews
-        </span>
-    </div>
-    <div class="flex items-center font-semibold my-1">
-        {#if business.owner != null}
-            <div id="claimed-info">
-                <i class="fa-solid fa-circle-check text-blue-400 mr-1 text-sm"></i>
-                <span class="text-blue-400 mr-2">
-                    Claimed
-                </span>
-            </div>
+<div class="flex max-w-[1300px] mx-auto">
+    <div class="absolute z-10 {imageCount > 3 ? 'text-zinc-100 top-[22rem] px-16' : 'text-zinc-900 top-40 px-10'} px-12">
+        <p class="text-5xl font-black">{business.name}</p>
+        <div class="flex items-center my-4">
+            {#if business.reviews.length}
+                <Stars stars={business.avgStars}/>
+            {/if}
+            <span class="font-semibold hover:underline cursor-pointer">
+                {business.reviews.length} reviews
+            </span>
+        </div>
+        <div class="flex items-center font-semibold my-1">
+            {#if business.owner != null}
+                <div id="claimed-info">
+                    <i class="fa-solid fa-circle-check text-blue-400 mr-1 text-sm"></i>
+                    <span class="text-blue-400 mr-2">
+                        Claimed
+                    </span>
+                </div>
+            {:else}
+                <div id="unclaimed-info">
+                    <span class="mr-1">
+                        Unclaimed
+                    </span>
+                    <i class="fa-solid fa-circle-exclamation mx-2 text-sm"></i>
+                </div>
+            {/if}
+            <span class="mr-2">•</span>           
+            {#each Array(business.expensiveness) as i}
+                <i class="fa-solid fa-dollar-sign"></i>
+            {/each}
+            <span class="ml-2">•</span>  
+            <a 
+                href="{`search?cflt=${business.categories[1].name.toLowerCase()}&find_loc=${businessLoc}`}" 
+                class="ml-2 hover:underline cursor-pointer">
+                {business.categories[1].name}
+            </a>
+            <span class="bg-zinc-400 bg-opacity-30 px-2 ml-3 text-sm py-[0.125rem] rounded cursor-pointer hover:bg-opacity-50 transition-[0.5] font-thin">
+                Edit
+            </span>
+        </div>
+        {#if currentTime >= openingTime && currentTime <= closingTime}
+            <span class="text-green-600 font-semibold text-lg">
+                Open
+            </span>
         {:else}
-            <div id="unclaimed-info">
-                <span class="mr-1">
-                    Unclaimed
-                </span>
-                <i class="fa-solid fa-circle-exclamation mx-2 text-sm"></i>
-            </div>
+            <span class="text-red-400 font-semibold text-lg">
+                Closed
+            </span>
         {/if}
-        <span class="mr-2">•</span>           
-        {#each Array(business.expensiveness) as i}
-            <i class="fa-solid fa-dollar-sign"></i>
-        {/each}
-        <span class="ml-2">•</span>  
-        <a 
-            href="{`search?cflt=${business.categories[1].name.toLowerCase()}&find_loc=${location}`}" 
-            class="ml-2 hover:underline cursor-pointer">
-            {business.categories[1].name}
-        </a>
-        <span class="bg-zinc-400 bg-opacity-30 px-2 ml-3 text-sm py-[0.125rem] rounded cursor-pointer hover:bg-opacity-50 transition-[0.5] font-thin">
-            Edit
+        <span class="font-semibold ml-2">
+            {openHours[0]} - {openHours[1]}
         </span>
+        <button
+            id="see-hours-button" 
+            on:click={scrollToHours}
+            class="bg-zinc-400 bg-opacity-30 px-2 ml-2 text-sm py-[0.125rem] rounded hover:bg-opacity-50 transition-[0.5]">
+            See hours
+        </button>
     </div>
-    {#if currentTime >= openingTime && currentTime <= closingTime}
-        <span class="text-green-600 font-semibold text-lg">
-            Open
-        </span>
-    {:else}
-        <span class="text-red-400 font-semibold text-lg">
-            Closed
-        </span>
-    {/if}
-    <span class="font-semibold ml-2">
-        {openHours[0]} - {openHours[1]}
-    </span>
-    <button
-        id="see-hours-button" 
-        class="bg-zinc-400 bg-opacity-30 px-2 ml-2 text-sm py-[0.125rem] rounded hover:bg-opacity-50 transition-[0.5]">
-        See hours
-    </button>
 </div>
 <div class="flex max-w-[1300px] mx-auto px-10">
     <div class="py-4 pr-10 w-[65%]">
         <p class="text-sm text-zinc-600">
             <a 
                 class="hover:underline cursor-pointer"
-                href="{`search?cflt=${business.categories[0].name.toLowerCase()}&find_loc=${location}`}" >
+                href="{`search?cflt=${business.categories[0].name.toLowerCase()}&find_loc=${businessLoc}`}" >
                 {business.categories[0].name}
             </a>
             <i class="fa-solid fa-chevron-right mx-2 text-xs"></i>
             <a 
                 class="hover:underline cursor-pointer"
-                href="{`search?cflt=${business.categories[1].name.toLowerCase()}&find_loc=${location}`}" >
+                href="{`search?cflt=${business.categories[1].name.toLowerCase()}&find_loc=${businessLoc}`}" >
                 {business.categories[1].name}
             </a>
             <i class="fa-solid fa-chevron-right mx-2 text-xs"></i>       
@@ -139,7 +146,7 @@
         </p>
         <div class="flex my-8">
             <a 
-                href="{$currentUser != null ? `/review?business=${encodeURIComponent(business.name)}` : '/login'}"
+                href="{$currentUser != null ? `/review?business=${encodeURIComponent(business.name)}&loc=${businessLoc}` : '/login'}"
                 class="bg-red-600 text-zinc-100 px-4 py-2 rounded font-semibold">
                 <i class="fa-regular fa-star mr-2"></i>
                 Write a review
@@ -221,20 +228,24 @@
                     <span class="font-black text-xl my-3">
                         About the Business
                     </span>
-                    <div class="flex mt-6 items-center">
-                        <img src="../build/images/avatar_default.19e0a8ff.jpg" class="w-12 h-12 rounded-full mr-3 border">
-                        <div>
-                            <p class="font-semibold">
-                                {business.owner}
-                            </p>
-                            <p class="text-sm text-zinc-600">
-                                Business Owner
-                            </p>
+                    {#if business.owner != null}
+                        <div class="flex mt-6 items-center">
+                            <img src="../build/images/avatar_default.19e0a8ff.jpg" class="w-12 h-12 rounded-full mr-3 border">
+                            <div>
+                                <p class="font-semibold">
+                                    {business.owner}
+                                </p>
+                                <p class="text-sm text-zinc-600">
+                                    Business Owner
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <p class="mt-6 font-roboto-light">
-                        {business.description}
-                    </p>
+                    {/if}
+                    {#if business.description != null}
+                        <p class="mt-6 font-roboto-light">
+                            {business.description}
+                        </p>
+                    {/if}
                 </div>
             {/if}
         <div class="my-8">
@@ -255,9 +266,11 @@
                                 class="font-semibold mt-[0.125rem] cursor-pointer hover:underline">
                                 {review.user.username}
                             </a>
-                            <p class="text-sm font-roboto-light">
-                                {review.user.address}
-                            </p>
+                            {#if review.user.address}
+                                <p class="text-sm font-roboto-light">
+                                    {review.user.address}
+                                </p>
+                            {/if}
                             <div class="flex items-center text-zinc-600 text-sm mt-1">
                                 <i class="fa-solid fa-users-rectangle text-xs"></i>
                                 <span class="mx-1">
