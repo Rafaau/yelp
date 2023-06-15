@@ -1,6 +1,8 @@
 const Encore = require('@symfony/webpack-encore');
 require('dotenv').config({ path: './.env' });
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const path = require('path');
+const sveltePreprocess = require('svelte-preprocess');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -46,9 +48,13 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     // configure Babel
-    // .configureBabel((config) => {
-    //     config.plugins.push('@babel/a-babel-plugin');
-    // })
+    .configureBabel((config) => {
+        config.presets.push('@babel/preset-flow');
+
+        //config.plugins.push('@babel/a-babel-plugin');
+    }, {
+        includeNodeModules: ['svelte'],
+    })
 
     // enables and configure @babel/preset-env polyfills
     .configureBabelPresetEnv((config) => {
@@ -84,6 +90,18 @@ Encore
         pattern: /\.(png|jpg|jpeg|svg)$/
     })
 
+    .addLoader({
+        test: /\.(.html|svelte)$/,
+        exclude: /node_modules/,
+        use: {
+            loader: 'svelte-loader',
+            options: {
+                emitCss: true,
+                hotReload: true,
+            },
+        },
+    })
+
     .addPlugin(new BrowserSyncPlugin(
         {
             host: 'localhost',
@@ -102,6 +120,9 @@ Encore
                 {
                     match: ["assets/**/*.css"],
                 },
+                {
+                    match: ["assets/**/*.svelte"],
+                }
             ],
             notify: false,
         },
@@ -112,4 +133,53 @@ Encore
     
 ;
 
-module.exports = Encore.getWebpackConfig();
+let config = Encore.getWebpackConfig();
+
+config.resolve = {
+    alias: {
+        svelte: path.resolve('node_modules', 'svelte'),
+    },
+    extensions: ['.mjs', '.js', '.svelte', '.ts'],
+    mainFields: ['svelte', 'browser', 'module', 'main'],
+    conditionNames: ['svelte'],   
+}
+
+config.module = {
+    rules: [
+        {
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            loader: "ts-loader"
+        },
+        {
+            test: /\.svelte$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'svelte-loader',
+                options: {
+                    emitCss: true,
+                    hotReload: true,
+                    preprocess: sveltePreprocess({ 
+                        sourceMap: !Encore.isProduction(),
+                        postcss: {
+                            plugins: [
+                                require('tailwindcss'),
+                                require('autoprefixer'),
+                            ],
+                        },
+                    })
+                },
+            },
+        }, 
+        {
+            test: /\.css$/,
+            use: [
+                'style-loader',
+                'css-loader',
+                'postcss-loader',
+            ],
+        },
+    ]
+}
+
+module.exports = config;

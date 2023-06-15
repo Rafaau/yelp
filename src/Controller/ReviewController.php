@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Review;
+use App\Entity\Business;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,26 @@ class ReviewController extends AbstractController
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
+    }
+
+    #[Route('/reviews/post', name: 'review-post' )]
+    public function post(Request $request): Response {
+        $data = json_decode($request->getContent(), true);
+        $user = $this->getUser();
+        $business = $this->em->getRepository(Business::class)->findOneBy(['name' => $data['businessName']]);
+        $review = new Review();
+
+        if ($user && $business) {
+            $review->setUser($user);
+            $review->setBusiness($business);
+            $review->setContent($data['content']);
+            $review->setStars($data['stars']);
+
+            $this->em->persist($review);
+            $this->em->flush();
+        }
+
+        return new JsonResponse(['status' => 'ok']);
     }
 
     #[Route('/reviews/update_reaction', name: 'review-update' )]
@@ -55,8 +76,9 @@ class ReviewController extends AbstractController
         $queryBuilder = $reviewsRepository->createQueryBuilder('r');
 
         $reviews = $queryBuilder
-            ->select('r, b')
+            ->select('r, b, u')
             ->innerJoin('r.business', 'b')
+            ->innerJoin('r.user', 'u')
             ->where('b.location = :location')
             ->setParameter('location', ucwords($location))
             ->orderBy('r.id', 'DESC')
@@ -64,12 +86,23 @@ class ReviewController extends AbstractController
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
-
+    
         $reviewsData = [];
         foreach ($reviews as $review) {
             $reviewsData[] = [
                 'id' => $review->getId(),
                 'content' => $review->getContent(),
+                'stars' => $review->getStars(),
+                'reactions' => $review->getReactions(),
+                'images' => $review->getImages(),
+                'user' => array(
+                    'id' => $review->getUser()->getId(),
+                    'username' => $review->getUser()->getUsername(),
+                    'userImage' => $review->getUser()->getUserImage(),
+                ),
+                'business' => array(
+                    'name' => $review->getBusiness()->getName(),
+                ),
             ];
         }
         

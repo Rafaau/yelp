@@ -24,8 +24,9 @@
         {% endblock %}
     </head>
     <body class="bg-zinc-100 overflow-x-hidden hide-scrollbar">
-        {% include 'header.html.twig' %}
+        <div id="globals-target"></div>
+        <div id="header-target"></div>
         {% block body %}{% endblock %}
-        {% include 'footer.html.twig' %}
+        <div id="footer-target"></div>
     </body>
 </html>

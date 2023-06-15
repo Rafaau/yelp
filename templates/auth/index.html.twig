@@ -1,167 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div class="relative top-[4.5rem] h-auto border-t py-16 pb-36 flex justify-center">
+    <script>
+        window.APP_DATA = {
+            csrfToken: "{{ csrf_token('authenticate') }}"
+        }
+    </script>
+
+    <div class="relative top-[4.5rem] h-auto py-16 pb-36 flex justify-center">
         <div class="flex items-center max-w-[1300px]">
             {% if view == 'register' %}
-                <div 
-                    class="w-80">
-                    <p class="text-center text-red-600 font-semibold text-xl">
-                        Sign Up for Whelp
-                    </p>
-                    <p class="text-center text-sm font-semibold mt-1">
-                        Connect with great local businesses
-                    </p>
-                    <div class="mt-2">
-                    {{ form_start(registrationForm, { 'method': 'POST' }) }}
-                        <div class="flex items-center space-x-2">
-                            {{ form_widget(registrationForm.agreeTerms) }}
-                            <label class="text-xs text-gray-500">
-                                By continuing, I agree to Yelp’s <a class="text-blue-500 hover:underline" href="https://www.yelp.co.uk/static?p=tos">Terms of Service</a> and acknowledge Yelp’s <a class="text-blue-500 hover:underline" href="https://www.yelp.com/tos/privacy_policy">Privacy Policy</a>, including Yelp’s cookie policy.
-                            </label>
-                        </div>
-                        <div class="flex space-x-2 mb-2 mt-4">
-                            {{ form_widget(registrationForm.firstName, {
-                                'attr': {
-                                    'class': 'border border-zinc-400 px-2 py-1 w-[50%] rounded font-roboto-light outline-none mb-2',
-                                    'placeholder': 'First Name'
-                                }
-                            }) }}
-                            {{ form_widget(registrationForm.lastName, {
-                                'attr': {
-                                    'class': 'border border-zinc-400 px-2 py-1 w-[50%] rounded font-roboto-light outline-none mb-2',
-                                    'placeholder': 'Last Name'
-                                }
-                            }) }}
-                        </div>
-                        {{ form_widget(registrationForm.email, {
-                            'attr': {
-                                'class': 'border border-zinc-400 px-2 py-1 w-[100%] rounded font-roboto-light outline-none mb-2',
-                                'placeholder': 'Email'
-                            }
-                        }) }}
-                        {{ form_widget(registrationForm.plainPassword, {
-                            'attr': {
-                                'class': 'border border-zinc-400 px-2 py-1 w-[100%] rounded font-roboto-light outline-none mb-2',
-                                'placeholder': 'Password'
-                            }
-                        }) }}
-                        <input type="text" class="border border-zinc-400 px-2 py-1 w-[100%] rounded font-roboto-light outline-none mb-2" placeholder="ZIP Code">
-                        <p class="font-semibold">
-                            Birthday
-                            <span class="text-xs text-gray-400 font-roboto-light ml-1">
-                                Optional
-                            </span>
-                        </p>
-                        <div class="flex my-2 space-x-2">
-                            <select class="border border-zinc-400 px-2 py-1 w-[33%] rounded font-roboto-light outline-none mb-2">
-                                <option value="Month">Month</option>
-                                <option value="January">January</option>
-                                <option value="February">February</option>
-                                <option value="March">March</option>
-                                <option value="April">April</option>
-                                <option value="May">May</option>
-                                <option value="June">June</option>
-                                <option value="July">July</option>
-                                <option value="August">August</option>
-                                <option value="September">September</option>
-                                <option value="October">October</option>
-                                <option value="November">November</option>
-                                <option value="December">December</option>           
-                            </select>
-                            <select class="border border-zinc-400 px-2 py-1 w-[33%] rounded font-roboto-light outline-none mb-2">
-                                <option value="Day">Day</option>
-                                {% for i in 1..31 %}
-                                    <option value="{{ i }}">{{ i }}</option>
-                                {% endfor %}
-                            </select>
-                            <select class="border border-zinc-400 px-2 py-1 w-[33%] rounded font-roboto-light outline-none mb-2">
-                                <option value="Year">Year</option>
-                                {% for i in 2023..1900 %}
-                                    <option value="{{ i }}">{{ i }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <input type="checkbox">
-                            <label class="text-xs text-gray-500">
-                                Yes, I want Whelp to send me marketing emails about Yelp’s products, services, and local events. I can unsubscribe at any time.
-                            </label>
-                        </div>
-                        <button
-                            type="submit"
-                            class="py-2 px-4 bg-red-600 text-zinc-100 font-semibold rounded w-full mt-4">
-                            Sign up
-                        </button>
-                        <p class="pt-4 mt-4 border-t text-center text-xs text-zinc-400">
-                            Already on Yelp? 
-                            <a 
-                                class="text-blue-500 hover:underline cursor-pointer" 
-                                href="/login">
-                                Log in
-                            </a>
-                        </p>
-                    {{ form_end(registrationForm) }}
-                    </div>
-                </div>
+                <div id="register-target"></div>
             {% else %}
-                <div 
-                    class="w-80">
-                    <p class="text-center text-red-600 font-semibold text-xl">
-                        Log in to Whelp
-                    </p>
-                    <p class="text-center text-sm font-semibold mt-1">
-                        New to Whelp? 
-                        <a 
-                            class="text-blue-500 hover:underline cursor-pointer" 
-                            href="/signup">
-                            Sign up
-                        </a>
-                    </p>
-                    <form method="post" class="mt-2">
-                        <div class="flex items-center space-x-2">
-                            <input type="checkbox">
-                            <label class="text-xs text-gray-500">
-                                By continuing, I agree to Yelp’s <a class="text-blue-500 hover:underline" href="https://www.yelp.co.uk/static?p=tos">Terms of Service</a> and acknowledge Yelp’s <a class="text-blue-500 hover:underline" href="https://www.yelp.com/tos/privacy_policy">Privacy Policy</a>, including Yelp’s cookie policy.
-                            </label>
-                        </div>
-                        <input 
-                            type="text" 
-                            class="border border-zinc-400 px-2 py-1 w-[100%] rounded font-roboto-light outline-none my-2" 
-                            placeholder="Email"
-                            name="email" 
-                            id="inputEmail" 
-                            class="form-control" 
-                            autocomplete="email" 
-                            required 
-                            autofocus>
-                        <input 
-                            type="password" 
-                            class="border border-zinc-400 px-2 py-1 w-[100%] rounded font-roboto-light outline-none mb-2" 
-                            placeholder="Password"
-                            name="password" 
-                            id="inputPassword" 
-                            class="form-control" 
-                            autocomplete="current-password" 
-                            required>
-
-                        <input type="hidden" name="_csrf_token"
-                            value="{{ csrf_token('authenticate') }}">
-
-                        <button
-                            type="submit"
-                            class="py-2 px-4 bg-red-600 text-zinc-100 font-semibold rounded w-full mt-4">
-                            Log In
-                        </button>
-                        <p class="pt-4 mt-4 border-t text-right text-xs text-zinc-400">
-                            New to Whelp? 
-                            <a 
-                                class="text-blue-500 hover:underline cursor-pointer" 
-                                href="/signup">
-                                Sign up
-                            </a>
-                        </p>
-                    </form>
-                </div>
+                <div id="login-target"></div>
             {% endif %}
             <img 
                 class="ml-36 w-96 h-[22rem]"
