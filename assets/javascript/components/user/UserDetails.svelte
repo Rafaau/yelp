@@ -2,6 +2,7 @@
     import { currentUser } from '../../store.js';
     import Reactions from "../shared/Reactions.svelte";
     import Stars from "../shared/Stars.svelte";
+    import AddFriend from './AddFriend.svelte';
 
     let currentURL = new URL(window.location.href);
     let userId = currentURL.searchParams.get('userid');
@@ -96,14 +97,16 @@
                     id="user-firstname"
                     class="text-3xl font-black mb-1 flex items-center">
                     {user.username}
-                    {#if $currentUser != null && $currentUser.friends.includes(user)}
+                    {#if $currentUser != null && $currentUser.friends.filter(x => x.id == user.id).length}
                         <span class="text-base text-green-600 ml-auto">Friend</span>
                     {/if}
                     <span id="friend-span" class="text-base text-green-600 ml-auto hidden">Friend</span>
                 </p>
-                <p>
-                    From {user.address}
-                </p>
+                {#if user.address != null}
+                    <p>
+                        From {user.address}
+                    </p>
+                {/if}
                 <div class="flex items-center text-zinc-800 font-roboto-light text-base mt-1">
                     <i class="fa-solid fa-users-rectangle text-lg text-orange-600"></i>
                     <span class="mx-1 font-semibold">
@@ -188,12 +191,9 @@
             <div id="current-user" class="hidden">{user != null ? user.username : ''}</div>
             <div id="friend-id" class="hidden">{user.id}</div>
             <div class="border-l pl-8 pb-12 flex flex-col text-cyan-700 font-semibold">
-                {#if $currentUser != null || ($currentUser != null && $currentUser.id != user.id)}
-                    {#if $currentUser == null || ($currentUser != null && !$currentUser.friends.includes(user))}
-                        <a class="mb-1 flex items-center cursor-pointer {currentUser != null ? 'add-friend-btn' : 'login-btn'}">
-                            <i class="fa-solid fa-user-plus text-xs mr-2"></i>
-                            <span class="hover:underline">Add Friend</span>
-                        </a>
+                {#if $currentUser != null && $currentUser.id != user.id}
+                    {#if $currentUser != null && !$currentUser.friends.filter(x => x.id == user.id).length}
+                        <AddFriend user={user}/>
                     {/if}
                     <a
                         href="{$currentUser != null ? `/messaging/${$currentUser.id}-${user.id}` : '/login'}" 

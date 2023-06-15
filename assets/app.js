@@ -9,7 +9,6 @@
 import './styles/app.css';
 import './javascript/main.js';
 import './javascript/tooltips.js';
-import './javascript/endpoint-calls.js';
 import Globals from './javascript/components/Globals.svelte';
 import Header from './javascript/components/layout/Header.svelte';
 import Footer from './javascript/components/layout/Footer.svelte';
@@ -21,6 +20,8 @@ import Review from './javascript/components/review/Review.svelte';
 import Register from './javascript/components/auth/Register.svelte';
 import Login from './javascript/components/auth/Login.svelte';
 import Create from './javascript/components/business/Create.svelte';
+import Conversation from './javascript/components/messaging/Conversation.svelte';
+import Messages from './javascript/components/messaging/Messages.svelte';
 
 new Globals({
     target: document.getElementById('globals-target')
@@ -65,6 +66,14 @@ if (document.getElementById('browse-target')) {
 } else if (document.getElementById('create-target')) {
     new Create({
         target: document.getElementById('create-target')
+    })
+} else if (document.getElementById('conversation-target')) {
+    new Conversation({
+        target: document.getElementById('conversation-target')
+    })
+} else if (document.getElementById('messages-target')) {
+    new Messages({
+        target: document.getElementById('messages-target')
     })
 }
 

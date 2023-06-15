@@ -18,16 +18,17 @@
     let review = currentURL.pathname.includes('review');
     let claim = currentURL.pathname.includes('claim');
     let auth = currentURL.pathname.includes('login') || currentURL.pathname.includes('signup');
+    let messaging = currentURL.pathname.includes('messaging');
 
     let findLocInput = findLoc || bizLoc || homeLoc;
 
     console.log(cflt, findLoc, findDesc, business)
 
-    let blankView = findLoc != null && findDesc != null || review || claim || auth;
+    let blankView = findLoc != null && findDesc != null || review || claim || auth || messaging;
     let transparentView = cflt == null || findLoc == null;
     let whiteView = cflt != null || findLoc != null || business || user;
     let fixed = cflt != null && findDesc == null;
-    let padding = findDesc != null || (cflt == null && business) || review || claim || auth;
+    let padding = findDesc != null || (cflt == null && business) || review || claim || auth || messaging;
 
     let dropdown = {
         'Restaurants': false,
@@ -44,6 +45,18 @@
     function redirect(path: string) {
         console.log(path)
         window.location.href = path;
+    }
+
+    function markNotificationsAsRead() {
+        dropdown['Notifications'] = !dropdown['Notifications'];
+        fetch('/notifications/mark-as-read', {
+            method: 'POST'
+        }).then(function(response) {
+            if (response.ok) {
+                console.log('ok')
+                document.getElementById('notifications-count').remove();
+            }
+        })
     }
 </script>
 
@@ -104,16 +117,16 @@
                 <a
                     id="messages-btn" 
                     href="/messaging">
-                    <i class="fa-regular fa-comment-dots text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
+                    <i class="fa-regular fa-comment-dots text-2xl ml-3 cursor-pointer rounded-full py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                 </a>
                 <div
-                    on:click={() => dropdown['Notifications'] = !dropdown['Notifications']}
+                    on:click={() => markNotificationsAsRead()}
                     on:keydown={null}
                     use:clickOutside
                     on:click_outside={() => dropdown['Notifications'] = false}      
                     id="notifications-btn"                   
                     class="relative">
-                    <i class="fa-regular fa-bell text-2xl ml-3 cursor-pointer rounded-full py-2 px-2 hover:bg-zinc-400 hover:bg-opacity-30"></i>
+                    <i class="fa-regular fa-bell text-2xl ml-3 cursor-pointer rounded-full py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                     {#if $currentUser != null && $currentUser.unreadNotifications.length > 0 }
                         <span
                             id="notifications-count" 

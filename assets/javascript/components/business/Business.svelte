@@ -52,6 +52,19 @@
     function scrollToHours() {
         document.getElementById('hours').scrollIntoView({behavior: 'smooth'});
     }
+
+    function deleteReview(e, reviewId) {
+            fetch('/reviews/delete', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: reviewId,
+                })
+            }).then(function(response) {
+                if (response.ok) {
+                    e.target.closest('.review-element').remove();
+                }
+            });
+    }
 </script>
 
 {#await promise then business}
@@ -288,7 +301,7 @@
                         </div>
                         {#if $currentUser != null && review.user.id == $currentUser.id}
                             <button
-                                data-review-id="{review.id}"
+                                on:click={(e) => deleteReview(e, review.id)}
                                 class="ml-auto delete-review-btn">
                                 <i class="fa-solid fa-trash-can text-xl text-red-700 cursor-pointer hover:text-red-600"></i>
                             </button>

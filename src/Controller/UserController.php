@@ -37,16 +37,78 @@ class UserController extends AbstractController
                 ];
             }
 
+            $messagesReceived = [];
+            foreach ($user->getMessagesReceived() as $message) {
+                $messagesReceived[] = [
+                    'id' => $message->getId(),
+                    'sender' => $message->getSender()->getUsername(),
+                    'content' => $message->getContent(),
+                    'postDate' => $message->getPostDate(),
+                ];
+            }
+
+            $messagesSent = [];
+            foreach ($user->getMessagesSent() as $message) {
+                $messagesSent[] = [
+                    'id' => $message->getId(),
+                    'receiver' => $message->getReceiver()->getUsername(),
+                    'content' => $message->getContent(),
+                    'postDate' => $message->getPostDate(),
+                ];
+            }
+
+            $notificationsData = [];
+            foreach ($user->getNotifications() as $notification) {
+                $notificationsData[] = [
+                    'id' => $notification->getId(),
+                    'title' => $notification->getTitle(),
+                    'message' => $notification->getMessage(),
+                ];
+            }
+
+            $unreadNotificationsData = [];
+            foreach ($user->getUnreadNotifications() as $notification) {
+                $unreadNotificationsData[] = [
+                    'id' => $notification->getId(),
+                    'title' => $notification->getTitle(),
+                    'message' => $notification->getMessage(),
+                ];
+            }
+
             return new JsonResponse(['user' => [
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
                 'roles' => $user->getRoles(),
                 'friends' => $friendsData,
-                'unreadNotifications' => [],
-                'notifications' => [],
+                'unreadNotifications' => $unreadNotificationsData,
+                'notifications' => $notificationsData,
+                'messagesReceived' => $messagesReceived,
+                'messagesSent' => $messagesSent,
             ]]);
         }
+    }
+ 
+    #[Route('/users/add-friend', name: 'add-friend' )]
+    public function update(Request $request): Response {
+        $data = json_decode($request->getContent(), true);
+
+        $user = $this->em->getRepository(User::class)->findOneBy(['username' => $this->getUser()->getUserIdentifier()]);
+
+        if ($user) {
+            $friendToAdd = $this->em->getRepository(User::class)->find($data['id']);
+            $user->addFriend($friendToAdd);
+
+            $notification = new Notification();
+            $notification->setTitle('New friend request');
+            $notification->setMessage($user->getUsername() . ' wants to be your friend!');
+            $notification->setUser($friendToAdd);
+            $this->em->persist($notification);
+
+            $this->em->flush();
+        }
+
+        return new JsonResponse(['status' => 'ok']);
     }
 
     #[Route('/users/{userId}', name: 'get-user' )]
@@ -108,27 +170,5 @@ class UserController extends AbstractController
             'notifications' => [],
             'reviews' => $reviewsData,
         ]]);
-    }
-
-    #[Route('/users/add-friend', name: 'add-friend' )]
-    public function update(Request $request): Response {
-        $data = json_decode($request->getContent(), true);
-
-        $user = $this->em->getRepository(User::class)->findOneBy(['username' => $this->getUser()->getUserIdentifier()]);
-
-        if ($user) {
-            $friendToAdd = $this->em->getRepository(User::class)->find($data['id']);
-            $user->addFriend($friendToAdd);
-
-            $notification = new Notification();
-            $notification->setTitle('New friend request');
-            $notification->setMessage($user->getUsername() . ' wants to be your friend!');
-            $notification->setUser($friendToAdd);
-            $this->em->persist($notification);
-
-            $this->em->flush();
-        }
-
-        return new JsonResponse(['status' => 'ok']);
     }
 }
