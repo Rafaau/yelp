@@ -63,6 +63,7 @@ class UserController extends AbstractController
                     'id' => $notification->getId(),
                     'title' => $notification->getTitle(),
                     'message' => $notification->getMessage(),
+                    'isRead' => $notification->isIsRead()
                 ];
             }
 

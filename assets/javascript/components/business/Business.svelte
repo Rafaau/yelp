@@ -275,7 +275,7 @@
                         {/if}
                         <div>
                             <a 
-                                href="{`user_details?userid=${review.user.id}&location=${location}`}"
+                                href="{`user_details?userid=${review.user.id}&loc=${location}`}"
                                 class="font-semibold mt-[0.125rem] cursor-pointer hover:underline">
                                 {review.user.username}
                             </a>

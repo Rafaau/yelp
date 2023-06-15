@@ -43,7 +43,7 @@
                     {/if}
                     <div>
                         <a
-                            href="user_details?userid={review.user.id}&location={location}" 
+                            href="user_details?userid={review.user.id}&loc={location}" 
                             class="text-lg font-bold hover:underline">
                             {review.user.username}
                         </a>
