@@ -1,6 +1,6 @@
 # Yelp
 
-**Yelp** is a simple CRUD application built using **Symfony** framework, that mimics the popular platform of the same name, which allows to publish crowd-sourced reviews about businesses.
+**Yelp** is a simple CRUD application built using **Symfony** and **Svelte** frameworks, that mimics the popular platform of the same name, which allows to publish crowd-sourced reviews about businesses.
 
 ## Deployment
 
