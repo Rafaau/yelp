@@ -45,7 +45,7 @@
 
 {#if !hide}
 <div class="bg-zinc-200 px-10 py-10">
-    <div class="grid grid-cols-4 max-w-[1200px] mx-auto">
+    <div class="grid md:grid-cols-4 grid-cols-2 max-w-[1200px] mx-auto md:ml-0 ml-8">
         <div class="[&>button]:block [&>button]:text-zinc-500 [&>button]:py-[0.125rem]">
             <p class="font-bold pb-4">About</p>
             {#each aboutList as about}
@@ -58,7 +58,7 @@
                 <button on:click={scrollToTop} class="hover:underline">{discover}</button>
             {/each}
         </div>
-        <div class="[&>button]:block [&>button]:text-zinc-500 [&>button]:py-[0.125rem]">
+        <div class="[&>button]:block [&>button]:text-zinc-500 [&>button]:py-[0.125rem] md:mt-0 mt-8">
             <p class="font-bold pb-4">Whelp for Business</p>
             {#each whelpForBusinessList as whelpForBusiness}
                 <button on:click={scrollToTop} class="hover:underline">{whelpForBusiness}</button>

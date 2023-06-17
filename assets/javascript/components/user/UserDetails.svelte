@@ -2,6 +2,7 @@
     import { currentUser } from '../../store.js';
     import Reactions from "../shared/Reactions.svelte";
     import Stars from "../shared/Stars.svelte";
+    import About from './About.svelte';
     import AddFriend from './AddFriend.svelte';
 
     let currentURL = new URL(window.location.href);
@@ -48,10 +49,10 @@
 
 {#await promise then user}
 <img 
-    class="absolute top-14 h-[14.5rem] w-full object-cover object-bottom"
+    class="absolute sm:top-14 top-28 h-[14.5rem] w-full object-cover object-bottom"
     src="https://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_user_details/3a3ed7e5327e/assets/img/stars-static.png">
 <div class="w-full flex justify-center">
-    <div class="relative flex top-36 mb-44 px-24 max-w-[1300px]">
+    <div class="relative flex sm:top-36 top-52 mb-44 px-24 max-w-[1300px]">
         <div class="min-w-[14rem]">
             {#if user.userImage}
                 <img 
@@ -90,6 +91,7 @@
                     Reviews
                 </div>
             </div>
+            <About user={user} starsCount={starsCount} totalReactions={totalReactions} className="md:hidden block"/>
         </div>
         <div class="px-8 max-w-[60%]">
             <div class="border-b">
@@ -187,135 +189,7 @@
                 {/each}
             {/if}
         </div>
-        <div class="w-64">
-            <div id="current-user" class="hidden">{user != null ? user.username : ''}</div>
-            <div id="friend-id" class="hidden">{user.id}</div>
-            <div class="border-l pl-8 pb-12 flex flex-col text-cyan-700 font-semibold">
-                {#if $currentUser != null && $currentUser.id != user.id}
-                    {#if $currentUser != null && !$currentUser.friends.filter(x => x.id == user.id).length}
-                        <AddFriend user={user}/>
-                    {/if}
-                    <a
-                        href="{$currentUser != null ? `/messaging/${$currentUser.id}-${user.id}` : '/login'}" 
-                        class="mb-1 flex items-center cursor-pointer">
-                        <i class="fa-regular fa-comment text-xs mr-2"></i>
-                        <span class="hover:underline">Send message</span>
-                    </a>
-                    <a class="flex items-center cursor-pointer">
-                        <i class="fa-solid fa-user-check text-xs mr-2"></i>
-                        <span class="hover:underline">Follow {user.username}</span>
-                    </a> 
-                {:else}
-                    <div class="h-20"></div>
-                {/if}                        
-            </div>
-            <div class="mt-10 pl-8">
-                <p class="font-semibold text-lg text-red-600">
-                    About {user.username}
-                </p>
-                <p class="text-sm font-semibold my-2">
-                    Rating distribution
-                </p>
-                <div class="flex mb-1 text-zinc-600 font-roboto-medium">
-                    <div class="bg-[#FCD8D2] px-2 rounded mr-3 w-[4.25rem]">
-                        5 stars
-                    </div>
-                    {starsCount[8] + starsCount[9]}
-                </div>
-                <div class="flex mb-1 text-zinc-600 font-roboto-medium">
-                    <div class="bg-[#FDE3D0] px-2 rounded mr-3 w-[4.25rem]">
-                        4 stars
-                    </div>
-                    {starsCount[7] + starsCount[8]}
-                </div>
-                <div class="flex mb-1 text-zinc-600 font-roboto-medium">
-                    <div class="bg-[#FDE7CF] px-2 rounded mr-3 w-[4.25rem]">
-                        3 stars
-                    </div>
-                    {starsCount[5] + starsCount[6]}
-                </div>
-                <div class="flex mb-1 text-zinc-600 font-roboto-medium">
-                    <div class="bg-[#FEEDCE] px-2 rounded mr-3 w-[4.25rem]">
-                        2 stars
-                    </div>
-                    {starsCount[3] + starsCount[4]}
-                </div>
-                <div class="flex mb-1 text-zinc-600 font-roboto-medium">
-                    <div class="bg-[#FFF3CD] px-2 rounded mr-3 w-[4.25rem]">
-                        1 star
-                    </div>
-                    {starsCount[1] + starsCount[2]}
-                </div>
-                <p class="text-sm font-semibold my-3">
-                    Review Votes
-                </p>
-                <div class="flex items-center mt-1 text-sm text-zinc-600">
-                    <i class="fa-regular fa-lightbulb mr-[0.625rem] text-lg ml-[0.125rem]"></i>
-                    Useful
-                    <span class="font-semibold ml-2 text-zinc-900">
-                        {totalReactions['useful']}
-                    </span>
-                </div>
-                <div class="flex items-center mt-1 text-sm text-zinc-600">
-                    <i class="fa-regular fa-face-laugh-squint mr-2 text-lg"></i>
-                    Funny
-                    <span class="font-semibold ml-2 text-zinc-900">
-                        {totalReactions['funny']}
-                    </span>
-                </div>
-                <div class="flex items-center mt-1 text-sm text-zinc-600">
-                    <i class="fa-regular fa-face-grin-wink mr-2 text-lg"></i>
-                    Cool
-                    <span class="font-semibold ml-2 text-zinc-900">
-                        {totalReactions['cool']}
-                    </span>
-                </div>
-                <p class="text-sm font-semibold mt-3 mb-1">
-                    Location
-                </p>
-                <p class="text-sm font-roboto-light">
-                    {user.address}
-                </p>
-                <p class="text-sm font-semibold mt-3 mb-1">
-                    Whelping Since
-                </p>
-                <p class="text-sm font-roboto-light">
-                    {new Date(user.memberSince.date).toLocaleDateString('en-GB', {day: 'numeric', month: 'numeric', year: 'numeric'})}
-                </p>
-                {#if user.thingsILove != null}
-                    <p class="text-sm font-semibold mt-3 mb-1">
-                        Things I Love
-                    </p>
-                    <p class="text-sm font-roboto-light">
-                        {user.thingsILove}
-                    </p>
-                {/if}
-                {#if user.myHometown !=null}
-                    <p class="text-sm font-semibold mt-3 mb-1">
-                        My Hometown
-                    </p>
-                    <p class="text-sm font-roboto-light">
-                        {user.myHometown}
-                    </p>
-                {/if}
-                {#if user.whenIAmNotWhelping != null}
-                    <p class="text-sm font-semibold mt-3 mb-1">
-                        When I'm Not Whelping
-                    </p>
-                    <p class="text-sm font-roboto-light">
-                        {user.whenIAmNotWhelping}
-                    </p>
-                {/if}
-                {#if user.whyYouShouldRead != null}
-                    <p class="text-sm font-semibold mt-3 mb-1">
-                        Why You Should Read My Reviews
-                    </p>
-                    <p class="text-sm font-roboto-light">
-                        {user.whyYouShouldRead}
-                    </p>
-                {/if}
-            </div>
-        </div>
+        <About user={user} starsCount={starsCount} totalReactions={totalReactions} className="md:block hidden"/>
     </div>
 </div>
 {/await}

@@ -19,7 +19,7 @@
 {#await promise then conversations}
     <div class="relative top-16 border-t">
         {#if $currentUser.messagesReceived.length || $currentUser.messagesSent.length}
-            <div class="w-1/3 mx-auto mt-6">
+            <div class="lg:w-1/3 md:w-1/2 w-full md:px-0 px-4 mx-auto mt-6">
                 {#each conversations as conversation}
                     <a href={`/messaging/${$currentUser.id}-${$currentUser.id == conversation.sender.id ? conversation.receiver.id : conversation.sender.id}`}>
                     <div class="border rounded p-4 mb-3 w-full cursor-pointer hover:shadow-md">

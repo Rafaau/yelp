@@ -34,7 +34,7 @@
 </script>
 
 <div class="max-w-[1300px] mx-auto">
-    <div class="grid grid-cols-4 gap-8 px-10 pb-10">
+    <div class="grid md:grid-cols-4 grid-cols-2 gap-8 px-10 pb-10">
         {#each Object.keys(mainCategories) as category}
             <a 
                 href="{`search?cflt=${category}&find_loc=${location}`}"
@@ -52,11 +52,11 @@
         </div>  
     </div>
     {#if show}
-        <div class="grid grid-cols-4 px-10 gap-8 mb-10 text-zinc-600">
+        <div class="grid md:grid-cols-4 grid-cols-2 px-10 gap-8 mb-10 text-zinc-600">
             {#each Object.keys(moreCategories) as category}
                 <a 
                     href="{`search?cflt=${category}&find_loc=${location}`}"
-                    class="hover:underline">
+                    class="hover:underline md:ml-4 ml-8">
                     <i class="{moreCategories[category]}"></i>
                     {category}
                 </a>

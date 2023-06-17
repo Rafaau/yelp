@@ -58,7 +58,7 @@
 {#each Object.keys(activeCategories) as category}
     <a 
         href={`/search?cflt=${category}&find_loc=${findLoc}`}
-        class="rounded-md py-1 px-2 hover:bg-zinc-200">
+        class="rounded-md py-1 px-2 hover:bg-zinc-200 text-left">
         <i class="{activeCategories[category]}"></i>
         {category}
     </a>

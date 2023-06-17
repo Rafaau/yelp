@@ -67,13 +67,13 @@
 
 {#await promise then data}
     <div class="relative border-t h-screen pt-20">
-        <div class="w-1/3 mx-auto border-b pb-4">
+        <div class="lg:w-1/3 md:w-1/2 w-full md:px-0 px-2 mx-auto border-b pb-4">
             <div class="flex items-center space-x-4">
                 <img src={`/${receiver.userImage}`} class="rounded-full w-16 h-16 border">
                 <p class="font-semibold text-2xl">{receiver.username}</p>
             </div>
         </div>
-        <div class="overflow-y-scroll w-1/3 mx-auto h-[69vh] hide-scrollbar py-4 px-3 pb-16">
+        <div class="overflow-y-scroll lg:w-1/3 md:w-1/2 w-full mx-auto h-[69vh] hide-scrollbar py-4 px-3 pb-16">
             <p class="font-roboto-light text-sm mb-2">
                 This is the beginning of your message history with <strong>{receiver.username}</strong>
             </p>
@@ -99,7 +99,7 @@
                 {/each}
             </div>
         </div>
-        <div class="w-1/3 mx-auto absolute bottom-0 pb-1 left-1/3 bg-zinc-100">
+        <div class="lg:w-1/3 md:w-1/2 w-full mx-auto absolute bottom-0 pb-1 lg:left-1/3 md:left-1/4 md:px-0 px-2 left-0 bg-zinc-100">
             <div id="receiver-id" class="hidden">{receiver.id}</div>
             <div id="last-sender" class="hidden">{data.messages.length > 0 && data.messages[data.messages.length - 1].sender.id == $currentUser.id ? 1 : 0}</div>
             <div class="border-zinc-300 border rounded flex items-center">

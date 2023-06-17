@@ -157,10 +157,10 @@
     }
 </script>
 
-<div class="relative top-20 px-20 py-6 mb-20">
+<div class="relative top-20 md:px-20 px-12 py-6 mb-20">
     <p class="text-3xl font-bold text-zinc-800">{businessName}</p>
     <form on:submit|preventDefault={onSubmit}>
-        <div class="min-h-[24rem] w-[40rem] border border-zinc-300 rounded-md mt-4 px-5 py-6">
+        <div class="min-h-[24rem] md:w-[40rem] w-full border border-zinc-300 rounded-md mt-4 px-5 py-6">
             <div class="flex">
                 <div id="review-stars" class="flex">
                     

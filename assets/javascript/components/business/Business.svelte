@@ -80,7 +80,7 @@
     {/if}
 </div>
 <div class="flex max-w-[1300px] mx-auto">
-    <div class="absolute z-10 {imageCount > 3 ? 'text-zinc-100 top-[22rem] px-16' : 'text-zinc-900 top-40 px-10'} px-12">
+    <div class="absolute z-10 {imageCount > 3 ? 'text-zinc-100 sm:top-[22rem] top-[16rem] px-16' : 'text-zinc-900 top-40 px-10'} px-12">
         <p class="text-5xl font-black">{business.name}</p>
         <div class="flex items-center my-4">
             {#if business.reviews.length}
@@ -141,7 +141,7 @@
     </div>
 </div>
 <div class="flex max-w-[1300px] mx-auto px-10">
-    <div class="py-4 pr-10 w-[65%]">
+    <div class="py-4 md:pr-10 pr-0 w-full">
         <p class="text-sm text-zinc-600">
             <a 
                 class="hover:underline cursor-pointer"
@@ -157,22 +157,22 @@
             <i class="fa-solid fa-chevron-right mx-2 text-xs"></i>       
             {business.name}
         </p>
-        <div class="flex my-8">
+        <div class="grid lg:grid-cols-4 gap-2 sm:grid-cols-2 grid-cols-1 my-8">
             <a 
                 href="{$currentUser != null ? `/review?business=${encodeURIComponent(business.name)}&loc=${businessLoc}` : '/login'}"
-                class="bg-red-600 text-zinc-100 px-4 py-2 rounded font-semibold">
+                class="bg-red-600 text-zinc-100 px-4 py-2 rounded font-semibold text-center">
                 <i class="fa-regular fa-star mr-2"></i>
                 Write a review
             </a>
-            <button class="py-2 px-4 border border-zinc-400 rounded ml-2 hover:bg-zinc-400 hover:bg-opacity-30 transition-[0.5] font-semibold">
+            <button class="py-2 px-4 border border-zinc-400 rounded hover:bg-zinc-400 hover:bg-opacity-30 transition-[0.5] font-semibold">
                 <i class="fa-solid fa-camera-retro mr-2"></i>
                 Add Photo
             </button>
-            <button class="py-2 px-4 border border-zinc-400 rounded ml-2 hover:bg-zinc-400 hover:bg-opacity-30 transition-[0.5] font-semibold">
+            <button class="py-2 px-4 border border-zinc-400 rounded hover:bg-zinc-400 hover:bg-opacity-30 transition-[0.5] font-semibold">
                 <i class="fa-regular fa-share-from-square"></i>
                 Share
             </button>
-            <button class="py-2 px-4 border border-zinc-400 rounded ml-2 hover:bg-zinc-400 hover:bg-opacity-30 transition-[0.5] font-semibold">
+            <button class="py-2 px-4 border border-zinc-400 rounded hover:bg-zinc-400 hover:bg-opacity-30 transition-[0.5] font-semibold">
                 <i class="fa-regular fa-bookmark"></i>
                 Save
             </button>
@@ -182,7 +182,7 @@
                 id="hours" 
                 class="font-black text-xl">
                 Location & Hours
-                <div class="flex mt-6">
+                <div class="grid sm:grid-cols-2 grid-cols-1 mt-6">
                     <div>
                         <img src="https://maps.googleapis.com/maps/api/staticmap?size=315x150&sensor=false&client=gme-yelp&language=en&scale=1&zoom=15&center=51.511835%2C-0.122708&markers=scale%3A1%7Cicon%3Ahttps%3A%2F%2Fyelp-images.s3.amazonaws.com%2Fassets%2Fmap-markers%2Fannotation_32x43.png%7C51.511835%2C-0.122708&signature=ghss--MrHd30bDdO0JRyjz1dY6c="/>
                         <div class="flex mt-4">
@@ -199,7 +199,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="font-thin text-base ml-8 [&>p]:my-1">
+                    <div class="font-thin text-base sm:ml-8 ml-0 [&>p]:my-1">
                         {#each Object.entries(business.hours) as [day, hours]}
                             {#if day == currentDay}
                                 {#if currentTime >= convertTo24Hour(String(hours).split(' - ')[0]) && currentTime <= convertTo24Hour(String(hours).split(' - ')[1])}
@@ -275,7 +275,7 @@
                         {/if}
                         <div>
                             <a 
-                                href="{`user_details?userid=${review.user.id}&loc=${location}`}"
+                                href="{`user_details?userid=${review.user.id}&loc=${businessLoc}`}"
                                 class="font-semibold mt-[0.125rem] cursor-pointer hover:underline">
                                 {review.user.username}
                             </a>
@@ -338,7 +338,7 @@
             {/each}
         </div>
     </div>
-    <div class="sticky border px-4 py-4 w-96 h-44 top-6 mb-6 mt-12 ml-auto">
+    <div class="sticky border px-4 py-4 w-96 md:block hidden h-44 top-6 mb-6 mt-12 ml-auto">
         <a 
             href="{business.website}"
             class="font-bold text-cyan-700 border-b pb-2 flex cursor-pointer">

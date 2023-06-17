@@ -86,7 +86,7 @@
     <form on:submit|preventDefault={onSubmit}>
         {#if currentView == view.name}
             <div 
-                class="w-[45vw] pt-16 pb-8 px-16">
+                class="md:w-[45vw] w-full pt-16 pb-8 px-16">
                 <p class="text-3xl font-black">Hello! Let’s start with your business name</p>
                 <p class="text-gray-500 font-roboto-light mt-4">
                     We’ll use this information to help you claim your Whelp page. Your business will come up automatically if it is already listed.
@@ -105,7 +105,7 @@
                 </button>
             </div>
         {:else if currentView == view.location}
-            <div class="w-[45vw] py-8 px-16">
+            <div class="md:w-[45vw] w-full py-8 px-16">
                 <p
                     class="text-cyan-700 mb-2 cursor-pointer" 
                     on:click={() => currentView = view.name}>
@@ -136,7 +136,7 @@
                 </button>
             </div>
         {:else if currentView == view.website}
-            <div class="w-[45vw] py-8 px-16">
+            <div class="md:w-[45vw] w-full py-8 px-16">
                 <p
                     class="text-cyan-700 mb-2 cursor-pointer" 
                     on:click={() => currentView = view.location}>
@@ -167,7 +167,7 @@
                 </button>
             </div>
         {:else if currentView == view.category}
-            <div class="w-[45vw] py-8 px-16">
+            <div class="md:w-[45vw] w-full py-8 px-16">
                 <p
                     class="text-cyan-700 mb-2 cursor-pointer" 
                     on:click={() => currentView = view.website}>
@@ -251,7 +251,7 @@
                 </button>
             </div>
         {:else if currentView == view.hours}
-            <div class="w-[45vw] py-8 px-16">
+            <div class="md:w-[45vw] w-full py-8 px-16">
                 <p
                     class="text-cyan-700 mb-2 cursor-pointer" 
                     on:click={() => currentView = view.category}>
@@ -278,7 +278,7 @@
             </div> 
         {/if}
     </form>   
-    <div class="relative w-[45vw] py-8 px-16">
+    <div class="relative w-[45vw] py-8 px-16 md:block hidden">
         <img 
             src="https://s3-media0.fl.yelpcdn.com/assets/public/cityscape_300x233_v2.yji-deccc3d10e15b4494be1.svg" 
             alt="404"

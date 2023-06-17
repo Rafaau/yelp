@@ -32,9 +32,9 @@
     Recent Activity
 </p>
 {#await promise then reviews}
-    <div class="grid grid-cols-3 gap-8 px-10 pb-10 max-w-[1300px] mx-auto">
+    <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 px-10 pb-10 max-w-[1300px] mx-auto">
         {#each reviews as review}
-            <div class="w-[100%] h-[27.5rem] rounded border border-zinc-300 cursor-pointer hover:shadow-md">
+            <div class="w-[100%] lg:h-[27.5rem] md:h-[30.5rem] h-[34.5rem] rounded border border-zinc-300 cursor-pointer hover:shadow-md">
                 <div class="flex items-center p-4">
                     {#if review.user.userImage}
                         <img src="{review.user.userImage}" alt="404" class="w-12 h-12 rounded-full mr-2" />
@@ -63,7 +63,7 @@
                         <Stars stars={review.stars} />
                     </div>
                     <p class="text-sm dots">{review.content}</p>
-                    <div class="flex space-x-2 text-zinc-500 font-semibold text-sm pt-4 mt-3 border-t">
+                    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 text-zinc-500 font-semibold text-sm pt-4 mt-3 border-t">
                         <Reactions review={review}/>
                     </div>
                 </div>

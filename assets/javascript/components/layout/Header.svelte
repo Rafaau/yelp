@@ -2,10 +2,8 @@
     import { currentUser } from '../../store.js';
     import {clickOutside} from '../../libs/clickOutside.js';
     import Categories from './Categories.svelte';
-
-    function capitalize(string) {
-        return string ? string.charAt(0).toUpperCase() + string.slice(1) : null;
-    }
+    import { capitalize, redirect } from '../../libs/utils.js';
+    import Search from './Search.svelte';
 
     let currentURL = new URL(window.location.href);
     let cflt = capitalize(currentURL.searchParams.get('cflt'));
@@ -42,11 +40,6 @@
 
     $: console.log($currentUser);
 
-    function redirect(path: string) {
-        console.log(path)
-        window.location.href = path;
-    }
-
     function markNotificationsAsRead() {
         dropdown['Notifications'] = !dropdown['Notifications'];
         fetch('/notifications/mark-as-read', {
@@ -68,33 +61,13 @@
             whelp
         </a>
         {#if !blankView }
-            <div class="flex bg-white pl-3 py-3 rounded-md relative w-[40vw] shadow-md">
-                <input 
-                    id="cflt-input"
-                    type="text" 
-                    class="bg-transparent outline-none border-r border-zinc-300 pr-2 w-[45%] text-zinc-900"
-                    placeholder="pizza, pub, Fox & Hound"
-                    bind:value={cflt}/>
-                <input 
-                    id="loc-input"
-                    type="text" 
-                    class="bg-transparent outline-none pl-2 w-[45%] mr-[12%] text-zinc-900"
-                    placeholder="London"
-                    bind:value={findLocInput}/>               
-                <div 
-                
-                    on:click={() => redirect(`/search?cflt=${cflt ? cflt : ''}&find_loc=${findLocInput}`)}
-                    on:keydown={null}
-                    class="absolute items-center flex justify-center right-[-1%] top-0 bg-red-600 w-14 h-full rounded-r-md cursor-pointer">
-                    <i class="fa-solid fa-magnifying-glass text-2xl text-zinc-100"></i>
-                </div>
-            </div>
+            <Search cflt={cflt} findLocInput={findLocInput} className="sm:flex hidden"/>
             <span
                 on:click={() => dropdown['Business'] = !dropdown['Business']}
                 on:keydown={null}
                 use:clickOutside
                 on:click_outside={() => dropdown['Business'] = false}           
-                class="relative text-md cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 ml-auto">
+                class="relative text-md cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 ml-auto lg:block hidden text-center">
                 Whelp for business
                 <i class="fa-solid fa-chevron-down ml-1"></i>
                 {#if dropdown['Business']}
@@ -109,14 +82,15 @@
                 {/if}
             </span>
             <a 
-                class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 { currentUser != null ? 'write-review-btn' : 'login-btn' }"
+                class="text-md ml-3 cursor-pointer rounded-md py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30 { currentUser != null ? 'write-review-btn' : 'login-btn' } lg:block hidden text-center"
                 href={ $currentUser != null ? `../search?cflt=&find_desc=writereview&find_loc=${findLoc || homeLoc}` : '/login'}>
                 Write a review
             </a>
             {#if $currentUser != null }
                 <a
                     id="messages-btn" 
-                    href="/messaging">
+                    href="/messaging"
+                    class="lg:ml-0 ml-auto">
                     <i class="fa-regular fa-comment-dots text-2xl ml-3 cursor-pointer rounded-full py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                 </a>
                 <div
@@ -138,7 +112,6 @@
                         <div 
                             class="absolute z-20 top-12 w-64 bg-zinc-100 right-0 py-3 px-3 rounded-lg text-zinc-900 border shadow-md">
                             {#if $currentUser != null && $currentUser.notifications.length > 0}
-                                <!-- {% set notifications = app.user.notifications.toArray()|sort|reverse %} -->
                                 {#each $currentUser.notifications as notification }
                                     <div class="my-2">
                                         <div class="font-semibold flex items-center">
@@ -183,7 +156,7 @@
             {:else}
                 <button 
                     on:click={() => redirect('/login')}
-                    class="py-2 px-4 border { whiteView ? 'border-zinc-400' : 'border-zinc-100' } rounded-md ml-3 hover:bg-zinc-400 hover:bg-opacity-30">
+                    class="py-2 px-4 border { whiteView ? 'border-zinc-400' : 'border-zinc-100' } rounded-md hover:bg-zinc-400 hover:bg-opacity-30 lg:ml-3 ml-auto">
                     Log In
                 </button>
                 <button
@@ -195,13 +168,14 @@
             {/if}
         </div>
         {#if !blankView}
+            <Search cflt={cflt} findLocInput={findLocInput} className="sm:hidden flex w-full mt-4"/>
             <div class="flex items-center text-sm { whiteView ? 'text-zinc-900' : 'text-zinc-100' }">
                 <div 
                     on:mouseover={() => dropdown['Restaurants'] = true}
                     on:focus={() => dropdown['Restaurants'] = true}
                     on:blur={() => dropdown['Restaurants'] = false}
                     on:mouseleave={() => dropdown['Restaurants'] = false}
-                    class="relative text-md cursor-pointer py-3 px-3 ml-[10vw] mr-2 border-b-4 border-transparent hover:border-red-600">
+                    class="relative text-md cursor-pointer py-3 px-3 sm:ml-[10vw] ml-0 mr-2 border-b-4 border-transparent hover:border-red-600 flex items-center">
                     Restaurants
                     <i class="fa-solid fa-chevron-down ml-1"></i>
                     {#if dropdown['Restaurants']}
@@ -215,7 +189,7 @@
                     on:focus={() => dropdown['Home Services'] = true}
                     on:blur={() => dropdown['Home Services'] = false}
                     on:mouseleave={() => dropdown['Home Services'] = false}
-                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600 flex items-center text-center">
                     Home Services
                     <i class="fa-solid fa-chevron-down ml-1"></i>
                     {#if dropdown['Home Services']}
@@ -229,7 +203,7 @@
                     on:focus={() => dropdown['Auto Services'] = true}
                     on:blur={() => dropdown['Auto Services'] = false}
                     on:mouseleave={() => dropdown['Auto Services'] = false} 
-                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600 flex items-center text-center">
                     Auto Services
                     <i class="fa-solid fa-chevron-down ml-1"></i>
                     {#if dropdown['Auto Services']}
@@ -243,7 +217,7 @@
                     on:focus={() => dropdown['More'] = true}
                     on:blur={() => dropdown['More'] = false}
                     on:mouseleave={() => dropdown['More'] = false} 
-                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600">
+                    class="relative text-md cursor-pointer py-3 px-3 mr-2 border-b-4 border-transparent hover:border-red-600 flex items-center">
                     More
                     <i class="fa-solid fa-chevron-down ml-1"></i>
                     {#if dropdown['More']}

@@ -26,7 +26,7 @@
 </script>
 
 {#await promise then businesses}
-<div class="relative top-28 mb-28 flex border-b">
+<div class="relative sm:top-28 top-44 sm:mb-28 mb-44 flex border-b">
     <div class="">
             <div class="px-10 {findDesc == null ? 'py-6' : 'pb-6'} border-b">
                 {#if cflt != '' && findDesc == null}
@@ -71,7 +71,7 @@
                             class="ml-auto w-[30vw]"/>
                     </div>
                 {/if}
-                <div class="flex items-center w-[60%]">
+                <div class="flex items-center lg:w-[60%] w-full">
                     <span class="font-extrabold block text-2xl">
                         {#if cflt != '' && findDesc == null}
                             Top {businesses.length >= 10 ? 10 : businesses.length} {capitalize(cflt)} in {capitalize(location)}
@@ -92,7 +92,7 @@
                 <div class="sticky ">
                 </div>
             </div>
-        <div class="px-16 py-4 min-h-[50vh] w-[70%]">
+        <div class="px-16 py-4 min-h-[50vh] lg:w-[70%] w-full">
             {#if cflt != ''}
                 <span class="font-bold my-4">
                     All "{capitalize(cflt)}" results in {capitalize(location)}
@@ -101,7 +101,7 @@
             {#each businesses as business, index}
                 <a 
                     href="{findDesc != null ? `/review?business=${encodeURIComponent(business.name)}&loc=${location}` : `/biz?name=${encodeURIComponent(business.name)}&loc=${location}` }"
-                    class="flex my-5 pb-5 border-b cursor-pointer">
+                    class="flex my-5 pb-5 border-b cursor-pointer min-h-[12rem]">
                     {#if business.reviews.length && business.reviews[0] != null && business.reviews[0].images != null && business.reviews[0].images[0] != null}
                         <img src="{business.reviews[0].images[0]}" alt="" class="w-48 h-48 object-cover rounded-md">
                     {:else}
@@ -111,13 +111,13 @@
                         <span class="font-bold text-xl">
                             {index + 1}. <span class="hover:underline">{business.name}</span>
                         </span>
-                        <div class="flex items-center text-zinc-500 my-1">
+                        <div class="sm:flex block items-center text-zinc-500 my-1">
                             {#if business.reviews.length}
                                 <Stars stars={business.avgStars}/>
                             {/if}
-                            <span>
+                            <p class="sm:mt-0 mt-2">
                                 {business.reviews.length} reviews
-                            </span>
+                            </p>
                         </div>
                         <div class="flex my-2">
                             {#each business.categories as category}
