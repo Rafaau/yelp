@@ -27,7 +27,7 @@
             if (select_open_1.value == "Closed") {
                 select_close_1.style.display = 'none';
                 var temp = hiddenInput.value.split(',');
-                temp[0] = "0:00 AM - 0:00 AM";
+                temp[0] = "12:00 AM - 12:00 AM";
                 hiddenInput.value = temp.join(',');                        
             } else {
                 select_close_1.style.display = 'block';
@@ -41,7 +41,7 @@
             if (select_open_2.value == "Closed") {
                 select_close_2.style.display = 'none';
                 var temp = hiddenInput.value.split(',');
-                temp[1] = "0:00 AM - 0:00 AM";
+                temp[1] = "12:00 AM - 12:00 AM";
                 hiddenInput.value = temp.join(',');
             } else {
                 select_close_2.style.display = 'block';
@@ -55,7 +55,7 @@
             if (select_open_3.value == "Closed") {
                 select_close_3.style.display = 'none';
                 var temp = hiddenInput.value.split(',');
-                temp[2] = "0:00 AM - 0:00 AM";
+                temp[2] = "12:00 AM - 12:00 AM";
                 hiddenInput.value = temp.join(',');
             } else {
                 select_close_3.style.display = 'block';
@@ -69,7 +69,7 @@
             if (select_open_4.value == "Closed") {
                 select_close_4.style.display = 'none';
                 var temp = hiddenInput.value.split(',');
-                temp[3] = "0:00 AM - 0:00 AM";
+                temp[3] = "12:00 AM - 12:00 AM";
                 hiddenInput.value = temp.join(',');
             } else {
                 select_close_4.style.display = 'block';
@@ -83,7 +83,7 @@
             if (select_open_5.value == "Closed") {
                 select_close_5.style.display = 'none';
                 var temp = hiddenInput.value.split(',');
-                temp[4] = "0:00 AM - 0:00 AM";
+                temp[4] = "12:00 AM - 12:00 AM";
                 hiddenInput.value = temp.join(',');
             } else {
                 select_close_5.style.display = 'block';
@@ -97,7 +97,7 @@
             if (select_open_6.value == "Closed") {
                 select_close_6.style.display = 'none';
                 var temp = hiddenInput.value.split(',');
-                temp[5] = "0:00 AM - 0:00 AM";
+                temp[5] = "12:00 AM - 12:00 AM";
                 hiddenInput.value = temp.join(',');
             } else {
                 select_close_6.style.display = 'block';
@@ -111,7 +111,7 @@
             if (select_open_7.value == "Closed") {
                 select_close_7.style.display = 'none';
                 var temp = hiddenInput.value.split(',');
-                temp[6] = "0:00 AM - 0:00 AM";
+                temp[6] = "12:00 AM - 12:00 AM";
                 hiddenInput.value = temp.join(',');
             } else {
                 select_close_7.style.display = 'block';
@@ -171,14 +171,14 @@
             class="border rounded py-1 px-3 border-zinc-400">
             <option>Closed</option>
             {#each Array(24) as _, i}
-                <option>{i == 0 ? '0:00 AM' : (i <= 12 ? `${i}:00 AM` : (i == 12 ? `${i}:00 PM` : `${(i - 12)}:00 PM`))}</option>
+                <option>{i == 0 ? '12:00 AM' : (i <= 12 ? `${i}:00 AM` : (i == 12 ? `${i}:00 PM` : `${(i - 12)}:00 PM`))}</option>
             {/each}
         </select>
         <select
             id="{`select-close-${index + 1}`}" 
             class="border rounded py-1 px-3 border-zinc-400 hidden">
             {#each Array(24) as _, i}
-                <option>{i == 0 ? '0:00 AM' : (i <= 12 ? `${i}:00 AM` : (i == 12 ? `${i}:00 PM` : `${(i - 12)}:00 PM`))}</option>
+                <option>{i == 0 ? '12:00 AM' : (i <= 12 ? `${i}:00 AM` : (i == 12 ? `${i}:00 PM` : `${(i - 12)}:00 PM`))}</option>
             {/each}
         </select>
     </div>

@@ -6,6 +6,9 @@
     let location = currentURL.searchParams.get('loc');
     let hovered = 0;
     let chosen = 0;
+    let stars = 0;
+    let content = '';
+    let starsError = false;
 
     onMount(() => {
         var reviewStars = document.getElementById('review-stars');
@@ -69,8 +72,7 @@
                     return function() {
                         chosen = index * 2 - 1;
                         appendStars();
-                        var starsInput = document.getElementById('stars-input') as any;
-                        starsInput.value = `${chosen}`;
+                        stars = chosen;
                     }
                 })(i));
 
@@ -90,8 +92,7 @@
                     return function() {
                         chosen = index * 2;
                         appendStars();
-                        var starsInput = document.getElementById('stars-input') as any;
-                        starsInput.value = `${chosen}`;
+                        stars = chosen;
                     }
                 })(i));
 
@@ -126,34 +127,25 @@
         this.style.height = (this.scrollHeight) + "px";
         }
     })
-    
+
     function onSubmit(e) {
-        const formData = new FormData(e.target) as any
-
-        const data = {}
-        for (let field of formData) {
-            const [key, value] = field
-            data[key] = value
+        if (stars == 0) {
+            starsError = true;
+            return;
         }
 
-        let isValid = 
-            data['stars'] != 0 &&
-            data['content'] != '';
-
-        if (isValid) {
-            fetch('/reviews/post', {
-                method: 'POST',
-                body: JSON.stringify({
-                    businessName: businessName,
-                    stars: data['stars'],
-                    content: data['content']
-                })
-            }).then(function(response) {
-                if (response.ok) {
-                    window.location.href = `/biz?name=${encodeURIComponent(businessName)}&loc=${location}`
-                }
+        fetch('/reviews/post', {
+            method: 'POST',
+            body: JSON.stringify({
+                businessName: businessName,
+                stars,
+                content
             })
-        }
+        }).then(function(response) {
+            if (response.ok) {
+                window.location.href = `/biz?name=${encodeURIComponent(businessName)}&loc=${location}`
+            }
+        })
     }
 </script>
 
@@ -161,7 +153,7 @@
     <p class="text-3xl font-bold text-zinc-800">{businessName}</p>
     <form on:submit|preventDefault={onSubmit}>
         <div class="min-h-[24rem] md:w-[40rem] w-full border border-zinc-300 rounded-md mt-4 px-5 py-6">
-            <div class="flex">
+            <div class="flex items-center">
                 <div id="review-stars" class="flex">
                     
                 </div>
@@ -169,19 +161,21 @@
                     id="review-stars-overlay" 
                     class="font-roboto-light text-zinc-600">
                 </div>
+                <p class="text-red-600 ml-2 {starsError ? 'block' : 'hidden'}">*Rating is neccessary!</p>
             </div>
             <input 
                 class="hidden" 
                 name="stars"
                 id="stars-input" 
-                value={0}>
+                bind:value={stars}>
             <textarea 
                 id="review-content"
                 name="content"
+                bind:value={content}
+                required
                 class="mt-6 w-full outline-none bg-transparent resize-none hide-scrollbar font-roboto-light"
                 rows="12"
-                placeholder="Doesn’t look like much when you walk past, but I was practically dying of hunger so I popped in. The definition of a hole-in-the-wall. I got the regular hamburger and wow…  there are no words. A classic burger done right. Crisp bun, juicy patty, stuffed with all the essentials (ketchup, shredded lettuce, tomato, and pickles). There’s about a million options available between the menu board and wall full of specials, so it can get a little overwhelming, but you really can’t go wrong. Not much else to say besides go see for yourself! You won’t be disappointed.">
-            </textarea>
+                placeholder="Doesn’t look like much when you walk past, but I was practically dying of hunger so I popped in. The definition of a hole-in-the-wall. I got the regular hamburger and wow…  there are no words. A classic burger done right. Crisp bun, juicy patty, stuffed with all the essentials (ketchup, shredded lettuce, tomato, and pickles). There’s about a million options available between the menu board and wall full of specials, so it can get a little overwhelming, but you really can’t go wrong. Not much else to say besides go see for yourself! You won’t be disappointed."/>
             </div>
         <button type="submit" class="mt-6 px-4 py-2 bg-red-600 text-white rounded-md font-semibold">
             Post review

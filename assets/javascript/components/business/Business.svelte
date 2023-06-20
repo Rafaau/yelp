@@ -130,7 +130,9 @@
             </span>
         {/if}
         <span class="font-semibold ml-2">
-            {openHours[0]} - {openHours[1]}
+            {#if openHours[0] != openHours[1]}
+                {openHours[0]} - {openHours[1]}
+            {/if}
         </span>
         <button
             id="see-hours-button" 
@@ -207,7 +209,7 @@
                                         <div class="w-12 inline-block">
                                             {day}
                                         </div>
-                                        {hours}  
+                                        {hours}
                                         <span class="text-green-600 ml-4">
                                             Open now
                                         </span>
@@ -216,11 +218,15 @@
                                     <div class="flex">
                                         <div class="w-12 inline-block">
                                             {day}
-                                        </div> 
-                                        {hours}  
-                                        <span class="text-red-600 ml-4">
-                                            Closed now
-                                        </span>
+                                        </div>
+                                        {#if hours == '12:00 AM - 12:00 AM'}
+                                            <span class="text-zinc-400">Closed</span>
+                                        {:else} 
+                                            {hours}  
+                                            <span class="text-red-600 ml-4">
+                                                Closed now
+                                            </span>
+                                        {/if}
                                     </div>
                                 {/if}
                             {:else}
@@ -228,7 +234,11 @@
                                     <div class="w-12 inline-block">
                                         {day}
                                     </div>   
-                                    {hours}
+                                    {#if hours == '12:00 AM - 12:00 AM'}
+                                        <span class="text-zinc-400">Closed</span>
+                                    {:else} 
+                                        {hours}  
+                                    {/if}
                                 </div>
                             {/if}
                         {/each}

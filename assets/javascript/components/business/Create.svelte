@@ -1,12 +1,53 @@
 <script lang='ts'>
-    import { set } from "date-fns";
-    import { onMount } from "svelte";
     import OpenHours from "./OpenHours.svelte";
+
     let view = {'name': 1, 'location': 2, 'website': 3, 'category': 4, 'hours': 5};
+    let viewError = {'name': false, 'location': false, 'website': false, 'category': false, 'hours': false};
     let currentView = view.name;
-    let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+    let name: string = '';
+    let location: string = '';
+    let address: string = '';
+    let website: string = '';
+    let phone: string = '';
+    let categories: string = '';
+    let description: string = '';
+    let hours: string = '12:00 AM - 12:00 AM,12:00 AM - 12:00 AM,12:00 AM - 12:00 AM,12:00 AM - 12:00 AM,12:00 AM - 12:00 AM,12:00 AM - 12:00 AM,12:00 AM - 12:00 AM';
+
+    function validateNameView() {
+        if (!name.length) {
+            viewError.name = true
+        } else {
+            viewError.name = false
+            currentView = view.location
+        }
+    }
+
+    function validateLocationView() {
+        if (!location.length || !address.length) {
+            viewError.location = true
+        } else {
+            viewError.location = false
+            currentView = view.website
+        }
+    }
+
+    function validateCategoryView() {
+        if (!categories.length || !description.length) {
+            viewError.category = true
+        } else {
+            viewError.category = false
+            currentView = view.hours
+        }
+    }
 
     function setCategories() {
+        if (!website.length || !phone.length) {
+            viewError.website = true
+            return
+        }
+
+        viewError.website = false
         currentView = view.category;
 
         setTimeout(() => {
@@ -21,7 +62,7 @@
                 closeIcon.setAttribute('class', 'fa-solid fa-xmark ml-2 cursor-pointer ml-auto');
                 var hiddenInput = document.getElementById('category-input') as any;              
                 hiddenInput.value += `${selected.parentElement.label},${select.value},`;
-                form.categories = hiddenInput.value;
+                categories = hiddenInput.value;
                 closeIcon.addEventListener('click', function() {
                     newCategory.remove();
                     hiddenInput.value = hiddenInput.value.replace(select.value + ',', '');
@@ -32,52 +73,26 @@
         }, 0)
     }
 
-    let form = {
-        name: '',
-        location: '',
-        address: '',
-        website: '',
-        phone: '',
-        categories: '',
-        description: '',
-        hours: '0:00 AM - 0:00 AM,0:00 AM - 0:00 AM,0:00 AM - 0:00 AM,0:00 AM - 0:00 AM,0:00 AM - 0:00 AM,0:00 AM - 0:00 AM,0:00 AM - 0:00 AM'
-    }
-
     function onSubmit(e) {
-        const data = form
-        data.hours = (document.getElementById('hours-input') as any).value;
-        console.log(data)
+        hours = (document.getElementById('hours-input') as any).value;
 
-        let isValid =
-            data['name'] != '' &&
-            data['location'] != '' &&
-            data['address'] != '' &&
-            data['website'] != '' &&
-            data['phone'] != '' &&
-            data['categories'] != '' &&
-            data['description'] != '' &&
-            data['hours'] != '';
-
-        if (isValid) {
-            console.log(data)
-            fetch('/businesses/create', {
-                method: 'POST',
-                body: JSON.stringify({
-                    name: data['name'],
-                    location: data['location'],
-                    address: data['address'],
-                    website: data['website'],
-                    phone: data['phone'],
-                    categories: data['categories'],
-                    description: data['description'],
-                    hours: data['hours']
-                })
-            }).then(function(response) {
-                if (response.ok) {
-                    window.location.href = `biz?name=${encodeURIComponent(data['name'])}&loc=${data['location']}`;
-                }           
+        fetch('/businesses/create', {
+            method: 'POST',
+            body: JSON.stringify({
+                name,
+                location,
+                address,
+                website,
+                phone,
+                categories,
+                description,
+                hours
             })
-        }
+        }).then(function(response) {
+            if (response.ok) {
+                window.location.href = `biz?name=${encodeURIComponent(name)}&loc=${location}`;
+            }           
+        })
     }
 
 </script>
@@ -95,10 +110,11 @@
                     class="outline-none border rounded mt-8 font-roboto-light py-3 px-4 border-zinc-400 w-full"
                     type="text"
                     name="name"
-                    bind:value={form.name}
+                    bind:value={name}
                     placeholder="Your business name">
+                <p class="text-red-600 text-sm {viewError.name ? 'block' : 'hidden'}">*Missing form fields</p>
                 <button
-                    on:click={() => currentView = view.location}
+                    on:click={validateNameView}
                     type="button" 
                     class="bg-red-600 rounded py-2 px-4 text-zinc-100 font-semibold mt-6">
                     Continue
@@ -120,16 +136,17 @@
                     class="outline-none border rounded mt-8 font-roboto-light py-3 px-4 border-zinc-400 w-full"
                     type="text"
                     name="location"
-                    bind:value={form.location}
+                    bind:value={location}
                     placeholder="Your business location">
                 <input 
                     class="outline-none border rounded mt-8 font-roboto-light py-3 px-4 border-zinc-400 w-full"
                     type="text"
                     name="address"
-                    bind:value={form.address}
+                    bind:value={address}
                     placeholder="Your business address">
+                <p class="text-red-600 text-sm {viewError.location ? 'block' : 'hidden'}">*Missing form fields</p>
                 <button
-                    on:click={() => currentView = view.website}
+                    on:click={validateLocationView}
                     type="button" 
                     class="bg-red-600 rounded py-2 px-4 text-zinc-100 font-semibold mt-6">
                     Continue
@@ -151,14 +168,15 @@
                     class="outline-none border rounded mt-8 font-roboto-light py-3 px-4 border-zinc-400 w-full"
                     type="text"
                     name="website"
-                    bind:value={form.website}
+                    bind:value={website}
                     placeholder="Website">
                 <input 
                     class="outline-none border rounded mt-8 font-roboto-light py-3 px-4 border-zinc-400 w-full"
                     type="text"
                     name="phone"
-                    bind:value={form.phone}
+                    bind:value={phone}
                     placeholder="Phone number">
+                <p class="text-red-600 text-sm {viewError.website ? 'block' : 'hidden'}">*Missing form fields</p>
                 <button
                     on:click={setCategories}
                     type="button" 
@@ -235,16 +253,17 @@
                     class="hidden"
                     type="text"
                     name="categories"
-                    bind:value={form.categories}
+                    bind:value={categories}
                     id="category-input">
                 <input 
                     class="outline-none border rounded mt-8 font-roboto-light py-3 px-4 border-zinc-400 w-full"
                     type="text"
                     name="description"
-                    bind:value={form.description}
+                    bind:value={description}
                     placeholder="Your business description"> 
+                <p class="text-red-600 text-sm {viewError.category ? 'block' : 'hidden'}">*Missing form fields</p>
                 <button
-                    on:click={() => currentView = view.hours}
+                    on:click={validateCategoryView}
                     type="button" 
                     class="bg-red-600 rounded py-2 px-4 text-zinc-100 font-semibold mt-6">
                     Continue
@@ -268,7 +287,7 @@
                     type="text"
                     name="hours"
                     id="hours-input"
-                    bind:value={form.hours}/>
+                    bind:value={hours}/>
                 <button
                     id="create-biz-btn" 
                     type="submit"

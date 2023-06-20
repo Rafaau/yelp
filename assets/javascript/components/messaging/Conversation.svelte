@@ -29,6 +29,7 @@
     let input = '';
 
     function postMessage() {
+        if (input == '') return
         var lastSender = Number(document.getElementById('last-sender').innerHTML);
         fetch('/messages/post', {
             method: 'POST',
