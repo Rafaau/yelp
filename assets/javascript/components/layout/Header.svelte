@@ -4,6 +4,8 @@
     import Categories from './Categories.svelte';
     import { capitalize, redirect } from '../../libs/utils.js';
     import Search from './Search.svelte';
+    import { tooltip } from 'svooltip';
+	import 'svooltip/styles.css';
 
     let currentURL = new URL(window.location.href);
     let cflt = capitalize(currentURL.searchParams.get('cflt'));
@@ -90,7 +92,11 @@
                 <a
                     id="messages-btn" 
                     href="/messaging"
-                    class="lg:ml-0 ml-auto">
+                    class="lg:ml-0 ml-auto"
+                    use:tooltip={{
+                        content: "<span class='z-50'>Messages</span>",
+                        html: true,
+                    }}>
                     <i class="fa-regular fa-comment-dots text-2xl ml-3 cursor-pointer rounded-full py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                 </a>
                 <div
@@ -99,7 +105,11 @@
                     use:clickOutside
                     on:click_outside={() => dropdown['Notifications'] = false}      
                     id="notifications-btn"                   
-                    class="relative">
+                    class="relative"
+                    use:tooltip={{
+                        content: "<span class='z-50'>Notifications</span>",
+                        html: true,
+                    }}>
                     <i class="fa-regular fa-bell text-2xl ml-3 cursor-pointer rounded-full py-2 px-3 hover:bg-zinc-400 hover:bg-opacity-30"></i>
                     {#if $currentUser != null && $currentUser.unreadNotifications.length > 0 }
                         <span
@@ -135,7 +145,11 @@
                     on:click={() => dropdown['User'] = !dropdown['User']}
                     on:keydown={null}
                     use:clickOutside
-                    on:click_outside={() => dropdown['User'] = false}     
+                    on:click_outside={() => dropdown['User'] = false}
+                    use:tooltip={{
+                        content: `<span class='z-50'>${$currentUser.username}</span>`,
+                        html: true,
+                    }}     
                     id="user-panel"
                     class="relative">
                     <img
@@ -168,7 +182,7 @@
             {/if}
         </div>
         {#if !blankView}
-            <Search cflt={cflt} findLocInput={findLocInput} className="sm:hidden flex w-full mt-4"/>
+            <Search cflt={cflt} findLocInput={findLocInput} className="sm:hidden flex w-full mt-4 z-10"/>
             <div class="flex items-center text-sm { whiteView ? 'text-zinc-900' : 'text-zinc-100' }">
                 <div 
                     on:mouseover={() => dropdown['Restaurants'] = true}

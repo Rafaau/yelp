@@ -26,7 +26,7 @@
 </script>
 
 {#await promise then businesses}
-<div class="relative sm:top-28 top-44 sm:mb-28 mb-44 flex border-b">
+<div class="relative sm:top-28 top-44 sm:mb-28 mb-44 border-b">
     <div class="">
             <div class="px-10 {findDesc == null ? 'py-6' : 'pb-6'} border-b">
                 {#if cflt != '' && findDesc == null}
@@ -71,7 +71,7 @@
                             class="ml-auto w-[30vw]"/>
                     </div>
                 {/if}
-                <div class="flex items-center lg:w-[60%] w-full">
+                <div class="flex items-center w-full">
                     <span class="font-extrabold block text-2xl">
                         {#if cflt != '' && findDesc == null}
                             Top {businesses.length >= 10 ? 10 : businesses.length} {capitalize(cflt)} in {capitalize(location)}

@@ -172,6 +172,17 @@ config.module = {
             },
         }, 
         {
+            test: /\.svelte$/,
+            include: /node_modules/,
+            use: {
+                loader: 'svelte-loader',
+                options: {
+                    emitCss: true,
+                    hotReload: true
+                },
+            },
+        }, 
+        {
             test: /\.css$/,
             use: [
                 'style-loader',
