@@ -91,6 +91,8 @@
         }).then(function(response) {
             if (response.ok) {
                 window.location.href = `biz?name=${encodeURIComponent(name)}&loc=${location}`;
+            } else {
+                alert('Something went wrong');
             }           
         })
     }

@@ -31,6 +31,7 @@ class Review
 
     #[ORM\Column]
     #[Assert\Range(min: 1, max: 10)]
+    #[Assert\NotBlank(message: 'Stars is required')]
     private ?int $stars = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]

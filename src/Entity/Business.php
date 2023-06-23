@@ -17,9 +17,11 @@ class Business
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Name is required')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Location is required')]
     private ?string $location = null;
 
     #[ORM\OneToMany(mappedBy: 'business', targetEntity: Review::class, orphanRemoval: true)]
@@ -32,6 +34,7 @@ class Business
     private array $hours = [];
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Address is required')]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]

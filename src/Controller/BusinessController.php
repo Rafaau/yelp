@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Business;
 use App\Entity\Category;
+use App\Interface\BusinessServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,10 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class BusinessController extends AbstractController
 {
     private $em;
+    private $businessInterface;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, BusinessServiceInterface $businessInterface)
     {
         $this->em = $em;
+        $this->businessInterface = $businessInterface;
     }
 
     #[Route('/businesses', name: 'get-businesses' )]
@@ -171,43 +174,11 @@ class BusinessController extends AbstractController
     }
 
     #[Route('/businesses/create', name: 'business-create' )]
-    public function update(Request $request, EntityManagerInterface $entityManager): Response {
+    public function update(Request $request): Response {
         $data = json_decode($request->getContent(), true);
-        $categoryRepository = $this->em->getRepository(Category::class);
+        
+        $business = $this->businessInterface->createBusiness($data, $this->getUser()->getUserIdentifier());
 
-        $business = new Business();
-
-        $business->setName($data['name']);
-        $business->setLocation($data['location']);
-        $business->setDescription($data['description']);
-        $business->setWebsite($data['website']);
-        $business->setPhoneNumber($data['phone']);
-        $business->setAddress($data['address']);
-        $business->setOwner($this->getUser()->getUserIdentifier());
-        $hours = explode(',', $data['hours']);
-        $business->setHours(
-            [
-                'Mon' => $hours[0],
-                'Tue' => $hours[1],
-                'Wed' => $hours[2],
-                'Thu' => $hours[3],
-                'Fri' => $hours[4],
-                'Sat' => $hours[5],
-                'Sun' => $hours[6],
-            ]
-        );
-        $categories = explode(',', $data['categories']);
-        foreach ($categories as $categoryName) {
-            $category = $categoryRepository->findOneBy(['name' => $categoryName]);
-            if ($category) {     
-                $business->addCategory($category);
-            }
-        }
-        $business->setExpensiveness(1);
-
-        $entityManager->persist($business);
-        $entityManager->flush();
-
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => $business ? 'ok' : 'error']);
     }
 }
