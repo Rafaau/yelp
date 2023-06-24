@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Review;
-use App\Entity\Business;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Interface\ReviewServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,45 +11,27 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ReviewController extends AbstractController
 {
-    private $em;
+    private $reviewInterface;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ReviewServiceInterface $reviewInterface)
     {
-        $this->em = $em;
+        $this->reviewInterface = $reviewInterface;
     }
 
     #[Route('/reviews/post', name: 'review-post' )]
     public function post(Request $request): Response {
         $data = json_decode($request->getContent(), true);
-        $user = $this->getUser();
-        $business = $this->em->getRepository(Business::class)->findOneBy(['name' => $data['businessName']]);
-        $review = new Review();
+        
+        $review = $this->reviewInterface->postReview($data, $this->getUser());
 
-        if ($user && $business) {
-            $review->setUser($user);
-            $review->setBusiness($business);
-            $review->setContent($data['content']);
-            $review->setStars($data['stars']);
-
-            $this->em->persist($review);
-            $this->em->flush();
-        }
-
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => $review ? 'ok' : 'error']);
     }
 
     #[Route('/reviews/update_reaction', name: 'review-update' )]
     public function update(Request $request): Response {
         $data = json_decode($request->getContent(), true);
 
-        $review = $this->em->getRepository(Review::class)->find($data['id']);
-
-        if ($review) {
-            $currentReactions = $review->getReactions();
-            $updatedReactions = array_merge($currentReactions, $data['reactions']);
-            $review->setReactions($updatedReactions);
-            $this->em->flush();
-        }
+        $this->reviewInterface->updateReactions($data);
 
         return new JsonResponse(['status' => 'ok']);
     }
@@ -60,51 +40,14 @@ class ReviewController extends AbstractController
     public function delete(Request $request): Response {
         $data = json_decode($request->getContent(), true);
 
-        $review = $this->em->getRepository(Review::class)->find($data['id']);
-
-        if ($review) {
-            $this->em->remove($review);
-            $this->em->flush();
-        }
+        $this->reviewInterface->deleteReview($data['id']);
 
         return new JsonResponse(['status' => 'ok']);
     }
 
     #[Route('/reviews/{location}/{page}', name: 'review-load' )]
     public function getReviews($location, $page = 1, $limit = 9): Response {
-        $reviewsRepository = $this->em->getRepository(Review::class);
-        $queryBuilder = $reviewsRepository->createQueryBuilder('r');
-
-        $reviews = $queryBuilder
-            ->select('r, b, u')
-            ->innerJoin('r.business', 'b')
-            ->innerJoin('r.user', 'u')
-            ->where('b.location = :location')
-            ->setParameter('location', ucwords($location))
-            ->orderBy('r.id', 'DESC')
-            ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
-    
-        $reviewsData = [];
-        foreach ($reviews as $review) {
-            $reviewsData[] = [
-                'id' => $review->getId(),
-                'content' => $review->getContent(),
-                'stars' => $review->getStars(),
-                'reactions' => $review->getReactions(),
-                'images' => $review->getImages(),
-                'user' => array(
-                    'id' => $review->getUser()->getId(),
-                    'username' => $review->getUser()->getUsername(),
-                    'userImage' => $review->getUser()->getUserImage(),
-                ),
-                'business' => array(
-                    'name' => $review->getBusiness()->getName(),
-                ),
-            ];
-        }
+        $reviewsData = $this->reviewInterface->getReviews($location, $page, $limit);
         
         return new JsonResponse(['reviews' => $reviewsData]);            
     }

@@ -2,36 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\Notification;
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Interface\NotificationServiceInterface;
 
 class NotificationController extends AbstractController
 {
-    private $em;
+    private $notificationInterface;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(NotificationServiceInterface $notificationInterface)
     {
-        $this->em = $em;
+        $this->notificationInterface = $notificationInterface;
     }
 
     #[Route('/notifications/mark-as-read', name: 'mark-as-read' )]
     public function update(Request $request): Response {
-        $user = $this->em->getRepository(User::class)->findOneBy(['username' => $this->getUser()->getUserIdentifier()]);
-
-        if ($user) {
-            $unreadNotifications = $user->getUnreadNotifications();
-            foreach ($unreadNotifications as $notification) {
-                $notification->setIsRead(true);
-            }
-
-            $this->em->flush();
-        }
+        $this->notificationInterface->markAsRead($this->getUser()->getUserIdentifier());
 
         return new JsonResponse(['status' => 'ok']);
     }
