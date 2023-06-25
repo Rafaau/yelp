@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class BusinessController extends AbstractController
 {
@@ -20,33 +21,45 @@ class BusinessController extends AbstractController
 
     #[Route('/businesses', name: 'get-businesses' )]
     public function getAll(Request $request): Response {
-        $cflt = $request->query->get('cflt');
-        $find_loc = $request->query->get('find_loc');
-
-        $businessesData = $this->businessInterface->getBusinesses($cflt, $find_loc);
-
-        return new JsonResponse([
-            'status' => 'ok', 
-            'businesses' => $businessesData
-        ]);
+        try {
+            $cflt = $request->query->get('cflt');
+            $find_loc = $request->query->get('find_loc');
+    
+            $businessesData = $this->businessInterface->getBusinesses($cflt, $find_loc);
+    
+            return new JsonResponse([
+                'status' => 'ok', 
+                'businesses' => $businessesData
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 
     #[Route('/businesses/{business}-{location}', name: 'get-business' )]
     public function get($business, $location): Response {
-        $businessData = $this->businessInterface->getBusiness($business, $location);
+        try {
+            $businessData = $this->businessInterface->getBusiness($business, $location);
 
-        return new JsonResponse([
-            'status' => 'ok', 
-            'business' => $businessData
-        ]);
+            return new JsonResponse([
+                'status' => 'ok', 
+                'business' => $businessData
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 
     #[Route('/businesses/create', name: 'business-create' )]
-    public function update(Request $request): Response {
-        $data = json_decode($request->getContent(), true);
+    public function create(Request $request, UserInterface $user): Response {
+        try {
+            $data = json_decode($request->getContent(), true);
         
-        $business = $this->businessInterface->createBusiness($data, $this->getUser()->getUserIdentifier());
-
-        return new JsonResponse(['status' => $business ? 'ok' : 'error']);
+            $this->businessInterface->createBusiness($data, $user->getUserIdentifier());
+    
+            return new JsonResponse(['status' => 'ok']);
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 }

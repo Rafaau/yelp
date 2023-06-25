@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class MessageController extends AbstractController
 {
@@ -23,36 +24,48 @@ class MessageController extends AbstractController
     }
 
     #[Route('/messages/post', name: 'post-message' )]
-    public function post(Request $request): Response {
-        $data = json_decode($request->getContent(), true);
+    public function post(Request $request, UserInterface $user): Response {
+        try {
+            $data = json_decode($request->getContent(), true);
         
-        $sender = $this->messageInterface->postMessage($data, $this->getUser()->getUserIdentifier());
-
-        return new JsonResponse(['status' => 'ok', 'sender' => $sender->getUsername()]);
+            $sender = $this->messageInterface->postMessage($data, $user->getUserIdentifier());
+    
+            return new JsonResponse(['status' => 'ok', 'sender' => $sender->getUsername()]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 
     #[Route('/messages', name: 'get-messages' )]
     public function get(Request $request): Response {
-        $receiverId = $request->query->get('receiverId');
-        $senderId = $request->query->get('senderId');
-
-        $messagesData = $this->messageInterface->getMessages($receiverId, $senderId);
-        $receiver = $this->userInterface->getUserById($receiverId);
-        
-        return new JsonResponse([
-            'messages' => $messagesData,
-            'receiver' => [
-                'id' => $receiver->getId(),
-                'username' => $receiver->getUsername(),
-                'userImage' => $receiver->getUserImage() ?? 'build/images/avatar_default.19e0a8ff.jpg'
-            ],
-        ]);
+        try {
+            $receiverId = $request->query->get('receiverId');
+            $senderId = $request->query->get('senderId');
+    
+            $messagesData = $this->messageInterface->getMessages($receiverId, $senderId);
+            $receiver = $this->userInterface->getUserById($receiverId);
+            
+            return new JsonResponse([
+                'messages' => $messagesData,
+                'receiver' => [
+                    'id' => $receiver->getId(),
+                    'username' => $receiver->getUsername(),
+                    'userImage' => $receiver->getUserImage() ?? 'build/images/avatar_default.19e0a8ff.jpg'
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 
     #[Route('/messages/conversations', name: 'get-conversations' )]
-    public function getConversations() {
-        $conversationsData = $this->messageInterface->getConversations($this->getUser());
+    public function getConversations(UserInterface $user) {
+        try {
+            $conversationsData = $this->messageInterface->getConversations($user);
 
-        return new JsonResponse(['conversations' => $conversationsData]);
+            return new JsonResponse(['conversations' => $conversationsData]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 }

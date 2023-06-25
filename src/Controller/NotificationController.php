@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Interface\NotificationServiceInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class NotificationController extends AbstractController
 {
@@ -19,9 +20,13 @@ class NotificationController extends AbstractController
     }
 
     #[Route('/notifications/mark-as-read', name: 'mark-as-read' )]
-    public function update(Request $request): Response {
-        $this->notificationInterface->markAsRead($this->getUser()->getUserIdentifier());
+    public function update(UserInterface $user): Response {
+        try {
+            $this->notificationInterface->markAsRead($user->getUserIdentifier());
 
-        return new JsonResponse(['status' => 'ok']);
+            return new JsonResponse(['status' => 'ok']);
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 }
