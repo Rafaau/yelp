@@ -183,7 +183,7 @@
         </div>
         {#if !blankView}
             <Search cflt={cflt} findLocInput={findLocInput} className="sm:hidden flex w-full mt-4 z-10"/>
-            <div class="flex items-center text-sm { whiteView ? 'text-zinc-900' : 'text-zinc-100' }">
+            <div class="sm:flex hidden items-center text-sm { whiteView ? 'text-zinc-900' : 'text-zinc-100' }">
                 <div 
                     on:mouseover={() => dropdown['Restaurants'] = true}
                     on:focus={() => dropdown['Restaurants'] = true}
