@@ -332,7 +332,7 @@
                     <div class="font-roboto-light">
                         {@html review.content.replace(/\n/g, '<br />')}
                     </div>
-                    {#if review.images|length}
+                    {#if review.images.length}
                     <div class="flex h-36 my-6 space-x-4">
                         {#each review.images as image}
                             <img 
