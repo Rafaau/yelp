@@ -4,8 +4,9 @@
 
 ## Deployment
 
-The application is deployed on the **Heroku** platform. You can visit it at:
-https://whelp.herokuapp.com/
+~~The application is deployed on the **Heroku** platform. You can visit it at:
+https://whelp.herokuapp.com/~~
+**UNDEPLOYED**
 
 >**NOTE**: There is no e-mail verification, so you can create account using fake credentials.
 >The application is still under development. Any visible placeholders are temporary and will receive appropriate functionalities in the future.
